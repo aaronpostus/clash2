@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="ClashCraft:jar">
+    <output-path>$USER_HOME$/OneDrive/Documents/Clash/plugins</output-path>
+    <root id="archive" name="ClashCraft.jar">
+      <element id="module-output" name="ClashCraft" />
+    </root>
+  </artifact>
+</component>

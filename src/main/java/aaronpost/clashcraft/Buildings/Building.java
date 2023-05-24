@@ -6,6 +6,7 @@ import aaronpost.clashcraft.Interfaces.IUpdatable;
 
 
 public abstract class Building extends Displayable implements IFixedUpdatable {
+    public
     boolean place() {
         // try to place, if i can't i return false
         return false;

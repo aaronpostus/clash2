@@ -1,5 +1,6 @@
-package us.aaronpost.clash.Schematics;
+package aaronpost.clashcraft.Schematics;
 
+import aaronpost.clashcraft.Schematics.LocationWrapper;
 import org.bukkit.Location;
 
 import java.io.Serializable;

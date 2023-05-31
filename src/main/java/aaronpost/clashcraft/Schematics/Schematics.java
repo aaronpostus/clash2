@@ -1,4 +1,4 @@
-package us.aaronpost.clash.Schematics;
+package aaronpost.clashcraft.Schematics;
 
 import java.io.Serializable;
 import java.util.ArrayList;

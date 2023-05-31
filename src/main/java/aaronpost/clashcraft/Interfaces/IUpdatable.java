@@ -1,5 +1,5 @@
 package aaronpost.clashcraft.Interfaces;
 
-public interface IUpdatable {
+public interface IUpdatable extends IUpdate {
     public void update();
 }

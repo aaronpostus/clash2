@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: net.wesjd:anvilgui:1.6.5-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/wesjd/anvilgui/1.6.5-SNAPSHOT/anvilgui-1.6.5-20230514.214322-2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/net/wesjd/anvilgui/1.6.5-SNAPSHOT/anvilgui-1.6.5-20230514.214322-2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/wesjd/anvilgui/1.6.5-SNAPSHOT/anvilgui-1.6.5-20230514.214322-2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,5 +1,6 @@
-package us.aaronpost.clash.Schematics;
+package aaronpost.clashcraft.Schematics;
 
+import aaronpost.clashcraft.ClashCraft;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
@@ -7,12 +8,11 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import us.aaronpost.clash.Clash;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 public class Schematic implements Serializable {
     private final String name;
     private final int xLength, yLength, zLength;
@@ -146,7 +146,7 @@ public class Schematic implements Serializable {
         double initZ = loc.getZ();
         double initX = loc.getX();
         int counter = 0;
-        Clash.getPlugin().getServer().getPlayer("Aaronn").spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.GOLD + "Pasting schmeatic " + name));
+        ClashCraft.plugin.getServer().getPlayer("Aaronn").spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.GOLD + "Pasting schmeatic " + name));
         for(int y = 0; y < yLength; y++) {
             loc.setX(initX);
             for (int x = 0; x < xLength; x++) {

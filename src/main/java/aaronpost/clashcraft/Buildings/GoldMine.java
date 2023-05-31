@@ -1,23 +1,38 @@
 package aaronpost.clashcraft.Buildings;
 
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.block.Chest;
+import aaronpost.clashcraft.Globals.BuildingGlobals;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import java.time.Duration;
 
+// Author: Aaron Post
 public class GoldMine extends Collector {
-    public static ItemStack ITEM_STACK = new ItemStack(Material.CHEST);
-    public static String DISPLAY_NAME = Color.YELLOW + "Gold Mine";
-    static {
-        ItemMeta itemMeta = ITEM_STACK.getItemMeta();
-        itemMeta.setDisplayName(DISPLAY_NAME);
+    public GoldMine(int x, int z) {
+        super(x,z);
+        // super.currency = Player's gold currency;
     }
 
-    public GoldMine() {
-        super.setDisplayName(DISPLAY_NAME);
-        super.setItemStack(ITEM_STACK);
-        super.setCollectionRate(3600);
-        // super.currency = Player's gold currency;
+    @Override
+    public boolean isMaxLevel() { return getLevel() == BuildingGlobals.GOLDMINE_MAX_LEVEL; }
+    @Override
+    public Duration getUpgradeTime() { return BuildingGlobals.GOLDMINE_BUILD_TIME[getLevel() - 1]; }
+
+    @Override
+    float getCollectionRate() {
+        return BuildingGlobals.GOLDMINE_COLLECTION_RATE[getLevel() - 1];
+    }
+
+    @Override
+    float getCapacity() {
+        return BuildingGlobals.GOLDMINE_CAPACITY[getLevel() - 1];
+    }
+
+    @Override
+    public ItemStack getItemStack() {
+        return BuildingGlobals.GOLDMINE_ITEM_STACK.clone();
+    }
+
+    @Override
+    public String getDisplayName() {
+        return BuildingGlobals.GOLDMINE_DISPLAY_NAME;
     }
 }

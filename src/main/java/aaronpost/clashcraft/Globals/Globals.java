@@ -1,7 +1,10 @@
-package aaronpost.clashcraft;
+package aaronpost.clashcraft.Globals;
 
+import aaronpost.clashcraft.ClashCraft;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 
 public class Globals {
     public static World world = ClashCraft.plugin.getServer().getWorld("World");
@@ -31,4 +34,14 @@ public class Globals {
     public static int ARCHER_POSITION = 12;
     public static int COST_POSITION = 8;
 
+    // GOLD
+    public static ItemStack GOLD_ITEM_STACK = new ItemStack(Material.GOLD_INGOT);
+    public static String GOLD_DISPLAY_NAME = ChatColor.YELLOW + "Gold";
+
+
+    // BUILDINGS
+
+    // GOLD MINE
+
+    public static int ELIXIR_TYPE = 2;
 }

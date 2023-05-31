@@ -1,6 +1,6 @@
 package aaronpost.clashcraft.Arenas;
 
-import aaronpost.clashcraft.Globals;
+import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Islands.Island;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -13,10 +13,10 @@ public class Arenas {
     public static Arenas a = new Arenas();
     public static int GRID_X_LENGTH = 55;
     public static int GRID_Z_LENGTH = 55;
-    public static Location spawn = new Location(Globals.world, -421, 124, 265);
+    public static Location spawn = new Location(Globals.world, 54, 68, 11);
 
     public Arenas() {
-        addArena(-224, 52, -94);
+        addArena(40, 84, 71);
     }
 
     private void addArena(int x, int y, int z) {
@@ -35,14 +35,6 @@ public class Arenas {
             }
         }
         return false;
-    }
-    public Arena findArenaFromIsland(Island island) {
-        for(Arena arena: arenas) {
-            if(island.equals(arena.getIsland())) {
-                return arena;
-            }
-        }
-        return null;
     }
     public Arena findPlayerArena(Player p) {
         for(Arena arena: arenas) {

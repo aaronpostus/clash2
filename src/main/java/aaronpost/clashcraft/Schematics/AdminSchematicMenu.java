@@ -1,6 +1,8 @@
-package us.aaronpost.clash.Schematics;
+package aaronpost.clashcraft.Schematics;
 
-import net.citizensnpcs.npc.ai.speech.Chat;
+import aaronpost.clashcraft.ClashCraft;
+import aaronpost.clashcraft.Globals.Globals;
+import aaronpost.clashcraft.OfflineSkull;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,11 +15,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import us.aaronpost.clash.Clash;
-import us.aaronpost.clash.GUIs.OfflineSkull;
-import us.aaronpost.clash.Schematics.Schematic;
-import us.aaronpost.clash.Schematics.Schematics;
-import us.aaronpost.clash.Troops.BHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,13 +30,13 @@ public class AdminSchematicMenu implements Listener {
         s = (ArrayList<Schematic>) Schematics.s.getSchematics();
 
         // Offline player skull
-        ItemStack leftArrow = OfflineSkull.getSkull(BHelper.LEFT_ARROW_URL);
+        ItemStack leftArrow = OfflineSkull.getSkull(Globals.LEFT_ARROW_URL);
         ItemMeta meta = leftArrow.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD + "<==");
         leftArrow.setItemMeta(meta);
 
         // Offline player skull
-        ItemStack rightArrow = OfflineSkull.getSkull(BHelper.RIGHT_ARROW_URL);
+        ItemStack rightArrow = OfflineSkull.getSkull(Globals.RIGHT_ARROW_URL);
         meta = rightArrow.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD + "==>");
         rightArrow.setItemMeta(meta);
@@ -72,13 +69,13 @@ public class AdminSchematicMenu implements Listener {
                                             i.getWhoClicked().closeInventory();
                                         } else if (i.getClick().isRightClick()) {
                                             Schematics.s.getSchematics().remove(schematic);
-                                            File file = new File(Clash.getPlugin().getDataFolder().getAbsolutePath()
+                                            File file = new File(ClashCraft.plugin.getDataFolder().getAbsolutePath()
                                                     + "/Schematics/" + schematicName + ".json");
                                             boolean fileDeleteSuccess = file.delete();
                                             if(fileDeleteSuccess) {
-                                                i.getWhoClicked().sendMessage(BHelper.prefix + " Successfully deleted schematic and file for \"" + schematicName + "\".");
+                                                i.getWhoClicked().sendMessage(Globals.prefix + " Successfully deleted schematic and file for \"" + schematicName + "\".");
                                             } else {
-                                                i.getWhoClicked().sendMessage(BHelper.prefix + " Successfully deleted schematic for" +
+                                                i.getWhoClicked().sendMessage(Globals.prefix + " Successfully deleted schematic for" +
                                                         " \"" + schematicName + "\".");
                                             }
                                             i.getWhoClicked().closeInventory();

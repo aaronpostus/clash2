@@ -18,7 +18,7 @@ public class TestUpdatable implements IUpdatable, IFixedUpdatable {
     }
 
     @Override
-    public void catchUp(Duration duration) {
+    public void catchUp(float hours) {
 
     }
 

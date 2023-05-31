@@ -1,9 +1,11 @@
 package aaronpost.clashcraft.Arenas;
 import aaronpost.clashcraft.Buildings.Building;
+import aaronpost.clashcraft.Buildings.GoldMine;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Islands.Island;
 import aaronpost.clashcraft.Pair;
 import aaronpost.clashcraft.Session;
+import aaronpost.clashcraft.Singletons.GameManager;
 import aaronpost.clashcraft.Singletons.Sessions;
 
 import org.bukkit.*;
@@ -30,6 +32,8 @@ public class Arena {
         player = p;
         session = Sessions.s.getSession(p);
         island = session.getIsland();
+        island.setArena(this);
+        island.setPlayer(p);
         Location tpLoc = loc.clone();
 
         tpLoc.setX(tpLoc.getX() - 2);
@@ -70,7 +74,7 @@ public class Arena {
 
                 // If player has a NEW building that they haven't placed down, this will give it back to them.
                 if(buildingInHand != null) {
-                    p.getInventory().addItem(buildingInHand.getItemStack());
+                    p.getInventory().addItem(buildingInHand.getPlainItemStack());
                 }
                 island.startUpdates();
                 Sessions.s.getSession(p).initializeScoreboard(player);
@@ -78,6 +82,8 @@ public class Arena {
                 p.setAllowFlight(true);
             }
         },  10);
+        GameManager.getInstance().addFixedUpdatable(island);
+        GameManager.getInstance().addUpdatable(island);
     }
     public boolean isValidGridLocation(Location loc) {
         Pair<Double,Double> gridPos = getGridLocFromAbsLoc(loc);
@@ -90,13 +96,15 @@ public class Arena {
         return new Pair<Double,Double>(loc.getX() - loc2.getX(), loc.getZ() - loc2.getZ());
     }
     public void unassign() {
-        player.setAllowFlight(false);
-        island.stopUpdates();
-        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-        session.saveLogOffTime();
-        player = null;
-        island = null;
-        session = null;
+        GameManager.getInstance().removeUpdatable(island);
+        GameManager.getInstance().removeUpdatable(island);
+        this.player.setAllowFlight(false);
+        this.island.stopUpdates();
+        this.player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        this.session.saveLogOffTime();
+        this.player = null;
+        this.island = null;
+        this.session = null;
     }
 
     public Location getLoc() {

@@ -1,6 +1,7 @@
 package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Globals.BuildingGlobals;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import java.time.Duration;
 
@@ -25,14 +26,16 @@ public class GoldMine extends Collector {
     float getCapacity() {
         return BuildingGlobals.GOLDMINE_CAPACITY[getLevel() - 1];
     }
+    @Override
+    public ChatColor getPrimaryColor() { return ChatColor.GRAY; }
 
     @Override
-    public ItemStack getItemStack() {
+    public ItemStack getPlainItemStack() {
         return BuildingGlobals.GOLDMINE_ITEM_STACK.clone();
     }
 
     @Override
-    public String getDisplayName() {
+    public String getPlainDisplayName() {
         return BuildingGlobals.GOLDMINE_DISPLAY_NAME;
     }
 }

@@ -4,18 +4,16 @@ import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Buildings.BuildingInHand;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
+import aaronpost.clashcraft.Interfaces.IUpdatable;
 import aaronpost.clashcraft.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import javax.xml.stream.Location;
 import java.io.Serializable;
-import java.time.Duration;
-import java.time.LocalTime;
-import java.time.temporal.Temporal;
 import java.util.*;
 
-public class Island implements Serializable, IFixedUpdatable {
+public class Island implements Serializable, IFixedUpdatable, IUpdatable {
     private BuildingInHand buildingInHand;
     private transient Location location;
     private transient Player player;
@@ -125,25 +123,39 @@ public class Island implements Serializable, IFixedUpdatable {
         }
     }
     @Override
+    public void update() {
+        if(buildingInHand != null) {
+            buildingInHand.update();
+        }
+    }
+    @Override
     public void fixedUpdate() {
-
+        for(Building building : getBuildings()) {
+            building.fixedUpdate();
+        }
     }
 
     @Override
-    public void catchUp(Duration timeToCatchUp) {
+    public void catchUp(float hours) {
         for(Building building : getBuildings()) {
-            building.catchUp(timeToCatchUp);
+            building.catchUp(hours);
         }
+    }
+    public void setArena(Arena arena) {
+        this.arena = arena;
+    }
+    public void setPlayer(Player player) {
+        this.player = player;
     }
     private void loadBuildings() {
         for(Building building: getBuildings()) {
-            player.sendMessage(ChatColor.GRAY + "Loaded " + building.getDisplayName() + ChatColor.GRAY
+            player.sendMessage(ChatColor.GRAY + "Loaded " + building.getPlainDisplayName() + ChatColor.GRAY
                     + " Level " + building.getLevel());
             building.paste(arena);
         }
         if(buildingInHand != null) {
             player.sendMessage(ChatColor.GRAY + "You have a building in your hand: " +
-                    buildingInHand.getBuilding().getDisplayName());
+                    buildingInHand.getBuilding().getPlainDisplayName());
         }
     }
     @Override
@@ -175,5 +187,6 @@ public class Island implements Serializable, IFixedUpdatable {
         for(Building building : getBuildings()) {
             building.stopUpdates();
         }
+        this.arena = null;
     }
 }

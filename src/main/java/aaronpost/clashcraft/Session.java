@@ -3,6 +3,7 @@ package aaronpost.clashcraft;
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Currency.Currency;
 import aaronpost.clashcraft.Currency.Gold;
+import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Islands.Island;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -12,7 +13,6 @@ import org.bukkit.scoreboard.*;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalTime;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +20,7 @@ public class Session implements Serializable {
     private final Island island;
     private transient Scoreboard scoreboard;
     private transient Arena arena;
-    private Temporal timeUpdatesStopped = null;
+    private long timeUpdatesStopped = -1;
     private List<Currency> currencies = new ArrayList<>();
     private final UUID u;
 
@@ -30,13 +30,14 @@ public class Session implements Serializable {
         currencies.add(new Gold(p));
     }
     public void saveLogOffTime() {
-        timeUpdatesStopped = LocalTime.now();
+        timeUpdatesStopped = System.currentTimeMillis();
     }
-    public Duration retrieveTimeOffline() {
-        if(timeUpdatesStopped == null) {
-            return null;
+    public float retrieveHoursOffline() {
+        if(timeUpdatesStopped == -1) {
+            return -1;
         }
-        return Duration.between(timeUpdatesStopped, LocalTime.now());
+        return ((float) (System.currentTimeMillis() - timeUpdatesStopped)) * BuildingGlobals.MILLISECONDS_TO_SECONDS *
+                BuildingGlobals.SECONDS_TO_HOURS;
     }
     public void initializeScoreboard(Player player) {
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();

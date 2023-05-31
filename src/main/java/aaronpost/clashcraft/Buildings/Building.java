@@ -7,9 +7,13 @@ import aaronpost.clashcraft.Interfaces.IDisplayable;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Schematics.Schematics;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.UUID;
@@ -68,7 +72,19 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public void setSchematic(String schematicName) {
         this.schematic = Schematics.s.getSchematic(schematicName);
     }
-
+    public ItemStack getItemStack() {
+        ItemStack itemStack = getPlainItemStack();
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setDisplayName(getDisplayName());
+        itemStack.setItemMeta(meta);
+        return itemStack;
+    }
+    public String getDisplayName() {
+        return getPlainDisplayName() + ChatColor.GRAY + " Level " + getLevel();
+    }
+    public abstract ItemStack getPlainItemStack();
+    public abstract String getPlainDisplayName();
+    public abstract ChatColor getPrimaryColor();
     public int getGridLengthX() {
         return x;
     }
@@ -77,7 +93,7 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     }
     public void paste(Arena a) {
         schematic.pasteSchematic(absoluteLocation, 0);
-        ClashCraft.plugin.getServer().getLogger().info("Pasted " + getDisplayName() + " at " + absoluteLocation.toString());
+        ClashCraft.plugin.getServer().getLogger().info("Pasted " + getPlainDisplayName() + " at " + absoluteLocation.toString());
     }
     public void resetToGrass(Arena a) {
         schematic.resetToGrassLand(absoluteLocation.clone());

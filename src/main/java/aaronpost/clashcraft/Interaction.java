@@ -78,10 +78,10 @@ public class Interaction implements Listener {
                                     island.getBuildings().remove(building);
                                     island.putBuildingInHand(building);
                                     building.resetToGrass(playerArena);
-                                    player.getInventory().addItem(building.getItemStack());
+                                    player.getInventory().addItem(building.getPlainItemStack());
                                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
                                             TextComponent.fromLegacyText(ChatColor.GRAY + "Picked up "
-                                                    + building.getDisplayName()));
+                                                    + building.getPlainDisplayName()));
                                 } else {
                                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
                                             TextComponent.fromLegacyText(ChatColor.GRAY + " You can only have " +
@@ -93,7 +93,7 @@ public class Interaction implements Listener {
                             Building building = island.findBuildingAtLocation(player.getTargetBlockExact
                                     (500).getLocation());
                             if(building != null) {
-                                player.sendMessage(ChatColor.GRAY +  "todo menu for " + building.getDisplayName());
+                                player.sendMessage(ChatColor.GRAY +  "todo menu for " + building.getPlainDisplayName());
                             }
                         } else if (meta.hasLore()) {
                             List<String> lore = meta.getLore();
@@ -112,7 +112,7 @@ public class Interaction implements Listener {
                                                 if (fit3x3atTargetBlock) {
                                                     // this is reaching way too deep the island class should do all this
                                                     //island.deleteAllUUID(building.getUUID());
-                                                    player.getInventory().remove(buildingInHand.getItemStack());
+                                                    player.getInventory().remove(buildingInHand.getPlainItemStack());
                                                     //building.setLocation(targetBlockLoc);
                                                     //int x = (int) arena.getRelativeX(targetBlockLoc);
                                                     //int z = (int) arena.getRelativeZ(targetBlockLoc);
@@ -148,7 +148,7 @@ public class Interaction implements Listener {
                     Building building = island.findBuildingAtLocation(player.getTargetBlockExact(500).getLocation());
                     if(building != null) {
                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                                TextComponent.fromLegacyText(ChatColor.GRAY +  "Clicked on a " + building.getDisplayName()));
+                                TextComponent.fromLegacyText(ChatColor.GRAY +  "Clicked on a " + building.getPlainDisplayName()));
                     }
                 }
             }

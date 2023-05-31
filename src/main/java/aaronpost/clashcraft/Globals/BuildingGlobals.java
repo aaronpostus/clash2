@@ -3,14 +3,21 @@ package aaronpost.clashcraft.Globals;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.time.Duration;
 
 public class BuildingGlobals {
     // Collectors
-    public static float COLLECTION_RATE_DIVISOR = (1f/60f/60f);
+    public static float MILLISECONDS_TO_SECONDS = (1f/1000f);
+    public static float SECONDS_TO_HOURS = (1f/60f/60f);
     public static ItemStack GOLDMINE_ITEM_STACK = new ItemStack(Material.CHEST);
     public static String GOLDMINE_DISPLAY_NAME = ChatColor.YELLOW + "Gold Mine";
+    static {
+        ItemMeta meta = GOLDMINE_ITEM_STACK.getItemMeta();
+        meta.setDisplayName(GOLDMINE_DISPLAY_NAME);
+        GOLDMINE_ITEM_STACK.setItemMeta(meta);
+    }
     public static float[] GOLDMINE_COLLECTION_RATE = new float[]{ 200, 400, 600, 800, 1000 };
     public static float[] GOLDMINE_CAPACITY = new float[]{ 1000, 2000, 3000, 5000, 10000 };
     public static Duration[] GOLDMINE_BUILD_TIME = new Duration[]{ Duration.ofSeconds(10), Duration.ofMinutes(1),

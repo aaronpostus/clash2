@@ -54,7 +54,7 @@ public class BuildingInHand implements Serializable, IUpdatable {
     }
 
     @Override
-    public void catchUp(Duration duration) {
+    public void catchUp(float hours) {
 
     }
 

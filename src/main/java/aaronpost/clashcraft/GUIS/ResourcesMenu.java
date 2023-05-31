@@ -1,7 +1,6 @@
 package aaronpost.clashcraft.GUIS;
 
 import aaronpost.clashcraft.Buildings.Building;
-import aaronpost.clashcraft.Buildings.BuildingInHand;
 import aaronpost.clashcraft.Buildings.GoldMine;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Islands.Island;
@@ -77,7 +76,7 @@ public class ResourcesMenu implements Listener {
                             island.putBuildingInHand(new GoldMine(0,0));
                             // Gets building ItemStack with formatted lore, and gives it to player
                             Building building = island.getBuildingInHand();
-                            stack = building.getItemStack();
+                            stack = building.getPlainItemStack();
                             break;
                         }
                         case MAGENTA_CONCRETE:

@@ -1,15 +1,20 @@
 package aaronpost.clashcraft.Buildings;
-
 import aaronpost.clashcraft.Currency.Currency;
-import org.bukkit.inventory.ItemStack;
+import aaronpost.clashcraft.Globals.BuildingGlobals;
 
+// Author: Aaron Post
 public abstract class Collector extends Building {
     // reference to player's currency that we will add to
-    public Currency currency;
-    // collection rate. child should change this.
-    public float collectionRatePerHour = 1;
-    public int maxStorage = 10;
+    private Currency currency;
     private float amount = 0f;
+    public Collector() {
+        super();
+    }
+    public Collector(int x, int z) {
+        super(x,z);
+    }
+    abstract float getCollectionRate();
+    abstract float getCapacity();
     public void collect() {
         boolean storageFull = currency.deposit(getAmountStored());
         if(storageFull) {
@@ -17,20 +22,25 @@ public abstract class Collector extends Building {
         }
         amount = 0f;
     }
+    public void catchUp(float hoursPassed) {
+        tryToFill((float) hoursPassed * getCollectionRate());
+    }
+    public void startUpdates() {
+
+    }
+    public void stopUpdates() {
+
+    }
     public int getAmountStored() {
         return (int) Math.ceil(amount);
     }
     public void fixedUpdate() {
-        amount += (collectionRatePerHour / 60 / 60);
-        if(amount > maxStorage) {
-            amount = maxStorage;
-        }
-        else {
-            // update some visual indicator that shows gold collected
-            System.out.println("Gold Mine Collection: " + getAmountStored() + "/" + maxStorage);
-        }
+        tryToFill(getCollectionRate() * BuildingGlobals.SECONDS_TO_HOURS);
     }
-    public void setCollectionRate(float collectionRate) {
-        this.collectionRatePerHour = collectionRate;
+    private void tryToFill(float amountToFill) {
+        amount += amountToFill;
+        if(amount > getCapacity()) {
+            amount = getCapacity();
+        }
     }
 }

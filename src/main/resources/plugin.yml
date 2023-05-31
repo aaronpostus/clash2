@@ -6,3 +6,15 @@ commands:
   test:
     description: test command
     usage: /test
+  island:
+    description: go to island or back to spawn
+    usage: /island
+  debugtools:
+    description: get debug tools
+    usage: /debugtools
+  savecoordinates:
+    description: save coords with name
+    usage: /savecoordinates
+  createschematic:
+    description: create schematic with name
+    usage: /createschematic

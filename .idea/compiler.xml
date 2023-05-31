@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="ClashCraft" target="1.8" />
+      <module name="ClashCraft" target="9" />
     </bytecodeTargetLevel>
   </component>
 </project>

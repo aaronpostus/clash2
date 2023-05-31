@@ -1,5 +1,9 @@
 package aaronpost.clashcraft.Interfaces;
 
-public interface IFixedUpdatable {
+import java.time.Duration;
+
+public interface IFixedUpdatable extends IUpdate {
     public void fixedUpdate();
+
+
 }

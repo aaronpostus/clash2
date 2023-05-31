@@ -1,14 +1,16 @@
 package aaronpost.clashcraft.Currency;
 
-import aaronpost.clashcraft.Displayable;
+import aaronpost.clashcraft.Interfaces.IDisplayable;
+import java.io.Serializable;
 
-import java.util.UUID;
-
-public abstract class Currency extends Displayable {
-    public int amount;
-    public int maxAmount;
+public abstract class Currency implements Serializable, IDisplayable {
+    private int amount;
+    private int maxAmount;
     public int getAmount() {
         return amount;
+    }
+    public int getMaxAmount() {
+        return maxAmount;
     }
     public void setAmount(int amount) {
         this.amount = amount;

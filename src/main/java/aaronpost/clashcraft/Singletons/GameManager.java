@@ -48,7 +48,7 @@ public class GameManager {
             public void run() {
                 update();
             }
-        }.runTaskTimer(ClashCraft.plugin, 0, 1);
+        }.runTaskTimer(ClashCraft.plugin, 0, 3);
     }
     public void addUpdatable(IUpdatable updatable) {
         updatables.add(updatable);

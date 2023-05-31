@@ -7,6 +7,9 @@ public abstract class Collector extends Building {
     // reference to player's currency that we will add to
     private Currency currency;
     private float amount = 0f;
+    public Collector() {
+        super();
+    }
     public Collector(int x, int z) {
         super(x,z);
     }

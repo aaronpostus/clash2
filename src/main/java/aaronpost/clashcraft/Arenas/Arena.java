@@ -74,16 +74,17 @@ public class Arena {
 
                 // If player has a NEW building that they haven't placed down, this will give it back to them.
                 if(buildingInHand != null) {
-                    p.getInventory().addItem(buildingInHand.getPlainItemStack());
+                    p.getInventory().addItem(buildingInHand.getItemStack());
                 }
                 island.startUpdates();
+                GameManager.getInstance().addFixedUpdatable(island);
+                GameManager.getInstance().addUpdatable(island);
                 Sessions.s.getSession(p).initializeScoreboard(player);
 
                 p.setAllowFlight(true);
             }
         },  10);
-        GameManager.getInstance().addFixedUpdatable(island);
-        GameManager.getInstance().addUpdatable(island);
+
     }
     public boolean isValidGridLocation(Location loc) {
         Pair<Double,Double> gridPos = getGridLocFromAbsLoc(loc);
@@ -96,8 +97,10 @@ public class Arena {
         return new Pair<Double,Double>(loc.getX() - loc2.getX(), loc.getZ() - loc2.getZ());
     }
     public void unassign() {
+        GameManager.getInstance().removeFixedUpdatable(island);
         GameManager.getInstance().removeUpdatable(island);
-        GameManager.getInstance().removeUpdatable(island);
+        Arenas.a.sendToSpawn(player);
+        player.getInventory().clear();
         this.player.setAllowFlight(false);
         this.island.stopUpdates();
         this.player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());

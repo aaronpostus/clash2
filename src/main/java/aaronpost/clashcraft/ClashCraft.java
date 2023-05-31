@@ -6,13 +6,10 @@ import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.PersistentData.Serializer;
 import aaronpost.clashcraft.Schematics.Controller;
 import aaronpost.clashcraft.Schematics.Schematic;
-import aaronpost.clashcraft.Schematics.Schematics;
+import aaronpost.clashcraft.Singletons.Schematics;
 import aaronpost.clashcraft.Singletons.GameManager;
 import aaronpost.clashcraft.Singletons.Sessions;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -32,8 +29,6 @@ public class ClashCraft extends JavaPlugin {
     private Serializer s;
     @Override
     public void onEnable() {
-        // Plugin startup logic
-        System.out.println("running1");
         plugin = this;
         plugin.getDataFolder();
         GameManager gm = GameManager.getInstance();
@@ -81,7 +76,6 @@ public class ClashCraft extends JavaPlugin {
         } catch(IOException e) {
             e.printStackTrace();
         }
-
         for(Player p: list) {
             try {
                 Session session = Sessions.s.getSession(p);
@@ -89,6 +83,10 @@ public class ClashCraft extends JavaPlugin {
                     s.serializeSession(p, session);
                 }
                 ClashCraft.plugin.getLogger().info(p.getName() + "'s session has been saved!");
+                if(Arenas.a.playerAtArena(p)) {
+                    Arenas.a.findPlayerArena(p).unassign();
+                    ClashCraft.plugin.getLogger().info(p.getName() + "'s arena has been unassigned.");
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -163,9 +161,6 @@ public class ClashCraft extends JavaPlugin {
             } else {
                 player.sendMessage(Globals.prefix + ChatColor.GRAY + " Sent you to spawn.");
                 Arenas.a.findPlayerArena(player).unassign();
-                Arenas.a.sendToSpawn(player);
-                player.getInventory().clear();
-                // Take player to spawn
             }
             return true;
         }

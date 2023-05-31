@@ -2,17 +2,21 @@ package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.ClashCraft;
+import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Interfaces.IDisplayable;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Schematics.Schematic;
-import aaronpost.clashcraft.Schematics.Schematics;
+import aaronpost.clashcraft.Singletons.Schematics;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -27,11 +31,15 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     private transient Location absoluteLocation;
     private int level = 1;
     private boolean isNewBuilding;
+    public Building() {
+        this(-1,-1);
+        this.isNewBuilding = true;
+    }
     public Building(int x, int z) {
         this.uuid = UUID.randomUUID();
         this.x = x;
         this.z = z;
-        this.isNewBuilding = true;
+        this.isNewBuilding = false;
     }
     public void setArena(Arena arena) {
         this.arena = arena;
@@ -76,6 +84,9 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         ItemStack itemStack = getPlainItemStack();
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(getDisplayName());
+        PersistentDataContainer buildingData = meta.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(ClashCraft.plugin, BuildingGlobals.BUILDING_NAMESPACED_KEY);
+        buildingData.set(key, PersistentDataType.STRING, getUUID().toString());
         itemStack.setItemMeta(meta);
         return itemStack;
     }
@@ -85,12 +96,8 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public abstract ItemStack getPlainItemStack();
     public abstract String getPlainDisplayName();
     public abstract ChatColor getPrimaryColor();
-    public int getGridLengthX() {
-        return x;
-    }
-    public int getGridLengthZ() {
-        return z;
-    }
+    public abstract int getGridLengthX();
+    public abstract int getGridLengthZ();
     public void paste(Arena a) {
         schematic.pasteSchematic(absoluteLocation, 0);
         ClashCraft.plugin.getServer().getLogger().info("Pasted " + getPlainDisplayName() + " at " + absoluteLocation.toString());

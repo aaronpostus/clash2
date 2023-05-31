@@ -11,6 +11,9 @@ public class GoldMine extends Collector {
         super(x,z);
         // super.currency = Player's gold currency;
     }
+    public GoldMine() {
+        super();
+    }
 
     @Override
     public boolean isMaxLevel() { return getLevel() == BuildingGlobals.GOLDMINE_MAX_LEVEL; }
@@ -28,6 +31,16 @@ public class GoldMine extends Collector {
     }
     @Override
     public ChatColor getPrimaryColor() { return ChatColor.GRAY; }
+
+    @Override
+    public int getGridLengthX() {
+        return 3;
+    }
+
+    @Override
+    public int getGridLengthZ() {
+        return 3;
+    }
 
     @Override
     public ItemStack getPlainItemStack() {

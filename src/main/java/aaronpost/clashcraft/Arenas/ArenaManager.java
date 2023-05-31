@@ -14,7 +14,6 @@ public class ArenaManager implements Listener {
         Arena arena = Arenas.a.findPlayerArena(p);
         if(arena != null) {
             arena.unassign();
-            e.getPlayer().getInventory().clear();
         }
         p.setAllowFlight(false);
     }

@@ -36,6 +36,7 @@ public class Arenas {
         }
         return false;
     }
+
     public Arena findPlayerArena(Player p) {
         for(Arena arena: arenas) {
             if(arena.getPlayer() != null) {

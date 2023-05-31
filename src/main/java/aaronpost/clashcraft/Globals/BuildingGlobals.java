@@ -8,6 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.time.Duration;
 
 public class BuildingGlobals {
+    public static String BUILDING_NAMESPACED_KEY = "buildingUUID";
     // Collectors
     public static float MILLISECONDS_TO_SECONDS = (1f/1000f);
     public static float SECONDS_TO_HOURS = (1f/60f/60f);
@@ -24,6 +25,7 @@ public class BuildingGlobals {
             Duration.ofMinutes(4), Duration.ofMinutes(10), Duration.ofMinutes(40) };
     public static float[] GOLDMINE_COST = new float[] { 150, 300, 700, 1400, 3000 };
     public static int[] GOLDMINE_HITPOINTS = new int[]{ 400, 440, 480, 520, 560 };
+    public static ChatColor GOLDMINE_PRIMARY_COLOR = ChatColor.GOLD;
     // max level per townhall level
     public static int[] GOLDMINE_TOWN_HALL_LEVEL = new int[]{ 1, 1, 2, 2, 3};
     public static int GOLDMINE_MAX_LEVEL = 5;

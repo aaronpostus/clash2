@@ -7,9 +7,9 @@ import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Interfaces.IUpdatable;
 import aaronpost.clashcraft.Pair;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import javax.xml.stream.Location;
 import java.io.Serializable;
 import java.util.*;
 
@@ -36,8 +36,7 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         if(!hasBuildingInHand()) {
             return null;
         }
-        Building building = buildingInHand.getBuilding();
-        return building;
+        return buildingInHand.getBuilding();
     }
     public void removeBuildingInHand() {
         buildingInHand = null;
@@ -111,7 +110,7 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         return null;
     }
     public void putBuildingInHand(Building building) {
-        this.buildingInHand = new BuildingInHand(building);
+        this.buildingInHand = new BuildingInHand(building, arena);
     }
 
     // maybe pass through a list of ICommands instead
@@ -143,6 +142,13 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
     }
     public void setArena(Arena arena) {
         this.arena = arena;
+        for(Building building : getBuildings()) {
+            building.setArena(arena);
+        }
+        if(buildingInHand != null) {
+            this.buildingInHand.setArena(arena);
+        }
+        this.location = arena.getLoc();
     }
     public void setPlayer(Player player) {
         this.player = player;
@@ -180,9 +186,8 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
                 removeBuildingInHand();
             }
         }
-
         if(buildingInHand != null) {
-            buildingInHand.stopUpdates();
+            this.buildingInHand.stopUpdates();
         }
         for(Building building : getBuildings()) {
             building.stopUpdates();

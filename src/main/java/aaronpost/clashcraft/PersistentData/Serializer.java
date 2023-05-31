@@ -4,10 +4,9 @@ import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Currency.Currency;
 import aaronpost.clashcraft.Schematics.Schematic;
-import aaronpost.clashcraft.Schematics.Schematics;
+import aaronpost.clashcraft.Singletons.Schematics;
 import aaronpost.clashcraft.Session;
 import aaronpost.clashcraft.Singletons.Sessions;
-import aaronpost.clashcraft.Troop;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.bukkit.entity.Player;
@@ -30,7 +29,7 @@ public class Serializer implements Listener {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Building.class, new DeserializerAdapter<Building>(path + "Buildings."));
         builder.registerTypeAdapter(Currency.class, new DeserializerAdapter<Currency>(path + "Currency."));
-        //builder.setPrettyPrinting();
+        builder.setPrettyPrinting();
         this.sessionGson = builder.create();
     }
     @EventHandler

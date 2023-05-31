@@ -1,4 +1,6 @@
-package aaronpost.clashcraft.Schematics;
+package aaronpost.clashcraft.Singletons;
+
+import aaronpost.clashcraft.Schematics.Schematic;
 
 import java.io.Serializable;
 import java.util.ArrayList;

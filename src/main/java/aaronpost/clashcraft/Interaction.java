@@ -74,7 +74,7 @@ public class Interaction implements Listener {
                             if(building != null) {
                                 Building buildingInHand = island.getBuildingInHand();
                                 if(buildingInHand == null) {
-                                    BuildingInHand newBuildingInHand = new BuildingInHand(building);
+                                    BuildingInHand newBuildingInHand = new BuildingInHand(building, playerArena);
                                     island.getBuildings().remove(building);
                                     island.putBuildingInHand(building);
                                     building.resetToGrass(playerArena);

@@ -3,6 +3,7 @@ package aaronpost.clashcraft.Schematics;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.OfflineSkull;
+import aaronpost.clashcraft.Singletons.Schematics;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

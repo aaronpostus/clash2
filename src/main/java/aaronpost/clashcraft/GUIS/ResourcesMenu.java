@@ -73,10 +73,10 @@ public class ResourcesMenu implements Listener {
                     switch (e.getCurrentItem().getType()) {
                         case YELLOW_CONCRETE: {
                             // Creates a new building and puts it in the "hand" in the background
-                            island.putBuildingInHand(new GoldMine(0,0));
+                            island.putBuildingInHand(new GoldMine());
                             // Gets building ItemStack with formatted lore, and gives it to player
                             Building building = island.getBuildingInHand();
-                            stack = building.getPlainItemStack();
+                            stack = building.getItemStack();
                             break;
                         }
                         case MAGENTA_CONCRETE:

@@ -3,6 +3,8 @@ import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Buildings.BuildingInHand;
+import aaronpost.clashcraft.Globals.BuildingGlobals;
+import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Interfaces.IUpdatable;
 import aaronpost.clashcraft.Pair;
@@ -38,10 +40,14 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         }
         return buildingInHand.getBuilding();
     }
+    public void placeBuildingInHand() {
+        buildingInHand.place();
+    }
     public void removeBuildingInHand() {
         buildingInHand = null;
     }
     public boolean hasBuildingInHand() { return buildingInHand != null; }
+    public boolean hasBuilding(int x, int z) { return nodes[x][z] != null; }
     public Building getBuilding(int x, int z) {
         return buildings.get(nodes[x][z]);
     }
@@ -49,17 +55,19 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         return new ArrayList<>(this.buildings.values());
     }
     public void addBuilding(Building building, int x, int z) {
-        if(canAddBuilding(building, x, z)) {
+        if(canPlaceBuilding(building, x, z)) {
             addBuildingHelper(building, x, z);
         }
     }
     private void addBuildingHelper(Building building, int x, int z) {
         UUID buildingUUID = building.getUUID();
         //remove old building locations from grid
-        for(int i = x; i < x + building.getGridLengthX(); i++) {
-            for(int j = z; j < z + building.getGridLengthZ(); j++) {
-                if(nodes[i][j] == buildingUUID) {
-                    nodes[i][j] = null;
+        for(int i = 0; i < Arenas.GRID_X_LENGTH; i++) {
+            for(int j = 0; j < Arenas.GRID_Z_LENGTH; j++) {
+                if(nodes[i][j] != null) {
+                    if(nodes[i][j].equals(buildingUUID)) {
+                        nodes[i][j] = null;
+                    }
                 }
             }
         }
@@ -69,17 +77,19 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
                 nodes[i][j] = buildingUUID;
             }
         }
-        buildings.put(buildingUUID, building);
+        if(!buildings.containsKey(buildingUUID)) {
+            buildings.put(buildingUUID, building);
+        }
     }
     // Needs to account for fitting within the 40x40 grid, not colliding with other buildings, but can "collide" with itself.
-    public boolean canAddBuilding(Building building, org.bukkit.Location loc) {
+    public boolean canPlaceBuilding(Building building, org.bukkit.Location loc) {
         if(!arena.isValidGridLocation(loc)) {
             return false;
         }
         Pair<Double,Double> gridPos = arena.getGridLocFromAbsLoc(loc);
         return canAddBuildingHelper(building, gridPos);
     }
-    public boolean canAddBuilding(Building building, int x, int z) {
+    public boolean canPlaceBuilding(Building building, int x, int z) {
         return canAddBuildingHelper(building,new Pair<Double,Double>((double) x,(double)z));
     }
     private boolean canAddBuildingHelper(Building building, Pair<Double,Double> gridPos) {
@@ -142,6 +152,7 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
     }
     public void setArena(Arena arena) {
         this.arena = arena;
+        this.player = arena.getPlayer();
         for(Building building : getBuildings()) {
             building.setArena(arena);
         }
@@ -149,9 +160,6 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
             this.buildingInHand.setArena(arena);
         }
         this.location = arena.getLoc();
-    }
-    public void setPlayer(Player player) {
-        this.player = player;
     }
     private void loadBuildings() {
         for(Building building: getBuildings()) {
@@ -182,12 +190,10 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         }
         Building buildingInHand = getBuildingInHand();
         if(buildingInHand != null) {
+            this.buildingInHand.stopUpdates();
             if(!buildingInHand.isNewBuilding()) {
                 removeBuildingInHand();
             }
-        }
-        if(buildingInHand != null) {
-            this.buildingInHand.stopUpdates();
         }
         for(Building building : getBuildings()) {
             building.stopUpdates();

@@ -3,7 +3,11 @@ import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Buildings.BuildingInHand;
+import aaronpost.clashcraft.Commands.*;
 import aaronpost.clashcraft.GUIS.IslandMenu;
+import aaronpost.clashcraft.Globals.BuildingGlobals;
+import aaronpost.clashcraft.Globals.Globals;
+import aaronpost.clashcraft.Interfaces.IArenaCommand;
 import aaronpost.clashcraft.Islands.Island;
 import aaronpost.clashcraft.Singletons.Sessions;
 import net.md_5.bungee.api.ChatMessageType;
@@ -11,6 +15,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Fence;
@@ -23,134 +28,58 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Interaction implements Listener {
-
+    private Map<NamespacedKey, IArenaCommand> interactions;
+    private IArenaCommand leftClick = new LeftClickBuilding();
+    public Interaction() {
+        interactions = new HashMap<>();
+        interactions.put(Globals.NM_KEY_SHOP_ITEM, new OpenShopMenu());
+        interactions.put(Globals.NM_KEY_SPAWN_ITEM, new ReturnToSpawn());
+        interactions.put(Globals.NM_KEY_BLDNG_PICK_UP_ITEM, new PickBuildingUp());
+        interactions.put(Globals.NM_KEY_BLDNG_MENU_ITEM, new OpenBuildingMenu());
+        interactions.put(BuildingGlobals.NAMESPACED_KEY_IDENTIFIER, new PlaceBuilding());
+    }
     @EventHandler
     public void onDrop(PlayerDropItemEvent e) {
-        if(Arenas.a.findPlayerArena(e.getPlayer()) != null) {
+        if(Arenas.a.playerAtArena(e.getPlayer())) {
             e.setCancelled(true);
         }
     }
 
     @EventHandler
     public void inventoryItemClick(InventoryClickEvent e) {
-        if(Arenas.a.findPlayerArena((Player) e.getWhoClicked()) != null) {
+        if(Arenas.a.playerAtArena((Player) e.getWhoClicked())) {
             e.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void onItemClick(PlayerInteractEvent i) {
-        Arena playerArena = Arenas.a.findPlayerArena(i.getPlayer());
-        if(playerArena != null) {
-            Island island = playerArena.getIsland();
-            i.setCancelled(true);
-            EquipmentSlot slot = i.getHand(); //Get the hand of the event and set it to 'e'.
-            Player player = i.getPlayer();
-            if (slot.equals(EquipmentSlot.HAND)) { // checks for main hand to prevent from running twice
-                ItemStack item = i.getPlayer().getInventory().getItemInMainHand();
-                if (item.hasItemMeta()) {
-                    ItemMeta meta = item.getItemMeta();
-                    if (meta.hasDisplayName()) {
-                        String displayName = meta.getDisplayName();
-                        if (displayName.equals(ChatColor.GOLD + "Shop")) {
-                            ClashCraft.plugin.getServer().getPluginManager().registerEvents(
-                                    new IslandMenu(i.getPlayer()), ClashCraft.plugin);
-                        }
-                        else if (displayName.equals(ChatColor.LIGHT_PURPLE + "Return to Spawn")) {
-                            i.setCancelled(true);
-                            if (i.getItem() != null) {
-                                player.getInventory().remove(i.getItem());
-                            }
-                            player.performCommand("island");
-                        } else if(displayName.equals(ChatColor.RED + "Pick Building Up")) {
-                            Building building = island.findBuildingAtLocation(
-                                    player.getTargetBlockExact(500).getLocation());
-                            // This handles finding if there is a building, but also not interacting with the building
-                            // because "building" will be null if it is in your hand already!
-                            if(building != null) {
-                                Building buildingInHand = island.getBuildingInHand();
-                                if(buildingInHand == null) {
-                                    BuildingInHand newBuildingInHand = new BuildingInHand(building, playerArena);
-                                    island.getBuildings().remove(building);
-                                    island.putBuildingInHand(building);
-                                    building.resetToGrass(playerArena);
-                                    player.getInventory().addItem(building.getPlainItemStack());
-                                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                                            TextComponent.fromLegacyText(ChatColor.GRAY + "Picked up "
-                                                    + building.getPlainDisplayName()));
-                                } else {
-                                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                                            TextComponent.fromLegacyText(ChatColor.GRAY + " You can only have " +
-                                                    ChatColor.RED + "one " + ChatColor.GRAY +
-                                                    "building picked up at a time."));
-                                }
-                            }
-                        } else if(displayName.equals(ChatColor.AQUA + "Open Building Menu")) {
-                            Building building = island.findBuildingAtLocation(player.getTargetBlockExact
-                                    (500).getLocation());
-                            if(building != null) {
-                                player.sendMessage(ChatColor.GRAY +  "todo menu for " + building.getPlainDisplayName());
-                            }
-                        } else if (meta.hasLore()) {
-                            List<String> lore = meta.getLore();
-                            // Probably don't need this check
-                            if (lore.size() > 1) {
-                                Session playerSession = Sessions.s.getSession(player);
-                                if (playerSession != null) {
-                                    Building buildingInHand = island.getBuildingInHand();
-                                    if(buildingInHand != null) {
-                                        String uuid = ChatColor.stripColor(lore.get(1));
-                                        if(buildingInHand.getUUID().toString().equals(uuid)) {
-                                            if (playerArena.isValidGridLocation(i.getPlayer().getTargetBlockExact(500).getLocation())) {
-                                                Location targetBlockLoc = i.getPlayer().getTargetBlockExact(500).getLocation();
-                                                Arena arena = Arenas.a.findPlayerArena(i.getPlayer());
-                                                boolean fit3x3atTargetBlock = island.canAddBuilding(buildingInHand, targetBlockLoc);
-                                                if (fit3x3atTargetBlock) {
-                                                    // this is reaching way too deep the island class should do all this
-                                                    //island.deleteAllUUID(building.getUUID());
-                                                    player.getInventory().remove(buildingInHand.getPlainItemStack());
-                                                    //building.setLocation(targetBlockLoc);
-                                                    //int x = (int) arena.getRelativeX(targetBlockLoc);
-                                                    //int z = (int) arena.getRelativeZ(targetBlockLoc);
-                                                    //building.setRelativeLocation(x,z);
-                                                    buildingInHand.paste(playerArena);
-                                                    //island.addBuildingUUIDsToGrid(building);
-                                                    if(buildingInHand.isNewBuilding()) {
-                                                    //    building.changeToAssigned();
-                                                    }
-                                                    //island.addBuilding(buildingInHand);
-                                                    island.removeBuildingInHand();
-
-                                                } else {
-                                                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                                                            TextComponent.fromLegacyText(ChatColor.GRAY +
-                                                                    " Sorry, you "+ ChatColor.RED +"cannot "+
-                                                                    ChatColor.GRAY + "place that there."));
-                                                }
-                                            } else {
-                                                player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                                                        TextComponent.fromLegacyText(ChatColor.GRAY +
-                                                                " Sorry, you "+ ChatColor.RED +"cannot "+
-                                                                ChatColor.GRAY + "place that there."));
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-                } else {
-                    Building building = island.findBuildingAtLocation(player.getTargetBlockExact(500).getLocation());
-                    if(building != null) {
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                                TextComponent.fromLegacyText(ChatColor.GRAY +  "Clicked on a " + building.getPlainDisplayName()));
-                    }
-                }
+    public void onItemClick(PlayerInteractEvent interactEvent) {
+        Player player = interactEvent.getPlayer();
+        if(!Arenas.a.playerAtArena(player)) {
+            return;
+        }
+        Arena arena = Arenas.a.findPlayerArena(player);
+        Island island = arena.getIsland();
+        interactEvent.setCancelled(true);
+        ItemStack item = player.getInventory().getItemInMainHand();
+        ItemMeta meta = item.getItemMeta();
+        if(meta == null) {
+            leftClick.execute(arena);
+            return;
+        }
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        for(NamespacedKey namespacedKey : interactions.keySet()) {
+            if(data.has(namespacedKey, PersistentDataType.STRING)) {
+                interactions.get(namespacedKey).execute(arena);
+                return;
             }
         }
     }

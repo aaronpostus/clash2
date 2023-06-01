@@ -2,6 +2,7 @@ package aaronpost.clashcraft.Arenas;
 import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Buildings.GoldMine;
 import aaronpost.clashcraft.ClashCraft;
+import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Islands.Island;
 import aaronpost.clashcraft.Pair;
 import aaronpost.clashcraft.Session;
@@ -12,6 +13,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 public class Arena {
     private final Location loc;
@@ -29,11 +31,10 @@ public class Arena {
 
     public void assignPlayer(Player p) {
 
-        player = p;
-        session = Sessions.s.getSession(p);
-        island = session.getIsland();
-        island.setArena(this);
-        island.setPlayer(p);
+        this.player = p;
+        this.session = Sessions.s.getSession(p);
+        this.island = session.getIsland();
+        this.island.setArena(this);
         Location tpLoc = loc.clone();
 
         tpLoc.setX(tpLoc.getX() - 2);
@@ -43,21 +44,25 @@ public class Arena {
         ItemStack shop = new ItemStack(Material.BOOK);
         ItemMeta meta = shop.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD + "Shop");
+        meta.getPersistentDataContainer().set(Globals.NM_KEY_SHOP_ITEM, PersistentDataType.STRING, "shop");
         shop.setItemMeta(meta);
 
         ItemStack returnToSpawn = new ItemStack(Material.ENDER_PEARL);
         meta = returnToSpawn.getItemMeta();
         meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Return to Spawn");
+        meta.getPersistentDataContainer().set(Globals.NM_KEY_SPAWN_ITEM, PersistentDataType.STRING, "spawn");
         returnToSpawn.setItemMeta(meta);
 
         ItemStack pickUpTool = new ItemStack(Material.LEAD);
         meta = pickUpTool.getItemMeta();
         meta.setDisplayName(ChatColor.RED + "Pick Building Up");
+        meta.getPersistentDataContainer().set(Globals.NM_KEY_BLDNG_PICK_UP_ITEM, PersistentDataType.STRING, "pickup");
         pickUpTool.setItemMeta(meta);
 
         ItemStack openBuildingMenu = new ItemStack(Material.FLOWER_BANNER_PATTERN);
         meta = openBuildingMenu.getItemMeta();
         meta.setDisplayName(ChatColor.AQUA + "Open Building Menu");
+        meta.getPersistentDataContainer().set(Globals.NM_KEY_BLDNG_MENU_ITEM, PersistentDataType.STRING, "buildingMenu");
         openBuildingMenu.setItemMeta(meta);
 
         Bukkit.getScheduler().runTaskLater(ClashCraft.plugin, new Runnable() {

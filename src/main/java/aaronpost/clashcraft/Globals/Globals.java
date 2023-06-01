@@ -3,6 +3,7 @@ package aaronpost.clashcraft.Globals;
 import aaronpost.clashcraft.ClashCraft;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 
@@ -39,9 +40,9 @@ public class Globals {
     public static String GOLD_DISPLAY_NAME = ChatColor.YELLOW + "Gold";
 
 
-    // BUILDINGS
-
-    // GOLD MINE
-
-    public static int ELIXIR_TYPE = 2;
+    public static NamespacedKey NM_KEY_SHOP_ITEM = new NamespacedKey(ClashCraft.plugin, "shop");
+    public static NamespacedKey NM_KEY_BLDNG_MENU_ITEM= new NamespacedKey(ClashCraft.plugin, "buildingMenu");
+    public static NamespacedKey NM_KEY_BLDNG_PICK_UP_ITEM = new NamespacedKey(ClashCraft.plugin, "buildingPickUp");
+    public static NamespacedKey NM_KEY_SPAWN_ITEM = new NamespacedKey(ClashCraft.plugin, "buildingPickUp");
+    public static NamespacedKey NM_KEY_LEFT_CLICK_BLDNG = new NamespacedKey(ClashCraft.plugin, "leftClickBuilding");
 }

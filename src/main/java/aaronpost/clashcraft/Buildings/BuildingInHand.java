@@ -1,13 +1,17 @@
 package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Arenas.Arena;
-import aaronpost.clashcraft.ClashCraft;
+import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Interfaces.IUpdatable;
 import aaronpost.clashcraft.Islands.Island;
 import aaronpost.clashcraft.Pair;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,6 +31,7 @@ public class BuildingInHand implements Serializable, IUpdatable {
     private Building building;
     private transient Arena arena;
     private transient Island island;
+    private transient Player player;
     private transient int x = -1, z = -1;
     private transient List<Block> blockSilhoutte = new ArrayList<>();
 
@@ -38,17 +43,25 @@ public class BuildingInHand implements Serializable, IUpdatable {
      */
     public BuildingInHand(Building building, Arena arena) {
         this.building = building;
+        this.building.setArena(arena);
         this.arena = arena;
         this.island = arena.getIsland();
     }
     public Building getBuilding() { return building; }
     public void setArena(Arena arena) {
         this.arena = arena;
+        this.island = arena.getIsland();
+        this.player = arena.getPlayer();
+        this.x = -1;
+        this.z = -1;
     }
     public void place() {
-        //island.addBuilding();
-        if(building.isNewBuilding()) {
-            building.paste(arena);
+        if(island.canPlaceBuilding(building, x,z)) {
+            stopUpdates();
+            building.setArena(arena);
+            building.place(x,z);
+            island.addBuilding(building, x,z);
+            island.removeBuildingInHand();
         }
     }
 
@@ -81,9 +94,30 @@ public class BuildingInHand implements Serializable, IUpdatable {
             }
         }
     }
+    private boolean playerHoldingBuilding() {
+        if(this.player == null) {
+            this.player = arena.getPlayer();
+        }
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if(item == null) {
+            return false;
+        }
+        if(!item.hasItemMeta()) {
+            return false;
+        }
+        ItemMeta meta = item.getItemMeta();
+        if(meta == null) {
+            return false;
+        }
+        return meta.getPersistentDataContainer().has(BuildingGlobals.NAMESPACED_KEY_IDENTIFIER, PersistentDataType.STRING);
+    }
     @Override
     public void update() {
-        Block targetBlock = arena.getPlayer().getTargetBlockExact(500);
+        if(!playerHoldingBuilding()) {
+            removeOldSilhouette();
+            return;
+        }
+        Block targetBlock = player.getTargetBlockExact(500);
         // player is looking at the sky
         if(targetBlock == null) {
             this.x = -1;
@@ -97,16 +131,18 @@ public class BuildingInHand implements Serializable, IUpdatable {
             return;
         }**/
         // player is not looking at a valid grid location or building cannot fit there
-        if(!arena.isValidGridLocation(loc) || !island.canAddBuilding(building, loc)) {
-            this.x = (int) Math.ceil(loc.getX());
-            this.z = (int) Math.ceil(loc.getZ());
+        if(!arena.isValidGridLocation(loc) || !island.canPlaceBuilding(building, loc)) {
+            Pair<Double, Double> gridLoc = arena.getGridLocFromAbsLoc(loc);
+            this.x = (int) Math.ceil(gridLoc.first);
+            this.z = (int) Math.ceil(gridLoc.second);
             removeOldSilhouette();
             return;
         }
         removeOldSilhouette();
         addNewSilhouette(loc);
-        this.x = (int) Math.ceil(loc.getX());
-        this.z = (int) Math.ceil(loc.getZ());
+        Pair<Double, Double> gridLoc = arena.getGridLocFromAbsLoc(loc);
+        this.x = (int) Math.ceil(gridLoc.first);
+        this.z = (int) Math.ceil(gridLoc.second);
     }
 
     @Override
@@ -117,13 +153,13 @@ public class BuildingInHand implements Serializable, IUpdatable {
     @Override
     public void startUpdates() {
         this.island = arena.getIsland();
+        this.player = arena.getPlayer();
         building.stopUpdates();
         blockSilhoutte = new ArrayList<>();
     }
     @Override
     public void stopUpdates() {
-        removeOldSilhouette();
-        building.stopUpdates();
-        System.out.println("stopping updates");
+
+        if(building.isNewBuilding()) { removeOldSilhouette(); };
     }
 }

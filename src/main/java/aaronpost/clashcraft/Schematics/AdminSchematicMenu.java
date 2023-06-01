@@ -66,7 +66,7 @@ public class AdminSchematicMenu implements Listener {
                                 if (schematic.getName().equals(schematicName)) {
                                     if(!i.getClick().isShiftClick()) {
                                         if(i.getClick().isLeftClick()) {
-                                            schematic.pasteSchematic(i.getWhoClicked().getLocation(), 0);
+                                            schematic.pasteSchematic(i.getWhoClicked().getLocation());
                                             i.getWhoClicked().closeInventory();
                                         } else if (i.getClick().isRightClick()) {
                                             Schematics.s.getSchematics().remove(schematic);

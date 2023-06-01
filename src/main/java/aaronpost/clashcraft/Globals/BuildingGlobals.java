@@ -1,14 +1,18 @@
 package aaronpost.clashcraft.Globals;
 
+import aaronpost.clashcraft.ClashCraft;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.time.Duration;
 
 public class BuildingGlobals {
-    public static String BUILDING_NAMESPACED_KEY = "buildingUUID";
+    public static NamespacedKey NAMESPACED_KEY_UUID = new NamespacedKey(ClashCraft.plugin, "buildingUUID");
+    public static NamespacedKey NAMESPACED_KEY_IDENTIFIER = new NamespacedKey(ClashCraft.plugin, "buildingInHand");
+    public static enum BuildingStates { InHandNew, InHand, Upgrading, UpgradeComplete, IslandMode, DefenseMode }
     // Collectors
     public static float MILLISECONDS_TO_SECONDS = (1f/1000f);
     public static float SECONDS_TO_HOURS = (1f/60f/60f);

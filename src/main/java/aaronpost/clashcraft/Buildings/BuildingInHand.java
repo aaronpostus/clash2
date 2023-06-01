@@ -1,13 +1,16 @@
 package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Arenas.Arena;
-import aaronpost.clashcraft.ClashCraft;
+import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Interfaces.IUpdatable;
 import aaronpost.clashcraft.Islands.Island;
-import aaronpost.clashcraft.Pair;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,6 +30,7 @@ public class BuildingInHand implements Serializable, IUpdatable {
     private Building building;
     private transient Arena arena;
     private transient Island island;
+    private transient Player player;
     private transient int x = -1, z = -1;
     private transient List<Block> blockSilhoutte = new ArrayList<>();
 
@@ -81,9 +85,27 @@ public class BuildingInHand implements Serializable, IUpdatable {
             }
         }
     }
+    private boolean playerHoldingBuilding() {
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if(item == null) {
+            return false;
+        }
+        if(!item.hasItemMeta()) {
+            return false;
+        }
+        ItemMeta meta = item.getItemMeta();
+        if(meta == null) {
+            return false;
+        }
+        return meta.getPersistentDataContainer().has(BuildingGlobals.NAMESPACED_KEY_IDENTIFIER, PersistentDataType.STRING);
+    }
     @Override
     public void update() {
-        Block targetBlock = arena.getPlayer().getTargetBlockExact(500);
+        if(!playerHoldingBuilding()) {
+            removeOldSilhouette();
+            return;
+        }
+        Block targetBlock = player.getTargetBlockExact(500);
         // player is looking at the sky
         if(targetBlock == null) {
             this.x = -1;
@@ -117,6 +139,7 @@ public class BuildingInHand implements Serializable, IUpdatable {
     @Override
     public void startUpdates() {
         this.island = arena.getIsland();
+        this.player = arena.getPlayer();
         building.stopUpdates();
         blockSilhoutte = new ArrayList<>();
     }

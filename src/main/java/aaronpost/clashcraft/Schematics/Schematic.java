@@ -89,7 +89,7 @@ public class Schematic implements Serializable {
         this.yOffset = yOffset;
     }
 
-    public void pasteSchematic(Location origLoc, int delayInMilliseconds) {
+    public void pasteSchematic(Location origLoc) {
         Location loc = origLoc.clone();
         loc.setY(loc.getY() + yOffset);
         double initZ = loc.getZ();

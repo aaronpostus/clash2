@@ -3,6 +3,7 @@ package aaronpost.clashcraft.Buildings;
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
+import aaronpost.clashcraft.Globals.BuildingGlobals.BuildingStates;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Interfaces.IDisplayable;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
@@ -10,7 +11,6 @@ import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -24,22 +24,23 @@ import java.util.UUID;
 
 // Author: Aaron Post
 public abstract class Building implements IDisplayable, IFixedUpdatable, Serializable {
+
+    private BuildingStates state;
     private final UUID uuid;
     private int x, z;
     private Schematic schematic;
     private transient Arena arena;
     private transient Location absoluteLocation;
     private int level = 1;
-    private boolean isNewBuilding;
     public Building() {
         this(-1,-1);
-        this.isNewBuilding = true;
+        this.state = BuildingStates.InHandNew;
     }
     public Building(int x, int z) {
         this.uuid = UUID.randomUUID();
         this.x = x;
         this.z = z;
-        this.isNewBuilding = false;
+        this.state = BuildingStates.InHand;
     }
     public void setArena(Arena arena) {
         this.arena = arena;
@@ -57,16 +58,17 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     }
     boolean place() {
         // try to place, if i can't i return false
-
+        state = BuildingStates.IslandMode;
         return false;
     }
     boolean pickup() {
         // try to pickup, if i cant i return false
-
+        state = BuildingStates.InHand;
         return false;
     }
     boolean upgrade() {
         // try to upgrade, if i cant i return false
+        state = BuildingStates.Upgrading;
         return false;
     }
     void click() {
@@ -85,8 +87,8 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(getDisplayName());
         PersistentDataContainer buildingData = meta.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(ClashCraft.plugin, BuildingGlobals.BUILDING_NAMESPACED_KEY);
-        buildingData.set(key, PersistentDataType.STRING, getUUID().toString());
+        buildingData.set(BuildingGlobals.NAMESPACED_KEY_UUID, PersistentDataType.STRING, getUUID().toString());
+        buildingData.set(BuildingGlobals.NAMESPACED_KEY_IDENTIFIER, PersistentDataType.STRING, "building");
         itemStack.setItemMeta(meta);
         return itemStack;
     }
@@ -99,7 +101,7 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public abstract int getGridLengthX();
     public abstract int getGridLengthZ();
     public void paste(Arena a) {
-        schematic.pasteSchematic(absoluteLocation, 0);
+        schematic.pasteSchematic(absoluteLocation);
         ClashCraft.plugin.getServer().getLogger().info("Pasted " + getPlainDisplayName() + " at " + absoluteLocation.toString());
     }
     public void resetToGrass(Arena a) {
@@ -116,7 +118,4 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         return level;
     }
 
-    public boolean isNewBuilding() {
-        return isNewBuilding;
-    }
 }

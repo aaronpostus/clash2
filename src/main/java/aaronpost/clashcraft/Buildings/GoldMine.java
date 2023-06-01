@@ -1,6 +1,8 @@
 package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Globals.BuildingGlobals;
+import aaronpost.clashcraft.Schematics.Schematic;
+import aaronpost.clashcraft.Singletons.Schematics;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import java.time.Duration;
@@ -25,9 +27,15 @@ public class GoldMine extends Collector {
     @Override
     public ChatColor getPrimaryColor() { return ChatColor.GRAY; }
     @Override
-    public int getGridLengthX() { return 3; }
+    public int getGridLengthX() { return BuildingGlobals.GOLDMINE_GRID_LENGTH; }
     @Override
-    public int getGridLengthZ() { return 3; }
+    public int getGridLengthZ() { return BuildingGlobals.GOLDMINE_GRID_LENGTH; }
+
+    @Override
+    public Schematic getSchematic() {
+        return Schematics.s.getSchematic(BuildingGlobals.GOLDMINE_SCHEMATIC[getLevel() - 1]);
+    }
+
     @Override
     public ItemStack getPlainItemStack() { return BuildingGlobals.GOLDMINE_ITEM_STACK.clone(); }
     @Override

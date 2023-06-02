@@ -27,8 +27,7 @@ public class BuildingGlobals {
     }
     public static float[] GOLDMINE_COLLECTION_RATE = new float[]{ 200, 400, 600, 800, 1000 };
     public static float[] GOLDMINE_CAPACITY = new float[]{ 1000, 2000, 3000, 5000, 10000 };
-    public static Duration[] GOLDMINE_BUILD_TIME = new Duration[]{ Duration.ofSeconds(10), Duration.ofMinutes(1),
-            Duration.ofMinutes(4), Duration.ofMinutes(10), Duration.ofMinutes(40) };
+    public static long[] GOLDMINE_BUILD_TIME = new long[]{ 10, 60, 4 * 60, 10 * 60, 40 * 60 };
     public static float[] GOLDMINE_COST = new float[] { 150, 300, 700, 1400, 3000 };
     public static int[] GOLDMINE_HITPOINTS = new int[]{ 400, 440, 480, 520, 560 };
     public static int GOLDMINE_GRID_LENGTH = 5;

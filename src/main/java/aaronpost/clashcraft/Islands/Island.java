@@ -3,8 +3,6 @@ import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Buildings.BuildingInHand;
-import aaronpost.clashcraft.Globals.BuildingGlobals;
-import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Interfaces.IUpdatable;
 import aaronpost.clashcraft.Pair;
@@ -34,11 +32,14 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
             }
         }
     }
-    public Building getBuildingInHand() {
+    public Building getBuildingInBuildingInHand() {
         if(!hasBuildingInHand()) {
             return null;
         }
         return buildingInHand.getBuilding();
+    }
+    public BuildingInHand getBuildingInHand() {
+        return buildingInHand;
     }
     public void placeBuildingInHand() {
         buildingInHand.place();
@@ -86,15 +87,15 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         if(!arena.isValidGridLocation(loc)) {
             return false;
         }
-        Pair<Double,Double> gridPos = arena.getGridLocFromAbsLoc(loc);
+        Pair<Integer,Integer> gridPos = arena.getGridLocFromAbsLoc(loc);
         return canAddBuildingHelper(building, gridPos);
     }
     public boolean canPlaceBuilding(Building building, int x, int z) {
-        return canAddBuildingHelper(building,new Pair<Double,Double>((double) x,(double)z));
+        return canAddBuildingHelper(building,new Pair<Integer,Integer>(x,z));
     }
-    private boolean canAddBuildingHelper(Building building, Pair<Double,Double> gridPos) {
-        int x = gridPos.first.intValue();
-        int z = gridPos.second.intValue();
+    private boolean canAddBuildingHelper(Building building, Pair<Integer,Integer> gridPos) {
+        int x = gridPos.first;
+        int z = gridPos.second;
         int xLength = building.getGridLengthX();
         int zLength = building.getGridLengthZ();
         if(!(x + xLength <= Arenas.GRID_X_LENGTH && z + zLength <= Arenas.GRID_Z_LENGTH && x >= 0 && z >= 0)) {
@@ -114,8 +115,8 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
     // Returns the building at a given location. If there is no building (or it's not a valid location) we return null
     public Building findBuildingAtLocation(org.bukkit.Location targetBlock) {
         if(arena.isValidGridLocation(targetBlock)) {
-            Pair<Double,Double> gridLoc = arena.getGridLocFromAbsLoc(targetBlock);
-            return getBuilding(gridLoc.first.intValue(),gridLoc.second.intValue());
+            Pair<Integer,Integer> gridLoc = arena.getGridLocFromAbsLoc(targetBlock);
+            return getBuilding(gridLoc.first,gridLoc.second);
         }
         return null;
     }
@@ -154,7 +155,7 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         this.arena = arena;
         this.player = arena.getPlayer();
         for(Building building : getBuildings()) {
-            building.setArena(arena);
+            building.refreshReferences(arena);
         }
         if(buildingInHand != null) {
             this.buildingInHand.setArena(arena);
@@ -188,7 +189,7 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         for(Building building: getBuildings()) {
             building.resetToGrass(arena);
         }
-        Building buildingInHand = getBuildingInHand();
+        Building buildingInHand = getBuildingInBuildingInHand();
         if(buildingInHand != null) {
             this.buildingInHand.stopUpdates();
             if(!buildingInHand.isNewBuilding()) {

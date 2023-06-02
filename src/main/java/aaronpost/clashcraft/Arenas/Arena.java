@@ -1,6 +1,5 @@
 package aaronpost.clashcraft.Arenas;
 import aaronpost.clashcraft.Buildings.Building;
-import aaronpost.clashcraft.Buildings.GoldMine;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Islands.Island;
@@ -30,7 +29,7 @@ public class Arena {
     }
 
     public void assignPlayer(Player p) {
-
+        p.getInventory().clear();
         this.player = p;
         this.session = Sessions.s.getSession(p);
         this.island = session.getIsland();
@@ -75,7 +74,7 @@ public class Arena {
                 p.getInventory().setItem(8, returnToSpawn);
                 p.setGameMode(GameMode.ADVENTURE);
 
-                Building buildingInHand = island.getBuildingInHand();
+                Building buildingInHand = island.getBuildingInBuildingInHand();
 
                 // If player has a NEW building that they haven't placed down, this will give it back to them.
                 if(buildingInHand != null) {
@@ -84,22 +83,28 @@ public class Arena {
                 island.startUpdates();
                 GameManager.getInstance().addFixedUpdatable(island);
                 GameManager.getInstance().addUpdatable(island);
-                Sessions.s.getSession(p).initializeScoreboard(player);
-
+                session.refreshScoreboard();
+                float hoursOffline = session.retrieveHoursOffline();
+                if(hoursOffline > 0) {
+                    island.catchUp(hoursOffline);
+                }
                 p.setAllowFlight(true);
             }
         },  10);
 
     }
     public boolean isValidGridLocation(Location loc) {
-        Pair<Double,Double> gridPos = getGridLocFromAbsLoc(loc);
+        Pair<Integer,Integer> gridPos = getGridLocFromAbsLoc(loc);
         return 0 <= gridPos.first && gridPos.first < Arenas.GRID_X_LENGTH &&
                 0 <= gridPos.second && gridPos.second < Arenas.GRID_Z_LENGTH;
     }
-    public Pair<Double, Double> getGridLocFromAbsLoc(Location origLoc) {
+    public boolean isValidGridLocation(int x, int z) {
+        return x < Arenas.GRID_X_LENGTH && z < Arenas.GRID_Z_LENGTH && x > 0 && z > 0;
+    }
+    public Pair<Integer, Integer> getGridLocFromAbsLoc(Location origLoc) {
         Location loc = origLoc.clone();
         Location loc2 = this.loc.clone();
-        return new Pair<Double,Double>(loc.getX() - loc2.getX(), loc.getZ() - loc2.getZ());
+        return new Pair<Integer,Integer>((int)(loc.getX() - loc2.getX()), (int)(loc.getZ() - loc2.getZ()));
     }
     public void unassign() {
         GameManager.getInstance().removeFixedUpdatable(island);

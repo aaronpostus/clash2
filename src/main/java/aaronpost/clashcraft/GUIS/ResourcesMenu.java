@@ -4,6 +4,7 @@ import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Buildings.GoldMine;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Islands.Island;
+import aaronpost.clashcraft.Session;
 import aaronpost.clashcraft.Singletons.Sessions;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -67,15 +68,16 @@ public class ResourcesMenu implements Listener {
                 // Kills the listener for this class, closes inventory
                 HandlerList.unregisterAll(this);
                 e.getWhoClicked().closeInventory();
-                Island island = Sessions.s.getSession(p).getIsland();
-                if(island.getBuildingInHand() == null) {
+                Session session = Sessions.s.getSession(p);
+                Island island = session.getIsland();
+                if(island.getBuildingInBuildingInHand() == null) {
                     ItemStack stack = new ItemStack(Material.AIR);
                     switch (e.getCurrentItem().getType()) {
                         case YELLOW_CONCRETE: {
                             // Creates a new building and puts it in the "hand" in the background
-                            island.putBuildingInHand(new GoldMine());
+                            island.putBuildingInHand(new GoldMine(session.getGold()));
                             // Gets building ItemStack with formatted lore, and gives it to player
-                            Building building = island.getBuildingInHand();
+                            Building building = island.getBuildingInBuildingInHand();
                             stack = building.getItemStack();
                             break;
                         }

@@ -27,7 +27,7 @@ public class Session implements Serializable {
     public Session(Player p) {
         u = p.getUniqueId();
         island = new Island();
-        currencies.add(new Gold(p));
+        currencies.add(new Gold(this));
     }
     public void saveLogOffTime() {
         timeUpdatesStopped = System.currentTimeMillis();
@@ -39,7 +39,8 @@ public class Session implements Serializable {
         return ((float) (System.currentTimeMillis() - timeUpdatesStopped)) * BuildingGlobals.MILLISECONDS_TO_SECONDS *
                 BuildingGlobals.SECONDS_TO_HOURS;
     }
-    public void initializeScoreboard(Player player) {
+    public void refreshScoreboard() {
+        Player player = getPlayer();
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective objective = scoreboard.registerNewObjective("x", "y", ChatColor.BOLD +
                 StringUtils.upperCase(player.getName() + "'s Island"));
@@ -54,6 +55,14 @@ public class Session implements Serializable {
         }
         player.setScoreboard(scoreboard);
 
+    }
+    public Gold getGold() {
+        for(Currency currency : currencies) {
+            if(currency instanceof Gold) {
+                return (Gold) currency;
+            }
+        }
+        return null;
     }
     public Island getIsland() {
         return island;

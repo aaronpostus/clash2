@@ -1,14 +1,14 @@
 package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Arenas.Arena;
-import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Globals.BuildingGlobals.BuildingStates;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Interfaces.IDisplayable;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Schematics.Schematic;
-import aaronpost.clashcraft.Singletons.Schematics;
+import aaronpost.clashcraft.Session;
+import aaronpost.clashcraft.Singletons.Sessions;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -28,8 +28,12 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     private final UUID uuid;
     private int x, z;
     private transient Arena arena;
+    private transient Session session;
     private transient Location absoluteLocation;
     private int level = 1;
+    private long updateTime;
+    private transient int layersBuilt = 0;
+    private int nextLevel = 1;
     public Building() {
         this(-1,-1);
         this.state = BuildingStates.InHandNew;
@@ -40,8 +44,9 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         this.z = z;
         this.state = BuildingStates.InHand;
     }
-    public void setArena(Arena arena) {
+    public void refreshReferences(Arena arena) {
         this.arena = arena;
+        this.session = Sessions.s.getSession(arena.getPlayer());
         updateAbsoluteLocation();
     }
     private void updateAbsoluteLocation() {
@@ -54,9 +59,42 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         this.z = z;
         updateAbsoluteLocation();
     }
+    public Arena getArena() {
+        return arena;
+    }
+    public Session getSession() {
+        return session;
+    }
+    @Override
+    public void fixedUpdate() {
+        if(state == BuildingStates.IslandMode) {
+            islandModeUpdate();
+        }
+        else if(state == BuildingStates.Upgrading) {
+            if(updateTime == getTimeToBuild(nextLevel)) {
+
+            }
+            updateTime += 1;
+        }
+        visualUpdate();
+    }
+    private void visualUpdate() {
+        if(state == BuildingStates.Upgrading) {
+            if(getSchematic().constructionNeedsUpdate(layersBuilt, getPercentageBuilt())) {
+                paste(arena);
+            }
+        }
+    }
+    public abstract void visualUpdate2();
+    public abstract void islandModeUpdate();
+    public void sendMessage(String message) {
+        arena.getPlayer().sendMessage(getPlainDisplayName() + ChatColor.DARK_GRAY + ": " + ChatColor.GRAY + message);
+    }
     public boolean place(int x, int z) {
         setRelativeLocation(x,z);
-        state = BuildingStates.IslandMode;
+        if(state == BuildingStates.InHandNew) {
+            upgrade();
+        }
         startUpdates();
         paste(arena);
         return false;
@@ -66,8 +104,11 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         arena.getIsland().putBuildingInHand(this);
     }
     public boolean upgrade() {
-        // try to upgrade, if i cant i return false
+        if(state != BuildingStates.InHandNew) {
+            nextLevel = 1;
+        }
         state = BuildingStates.Upgrading;
+        paste(arena);
         return false;
     }
     public void click() {
@@ -86,6 +127,9 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         itemStack.setItemMeta(meta);
         return itemStack;
     }
+    public int getNextLevel() {
+        return nextLevel;
+    }
     public String getDisplayName() {
         return getPlainDisplayName() + ChatColor.GRAY + " Level " + getLevel();
     }
@@ -94,12 +138,22 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public abstract ChatColor getPrimaryColor();
     public abstract int getGridLengthX();
     public abstract int getGridLengthZ();
+    public long getRemainingUpdateTime() {
+        return getTimeToBuild(nextLevel);
+    }
+    public float getPercentageBuilt() {
+        return (updateTime / (float) getTimeToBuild(nextLevel));
+    }
+    public abstract long getTimeToBuild(int level);
     public abstract Schematic getSchematic();
     public void paste(Arena a) {
         updateAbsoluteLocation();
-        System.out.println(absoluteLocation);
+        Schematic schematic = getSchematic();
+        if(state == BuildingStates.Upgrading) {
+            schematic.pasteSchematicConstruction(absoluteLocation, schematic.layersToBuild(getPercentageBuilt()));
+            return;
+        }
         getSchematic().pasteSchematic(absoluteLocation);
-        ClashCraft.plugin.getServer().getLogger().info("Pasted " + getPlainDisplayName() + " at " + absoluteLocation.toString());
     }
     public void resetToGrass(Arena a) {
         getSchematic().resetToGrassLand(absoluteLocation.clone());
@@ -110,7 +164,6 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         }
     }
     public abstract boolean isMaxLevel();
-    public abstract Duration getUpgradeTime();
     public int getLevel() {
         return level;
     }

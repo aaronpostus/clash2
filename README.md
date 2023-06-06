@@ -4,3 +4,5 @@ Ver 1.0 alpha will include functional gold mines, elixir collector, gold storage
    
 This project makes use of Xavier Guzman's pathfinding library https://github.com/xaguzman/pathfinding
 as well as Google's Json serialization library "Gson" https://github.com/google/gson
+
+https://github.com/Flo0/GUITutorial

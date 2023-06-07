@@ -1,14 +1,15 @@
 package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Arenas.Arena;
-import aaronpost.clashcraft.ClashCraft;
+import aaronpost.clashcraft.Buildings.BuildingStates.*;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
-import aaronpost.clashcraft.Globals.BuildingGlobals.BuildingStates;
 import aaronpost.clashcraft.Globals.Globals;
+import aaronpost.clashcraft.Buildings.BuildingStates.IBuildingState;
 import aaronpost.clashcraft.Interfaces.IDisplayable;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Schematics.Schematic;
-import aaronpost.clashcraft.Singletons.Schematics;
+import aaronpost.clashcraft.Session;
+import aaronpost.clashcraft.Singletons.Sessions;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -17,35 +18,42 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-
 import java.io.Serializable;
-import java.time.Duration;
 import java.util.UUID;
 
 // Author: Aaron Post
 public abstract class Building implements IDisplayable, IFixedUpdatable, Serializable {
-    private BuildingStates state;
+    public IBuildingState state;
     private final UUID uuid;
-    private int x, z;
+    private int x, z, level = 1, nextLevel = 1;
     private transient Arena arena;
+    private transient Session session;
     private transient Location absoluteLocation;
-    private int level = 1;
-    public Building() {
-        this(-1,-1);
-        this.state = BuildingStates.InHandNew;
+    private long buildTime;
+    private transient int layersBuilt = 0;
+    // New building in hand
+    public Building(Arena arena) {
+        this.uuid = UUID.randomUUID();
+        this.x=-1;
+        this.z=-1;
+        this.arena = arena;
+        this.state = new InHandNewState(this);
     }
+    // Add level 1 building that doesn't have to build (townhall, clan castle, etc.)
     public Building(int x, int z) {
         this.uuid = UUID.randomUUID();
         this.x = x;
         this.z = z;
-        this.state = BuildingStates.InHand;
+        this.state = new IslandState(this);
     }
-    public void setArena(Arena arena) {
+    public void refreshReferences(Arena arena) {
         this.arena = arena;
+        this.session = Sessions.s.getSession(arena.getPlayer());
+        this.state.refreshReferences(this);
         updateAbsoluteLocation();
     }
     private void updateAbsoluteLocation() {
-        this.absoluteLocation = arena.getLoc().clone();
+        this.absoluteLocation = this.arena.getLoc().clone();
         this.absoluteLocation.setX(x + absoluteLocation.getX());
         this.absoluteLocation.setZ(z + absoluteLocation.getZ());
     }
@@ -54,28 +62,60 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         this.z = z;
         updateAbsoluteLocation();
     }
-    public boolean place(int x, int z) {
-        setRelativeLocation(x,z);
-        state = BuildingStates.IslandMode;
-        startUpdates();
-        paste(arena);
-        return false;
+    public void clickRequest() {
+        state.click();
     }
-    public void pickup() {
-        state = BuildingStates.InHand;
-        arena.getIsland().putBuildingInHand(this);
+    public void catchUpRequest(float hoursToCatchUp) {
+        state.catchUp(hoursToCatchUp);
     }
-    public boolean upgrade() {
-        // try to upgrade, if i cant i return false
-        state = BuildingStates.Upgrading;
-        return false;
+    public void openMenuRequest() {
+        state.openMenu();
     }
-    public void click() {
-        arena.getPlayer().sendMessage(getDisplayName() + " click");
+    @Override
+    public void fixedUpdateRequest() {
+        state.update();
     }
-    public UUID getUUID() {
-        return uuid;
+    public void pickupRequest() {
+        state.pickup();
     }
+    public void placeRequest(int x, int z) {
+        state.place(x,z);
+    }
+    public void visualUpdateRequest() {
+        state.visualUpdate();
+    }
+    // abstract methods -- you probably meant to access a "request" method instead.
+    public abstract void click();
+    public abstract void openMenu();
+    public abstract void catchUp(float hoursToCatchUp);
+    public abstract void update();
+    public abstract void visualUpdate();
+    public abstract ItemStack getPlainItemStack();
+    public abstract String getPlainDisplayName();
+    public abstract ChatColor getPrimaryColor();
+    public abstract int getGridLengthX();
+    public abstract int getGridLengthZ();
+    public abstract long getTimeToBuild(int level);
+    public abstract Schematic getSchematic();
+    public abstract int getMaxLevel();
+    public boolean isMaxLevel() {
+        return getLevel() == getMaxLevel();
+    }
+    // getters
+    public Arena getArena() {
+        return arena;
+    }
+    public Session getSession() { return session; }
+    public UUID getUUID() { return uuid; }
+    public int getNextLevel() { return nextLevel; }
+    public String getDisplayName() { return getPlainDisplayName() + ChatColor.GRAY + " Level " + getLevel(); }
+    public long getRemainingUpdateTime() { return getTimeToBuild(nextLevel); }
+    public int getLayersBuilt() { return layersBuilt; }
+    public void setLayersBuilt(int layers) { this.layersBuilt = layers; }
+    public float getPercentageBuilt() { return (buildTime / (float) getTimeToBuild(nextLevel)); }
+    public int getLevel() { return level; }
+
+    public boolean isNewBuilding() { return state instanceof InHandNewState; }
     public ItemStack getItemStack() {
         ItemStack itemStack = getPlainItemStack();
         ItemMeta meta = itemStack.getItemMeta();
@@ -86,36 +126,44 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         itemStack.setItemMeta(meta);
         return itemStack;
     }
-    public String getDisplayName() {
-        return getPlainDisplayName() + ChatColor.GRAY + " Level " + getLevel();
+    public void sendMessage(String message) {
+        arena.sendActionBar(getPlainDisplayName() + ChatColor.DARK_GRAY + ": " + ChatColor.GRAY + message);
     }
-    public abstract ItemStack getPlainItemStack();
-    public abstract String getPlainDisplayName();
-    public abstract ChatColor getPrimaryColor();
-    public abstract int getGridLengthX();
-    public abstract int getGridLengthZ();
-    public abstract Schematic getSchematic();
-    public void paste(Arena a) {
+    public void place(int x, int z) {
+        setRelativeLocation(x,z);
+        startUpdates();
+        paste();
+    }
+    public void pickup() {
+        arena.getIsland().putBuildingInHand(this);
+        resetToGrass();
+    }
+    public void buildStep() {
+        this.buildTime += 1;
+    }
+    public boolean upgrade() {
+        if(state instanceof InHandNewState) {
+            nextLevel = 1;
+        }
+        state = new BuildingState(this);
+        paste();
+        return false;
+    }
+    public void paste() {
         updateAbsoluteLocation();
-        System.out.println(absoluteLocation);
+        Schematic schematic = getSchematic();
+        if(state instanceof BuildingState) {
+            schematic.pasteSchematicConstruction(absoluteLocation, schematic.layersToBuild(getPercentageBuilt()));
+            return;
+        }
         getSchematic().pasteSchematic(absoluteLocation);
-        ClashCraft.plugin.getServer().getLogger().info("Pasted " + getPlainDisplayName() + " at " + absoluteLocation.toString());
     }
-    public void resetToGrass(Arena a) {
+    public void resetToGrass() {
         getSchematic().resetToGrassLand(absoluteLocation.clone());
         for(Entity entity: Globals.world.getNearbyEntities(absoluteLocation, 7, 7,7)) {
             if(entity.getType().equals(EntityType.DROPPED_ITEM)) {
                 entity.remove();
             }
         }
-    }
-    public abstract boolean isMaxLevel();
-    public abstract Duration getUpgradeTime();
-    public int getLevel() {
-        return level;
-    }
-
-    public boolean isNewBuilding() {
-        return state == BuildingStates.InHandNew;
     }
 }

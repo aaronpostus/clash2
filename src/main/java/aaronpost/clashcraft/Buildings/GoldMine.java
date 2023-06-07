@@ -1,5 +1,7 @@
 package aaronpost.clashcraft.Buildings;
 
+import aaronpost.clashcraft.Arenas.Arena;
+import aaronpost.clashcraft.Currency.Currency;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
@@ -9,17 +11,15 @@ import java.time.Duration;
 
 // Author: Aaron Post
 public class GoldMine extends Collector {
-    public GoldMine(int x, int z) {
-        super(x,z);
+    public GoldMine(Currency currency, int x, int z) {
+        super(currency, x,z);
         // super.currency = Player's gold currency;
     }
-    public GoldMine() {
-        super();
+    public GoldMine(Arena arena, Currency currency) {
+        super(arena, currency);
     }
     @Override
-    public boolean isMaxLevel() { return getLevel() == BuildingGlobals.GOLDMINE_MAX_LEVEL; }
-    @Override
-    public Duration getUpgradeTime() { return BuildingGlobals.GOLDMINE_BUILD_TIME[getLevel() - 1]; }
+    public int getMaxLevel() { return BuildingGlobals.GOLDMINE_MAX_LEVEL; }
     @Override
     float getCollectionRate() { return BuildingGlobals.GOLDMINE_COLLECTION_RATE[getLevel() - 1]; }
     @Override
@@ -30,12 +30,22 @@ public class GoldMine extends Collector {
     public int getGridLengthX() { return BuildingGlobals.GOLDMINE_GRID_LENGTH; }
     @Override
     public int getGridLengthZ() { return BuildingGlobals.GOLDMINE_GRID_LENGTH; }
+    @Override
+    public long getTimeToBuild(int level) { return BuildingGlobals.GOLDMINE_BUILD_TIME[level-1]; }
 
     @Override
     public Schematic getSchematic() {
         return Schematics.s.getSchematic(BuildingGlobals.GOLDMINE_SCHEMATIC[getLevel() - 1]);
     }
 
+    @Override
+    public void visualUpdate() {
+
+    }
+    @Override
+    public void openMenu() {
+
+    }
     @Override
     public ItemStack getPlainItemStack() { return BuildingGlobals.GOLDMINE_ITEM_STACK.clone(); }
     @Override

@@ -11,8 +11,8 @@ public class Arenas {
 
     private ArrayList<Arena> arenas = new ArrayList<>();
     public static Arenas a = new Arenas();
-    public static int GRID_X_LENGTH = 55;
-    public static int GRID_Z_LENGTH = 55;
+    public static int GRID_X_LENGTH = 90;
+    public static int GRID_Z_LENGTH = 90;
     public static Location spawn = new Location(Globals.world, 54, 68, 11);
 
     public Arenas() {

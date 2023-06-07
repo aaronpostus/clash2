@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Sessions {
-    private Map<Player,Session> sessions = new HashMap<>();
+    private final Map<Player,Session> sessions = new HashMap<>();
     public static Sessions s = new Sessions();
     public void addSession(Player p, Session s) { sessions.put(p,s); }
     public void removeSession(Player p) { sessions.remove(p); }

@@ -4,7 +4,6 @@ import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Interfaces.IArenaCommand;
 import aaronpost.clashcraft.Islands.Island;
-import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -21,6 +20,6 @@ public class OpenBuildingMenu implements IArenaCommand {
         if(building == null) {
             return;
         }
-        player.sendMessage(ChatColor.GRAY +  "todo menu for " + building.getPlainDisplayName());
+        building.openMenuRequest();
     }
 }

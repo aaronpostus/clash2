@@ -1,6 +1,7 @@
 package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Arenas.Arena;
+import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Interfaces.IUpdatable;
 import aaronpost.clashcraft.Islands.Island;
@@ -43,7 +44,7 @@ public class BuildingInHand implements Serializable, IUpdatable {
      */
     public BuildingInHand(Building building, Arena arena) {
         this.building = building;
-        this.building.setArena(arena);
+        this.building.refreshReferences(arena);
         this.arena = arena;
         this.island = arena.getIsland();
     }
@@ -56,13 +57,11 @@ public class BuildingInHand implements Serializable, IUpdatable {
         this.z = -1;
     }
     public void place() {
-        if(island.canPlaceBuilding(building, x,z)) {
-            stopUpdates();
-            building.setArena(arena);
-            building.place(x,z);
-            island.addBuilding(building, x,z);
-            island.removeBuildingInHand();
-        }
+        stopUpdates();
+        building.refreshReferences(arena);
+        building.placeRequest(x,z);
+        island.addBuilding(building, x,z);
+        island.removeBuildingInHand();
     }
 
     // Will check if schematic needs an update.
@@ -78,7 +77,7 @@ public class BuildingInHand implements Serializable, IUpdatable {
         }
         blockSilhoutte = new ArrayList<>();
     }
-    private void addNewSilhouette(Location loc) {
+    private void addSilhouette(Location loc) {
         int x = (int)Math.ceil(loc.getX());
         int z = (int)Math.ceil(loc.getZ());
         int y = (int)Math.floor(arena.getLoc().getY() - 1);
@@ -89,8 +88,30 @@ public class BuildingInHand implements Serializable, IUpdatable {
                 blockLoc.setY(y);
                 blockLoc.setZ(z + j);
                 Block block = blockLoc.getBlock();
-                block.setType(Material.TARGET);
+                block.setType(Material.LIME_CONCRETE);
                 blockSilhoutte.add(block);
+            }
+        }
+    }
+    private void addCantPlaceSilhouette(Location loc) {
+        Pair<Integer, Integer> gridLoc = arena.getGridLocFromAbsLoc(loc);
+        int x = (int) Math.ceil(loc.getX());
+        int z = (int) Math.ceil(loc.getZ());
+        int y = (int) Math.floor(arena.getLoc().getY() - 1);
+        for (int i = 0; i < building.getGridLengthX(); i++) {
+            for (int j = 0; j < building.getGridLengthZ(); j++) {
+                Location blockLoc = arena.getLoc().clone();
+                blockLoc.setX(x + i);
+                blockLoc.setY(y);
+                blockLoc.setZ(z + j);
+                int gridX = gridLoc.first + i;
+                int gridZ = gridLoc.second + j;
+                Block block = blockLoc.getBlock();
+                if (arena.isValidGridLocation(gridX, gridZ) && (!island.hasBuilding(gridX, gridZ) ||
+                        (island.hasBuilding(gridX, gridZ) && island.getBuilding(gridX, gridZ).equals(building)))) {
+                    block.setType(Material.RED_CONCRETE);
+                    blockSilhoutte.add(block);
+                }
             }
         }
     }
@@ -110,6 +131,9 @@ public class BuildingInHand implements Serializable, IUpdatable {
             return false;
         }
         return meta.getPersistentDataContainer().has(BuildingGlobals.NAMESPACED_KEY_IDENTIFIER, PersistentDataType.STRING);
+    }
+    public Pair<Integer,Integer> getSelectedGridPos() {
+        return new Pair<>(x,z);
     }
     @Override
     public void update() {
@@ -131,22 +155,30 @@ public class BuildingInHand implements Serializable, IUpdatable {
             return;
         }**/
         // player is not looking at a valid grid location or building cannot fit there
-        if(!arena.isValidGridLocation(loc) || !island.canPlaceBuilding(building, loc)) {
-            Pair<Double, Double> gridLoc = arena.getGridLocFromAbsLoc(loc);
-            this.x = (int) Math.ceil(gridLoc.first);
-            this.z = (int) Math.ceil(gridLoc.second);
+        if(!arena.isValidGridLocation(loc)) {
+            Pair<Integer, Integer> gridLoc = arena.getGridLocFromAbsLoc(loc);
+            this.x = gridLoc.first;
+            this.z = gridLoc.second;
             removeOldSilhouette();
             return;
         }
+        else if(!island.canPlaceBuilding(building, loc)) {
+            removeOldSilhouette();
+            addCantPlaceSilhouette(loc);
+            Pair<Integer, Integer> gridLoc = arena.getGridLocFromAbsLoc(loc);
+            this.x = gridLoc.first;
+            this.z = gridLoc.second;
+            return;
+        }
         removeOldSilhouette();
-        addNewSilhouette(loc);
-        Pair<Double, Double> gridLoc = arena.getGridLocFromAbsLoc(loc);
-        this.x = (int) Math.ceil(gridLoc.first);
-        this.z = (int) Math.ceil(gridLoc.second);
+        addSilhouette(loc);
+        Pair<Integer, Integer> gridLoc = arena.getGridLocFromAbsLoc(loc);
+        this.x = gridLoc.first;
+        this.z = gridLoc.second;
     }
 
     @Override
-    public void catchUp(float hours) {
+    public void catchUpRequest(float hours) {
 
     }
 
@@ -159,7 +191,6 @@ public class BuildingInHand implements Serializable, IUpdatable {
     }
     @Override
     public void stopUpdates() {
-
         if(building.isNewBuilding()) { removeOldSilhouette(); };
     }
 }

@@ -1,6 +1,8 @@
 package aaronpost.clashcraft.Currency;
 
 import aaronpost.clashcraft.Interfaces.IDisplayable;
+import aaronpost.clashcraft.Session;
+
 import java.io.Serializable;
 
 public abstract class Currency implements Serializable, IDisplayable {
@@ -15,8 +17,13 @@ public abstract class Currency implements Serializable, IDisplayable {
     public void setAmount(int amount) {
         this.amount = amount;
     }
+    public void setMaxAmount(int maxAmount) { this.amount = amount; }
     public boolean canAfford(int cost) {
         return cost >= amount;
+    }
+    public Currency(int amount, int maxAmount) {
+        this.amount = amount;
+        this.maxAmount = maxAmount;
     }
     public boolean withdraw(int cost) {
         if(canAfford(cost)) {

@@ -96,7 +96,6 @@ public class Schematic implements Serializable {
         double initX = loc.getX();
         int counter = 0;
         TextComponent text = new TextComponent();
-        //Clash.getPlugin().getServer().getPlayer("Aaronn").spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.GOLD + "Pasting schmeatic " + name));
         for(int y = 0; y < yLength; y++) {
             loc.setX(initX);
             for (int x = 0; x < xLength; x++) {
@@ -139,14 +138,18 @@ public class Schematic implements Serializable {
             loc.setY(loc.getY() + 1);
         }
     }
-
+    public boolean constructionNeedsUpdate(int layersBuilt, float percentageComplete) {
+        return layersToBuild(percentageComplete) != layersBuilt;
+    }
+    public int layersToBuild(float percentageComplete) {
+        return (int) Math.floor(percentageComplete * (yLength+yOffset));
+    }
     public void pasteSchematicConstruction(Location origLoc, int layersBuilt) {
         Location loc = origLoc.clone();
         loc.setY(loc.getY() + yOffset);
         double initZ = loc.getZ();
         double initX = loc.getX();
         int counter = 0;
-        ClashCraft.plugin.getServer().getPlayer("Aaronn").spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.GOLD + "Pasting schmeatic " + name));
         for(int y = 0; y < yLength; y++) {
             loc.setX(initX);
             for (int x = 0; x < xLength; x++) {
@@ -154,8 +157,10 @@ public class Schematic implements Serializable {
                 for(int z = 0; z < zLength; z++) {
                     Block referenceBlock = blockLocs.get(counter).getBlock();
                     Block newBlock = loc.getBlock();
-                    if((y) >= layersBuilt) {
-                        newBlock.setType(Material.SCAFFOLDING);
+                    if((y) >= layersBuilt - yOffset || referenceBlock.getType().equals(Material.AIR)) {
+                        if(x > 0 && x < xLength - 1 && z > 0 && z < zLength -1 ) {
+                            newBlock.setType(Material.SCAFFOLDING);
+                        }
                     } else {
                         newBlock.setType(referenceBlock.getType());
                         newBlock.setBlockData(referenceBlock.getBlockData());

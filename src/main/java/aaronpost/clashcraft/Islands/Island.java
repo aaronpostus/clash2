@@ -3,8 +3,6 @@ import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Buildings.BuildingInHand;
-import aaronpost.clashcraft.Globals.BuildingGlobals;
-import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Interfaces.IUpdatable;
 import aaronpost.clashcraft.Pair;
@@ -22,9 +20,11 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
     private transient Arena arena;
     private UUID[][] nodes;
     private Map<UUID, Building> buildings;
+
     public static enum Interactions {
         LEFT_CLICK, RIGHT_CLICK
     }
+
     public Island() {
         buildings = new HashMap<>();
         nodes = new UUID[Arenas.GRID_X_LENGTH][Arenas.GRID_Z_LENGTH];
@@ -34,67 +34,97 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
             }
         }
     }
-    public Building getBuildingInHand() {
-        if(!hasBuildingInHand()) {
+
+    public Building getBuildingInBuildingInHand() {
+        if (!hasBuildingInHand()) {
             return null;
         }
         return buildingInHand.getBuilding();
     }
+
+    public BuildingInHand getBuildingInHand() {
+        return buildingInHand;
+    }
+
     public void placeBuildingInHand() {
         buildingInHand.place();
     }
+
     public void removeBuildingInHand() {
         buildingInHand = null;
     }
-    public boolean hasBuildingInHand() { return buildingInHand != null; }
-    public boolean hasBuilding(int x, int z) { return nodes[x][z] != null; }
+
+    public boolean hasBuildingInHand() {
+        return buildingInHand != null;
+    }
+
+    public boolean hasBuilding(int x, int z) {
+        return nodes[x][z] != null;
+    }
+
     public Building getBuilding(int x, int z) {
         return buildings.get(nodes[x][z]);
     }
+
     public List<Building> getBuildings() {
         return new ArrayList<>(this.buildings.values());
     }
+
     public void addBuilding(Building building, int x, int z) {
-        if(canPlaceBuilding(building, x, z)) {
+        if (canPlaceBuilding(building, x, z)) {
             addBuildingHelper(building, x, z);
         }
     }
+
     private void addBuildingHelper(Building building, int x, int z) {
         UUID buildingUUID = building.getUUID();
         //remove old building locations from grid
-        for(int i = 0; i < Arenas.GRID_X_LENGTH; i++) {
-            for(int j = 0; j < Arenas.GRID_Z_LENGTH; j++) {
-                if(nodes[i][j] != null) {
-                    if(nodes[i][j].equals(buildingUUID)) {
+        for (int i = 0; i < Arenas.GRID_X_LENGTH; i++) {
+            for (int j = 0; j < Arenas.GRID_Z_LENGTH; j++) {
+                if (nodes[i][j] != null) {
+                    if (nodes[i][j].equals(buildingUUID)) {
                         nodes[i][j] = null;
                     }
                 }
             }
         }
         // add new building locations to grid
-        for(int i = x; i < x + building.getGridLengthX(); i++) {
-            for(int j = z; j < z + building.getGridLengthZ(); j++) {
+        for (int i = x; i < x + building.getGridLengthX(); i++) {
+            for (int j = z; j < z + building.getGridLengthZ(); j++) {
                 nodes[i][j] = buildingUUID;
             }
         }
-        if(!buildings.containsKey(buildingUUID)) {
+        if (!buildings.containsKey(buildingUUID)) {
             buildings.put(buildingUUID, building);
         }
     }
+
     // Needs to account for fitting within the 40x40 grid, not colliding with other buildings, but can "collide" with itself.
     public boolean canPlaceBuilding(Building building, org.bukkit.Location loc) {
-        if(!arena.isValidGridLocation(loc)) {
+        if (!arena.isValidGridLocation(loc)) {
             return false;
         }
-        Pair<Double,Double> gridPos = arena.getGridLocFromAbsLoc(loc);
+        Pair<Integer, Integer> gridPos = arena.getGridLocFromAbsLoc(loc);
         return canAddBuildingHelper(building, gridPos);
     }
-    public boolean canPlaceBuilding(Building building, int x, int z) {
-        return canAddBuildingHelper(building,new Pair<Double,Double>((double) x,(double)z));
+
+    public List<Pair<Integer, Integer>> getBuildingGridLocs(Building building) {
+        List<Pair<Integer, Integer>> gridLocs = new ArrayList<>();
+        for (int i = 0; i < Arenas.GRID_X_LENGTH; i++) {
+            for (int j = 0; j< Arenas.GRID_Z_LENGTH; j++) {
+                if(this.nodes[i][j].equals(building)) {
+                    gridLocs.add(new Pair<>(i,j));
+                }
+            }
+        }
+        return gridLocs;
     }
-    private boolean canAddBuildingHelper(Building building, Pair<Double,Double> gridPos) {
-        int x = gridPos.first.intValue();
-        int z = gridPos.second.intValue();
+    public boolean canPlaceBuilding(Building building, int x, int z) {
+        return canAddBuildingHelper(building,new Pair<Integer,Integer>(x,z));
+    }
+    private boolean canAddBuildingHelper(Building building, Pair<Integer,Integer> gridPos) {
+        int x = gridPos.first;
+        int z = gridPos.second;
         int xLength = building.getGridLengthX();
         int zLength = building.getGridLengthZ();
         if(!(x + xLength <= Arenas.GRID_X_LENGTH && z + zLength <= Arenas.GRID_Z_LENGTH && x >= 0 && z >= 0)) {
@@ -114,8 +144,8 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
     // Returns the building at a given location. If there is no building (or it's not a valid location) we return null
     public Building findBuildingAtLocation(org.bukkit.Location targetBlock) {
         if(arena.isValidGridLocation(targetBlock)) {
-            Pair<Double,Double> gridLoc = arena.getGridLocFromAbsLoc(targetBlock);
-            return getBuilding(gridLoc.first.intValue(),gridLoc.second.intValue());
+            Pair<Integer,Integer> gridLoc = arena.getGridLocFromAbsLoc(targetBlock);
+            return getBuilding(gridLoc.first,gridLoc.second);
         }
         return null;
     }
@@ -138,23 +168,23 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         }
     }
     @Override
-    public void fixedUpdate() {
+    public void fixedUpdateRequest() {
         for(Building building : getBuildings()) {
-            building.fixedUpdate();
+            building.fixedUpdateRequest();
         }
     }
 
     @Override
-    public void catchUp(float hours) {
+    public void catchUpRequest(float hours) {
         for(Building building : getBuildings()) {
-            building.catchUp(hours);
+            building.catchUpRequest(hours);
         }
     }
-    public void setArena(Arena arena) {
+    public void refreshReferences(Arena arena) {
         this.arena = arena;
         this.player = arena.getPlayer();
         for(Building building : getBuildings()) {
-            building.setArena(arena);
+            building.refreshReferences(arena);
         }
         if(buildingInHand != null) {
             this.buildingInHand.setArena(arena);
@@ -165,7 +195,7 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         for(Building building: getBuildings()) {
             player.sendMessage(ChatColor.GRAY + "Loaded " + building.getPlainDisplayName() + ChatColor.GRAY
                     + " Level " + building.getLevel());
-            building.paste(arena);
+            building.paste();
         }
         if(buildingInHand != null) {
             player.sendMessage(ChatColor.GRAY + "You have a building in your hand: " +
@@ -186,9 +216,9 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
     @Override
     public void stopUpdates() {
         for(Building building: getBuildings()) {
-            building.resetToGrass(arena);
+            building.resetToGrass();
         }
-        Building buildingInHand = getBuildingInHand();
+        Building buildingInHand = getBuildingInBuildingInHand();
         if(buildingInHand != null) {
             this.buildingInHand.stopUpdates();
             if(!buildingInHand.isNewBuilding()) {

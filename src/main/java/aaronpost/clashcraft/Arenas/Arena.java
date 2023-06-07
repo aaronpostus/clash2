@@ -9,6 +9,8 @@ import aaronpost.clashcraft.Session;
 import aaronpost.clashcraft.Singletons.GameManager;
 import aaronpost.clashcraft.Singletons.Sessions;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,11 +32,11 @@ public class Arena {
     }
 
     public void assignPlayer(Player p) {
-
+        p.getInventory().clear();
         this.player = p;
         this.session = Sessions.s.getSession(p);
         this.island = session.getIsland();
-        this.island.setArena(this);
+        this.island.refreshReferences(this);
         Location tpLoc = loc.clone();
 
         tpLoc.setX(tpLoc.getX() - 2);
@@ -75,7 +77,7 @@ public class Arena {
                 p.getInventory().setItem(8, returnToSpawn);
                 p.setGameMode(GameMode.ADVENTURE);
 
-                Building buildingInHand = island.getBuildingInHand();
+                Building buildingInHand = island.getBuildingInBuildingInHand();
 
                 // If player has a NEW building that they haven't placed down, this will give it back to them.
                 if(buildingInHand != null) {
@@ -84,22 +86,36 @@ public class Arena {
                 island.startUpdates();
                 GameManager.getInstance().addFixedUpdatable(island);
                 GameManager.getInstance().addUpdatable(island);
-                Sessions.s.getSession(p).initializeScoreboard(player);
-
+                session.refreshScoreboard();
+                float hoursOffline = session.retrieveHoursOffline();
+                if(hoursOffline > 0) {
+                    island.catchUpRequest(hoursOffline);
+                }
                 p.setAllowFlight(true);
             }
         },  10);
 
     }
+    public void purchaseNewBuilding(Building building) {
+        island.putBuildingInHand(building);
+        // Gets building ItemStack with formatted lore, and gives it to player
+        player.getInventory().addItem(building.getItemStack());
+    }
+    public void sendActionBar(String str) {
+        this.player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(str));
+    }
     public boolean isValidGridLocation(Location loc) {
-        Pair<Double,Double> gridPos = getGridLocFromAbsLoc(loc);
+        Pair<Integer,Integer> gridPos = getGridLocFromAbsLoc(loc);
         return 0 <= gridPos.first && gridPos.first < Arenas.GRID_X_LENGTH &&
                 0 <= gridPos.second && gridPos.second < Arenas.GRID_Z_LENGTH;
     }
-    public Pair<Double, Double> getGridLocFromAbsLoc(Location origLoc) {
+    public boolean isValidGridLocation(int x, int z) {
+        return x < Arenas.GRID_X_LENGTH && z < Arenas.GRID_Z_LENGTH && x >= 0 && z >= 0;
+    }
+    public Pair<Integer, Integer> getGridLocFromAbsLoc(Location origLoc) {
         Location loc = origLoc.clone();
         Location loc2 = this.loc.clone();
-        return new Pair<Double,Double>(loc.getX() - loc2.getX(), loc.getZ() - loc2.getZ());
+        return new Pair<Integer,Integer>((int)(loc.getX() - loc2.getX()), (int)(loc.getZ() - loc2.getZ()));
     }
     public void unassign() {
         GameManager.getInstance().removeFixedUpdatable(island);

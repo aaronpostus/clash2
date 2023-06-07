@@ -3,6 +3,7 @@ package aaronpost.clashcraft.PersistentData;
 import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Currency.Currency;
+import aaronpost.clashcraft.Buildings.BuildingStates.IBuildingState;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import aaronpost.clashcraft.Session;
@@ -21,14 +22,16 @@ import java.util.logging.Logger;
 
 public class Serializer implements Listener {
     private final Logger logger = ClashCraft.plugin.getLogger();
-    private final String sessionsPath = ClashCraft.plugin.getDataFolder().getAbsolutePath() + File.separator + "Sessions";
-    private final String schematicsPath = ClashCraft.plugin.getDataFolder().getAbsolutePath() + File.separator + "Schematics";
+    public static final String SESSIONS_PATH = ClashCraft.plugin.getDataFolder().getAbsolutePath() + File.separator + "Sessions";
+    public static final String SCHEMATICS_PATH = ClashCraft.plugin.getDataFolder().getAbsolutePath() + File.separator + "Schematics";
     private final Gson sessionGson;
     private final String path = "aaronpost.clashcraft.";
     public Serializer() {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Building.class, new DeserializerAdapter<Building>(path + "Buildings."));
         builder.registerTypeAdapter(Currency.class, new DeserializerAdapter<Currency>(path + "Currency."));
+        builder.registerTypeAdapter(IBuildingState.class, new DeserializerAdapter<IBuildingState>(path +
+                "Buildings.BuildingStates."));
         builder.setPrettyPrinting();
         this.sessionGson = builder.create();
     }
@@ -49,7 +52,7 @@ public class Serializer implements Listener {
     public void onPlayerJoin(PlayerJoinEvent p) {
         // Load their files up!
         Player player = p.getPlayer();
-        File file = new File(sessionsPath + File.separator + player.getUniqueId() + ".json");
+        File file = new File(SESSIONS_PATH + File.separator + player.getUniqueId() + ".json");
         // Player already has data, deserialize
         if(file.exists()) {
             try {
@@ -74,7 +77,7 @@ public class Serializer implements Listener {
         Gson g = builder.create();
         File file;
         for(int i = 0; i < schematics.size(); i++) {
-            file = new File(schematicsPath + File.separator + schematics.get(i).getName() + ".json");
+            file = new File(SCHEMATICS_PATH + File.separator + schematics.get(i).getName() + ".json");
             if(!file.exists()) {
                 try {
                     file.createNewFile();
@@ -93,7 +96,7 @@ public class Serializer implements Listener {
     }
 
     public List<Schematic> deserializeSchematics() throws IOException {
-        File[] schematicsFilePath = new File(schematicsPath + File.separator).listFiles();
+        File[] schematicsFilePath = new File(SCHEMATICS_PATH + File.separator).listFiles();
         List<Schematic> schematics = new ArrayList<>();
         int numberOfLoadedSchematics = 0;
         if(schematicsFilePath != null) {
@@ -119,7 +122,7 @@ public class Serializer implements Listener {
     }
     public void serializeSession(Player p, Session c) throws IOException {
         Session s = Sessions.s.getSession(p);
-        File file = new File(sessionsPath + File.separator + p.getUniqueId() + ".json");
+        File file = new File(SESSIONS_PATH + File.separator + p.getUniqueId() + ".json");
         System.out.println(file.getAbsolutePath());
         file.createNewFile();
         Writer w = new FileWriter(file, false);
@@ -128,7 +131,7 @@ public class Serializer implements Listener {
         w.close();
     }
     public Session deserializeSession(Player p) throws IOException {
-        File file = new File(sessionsPath + File.separator + p.getUniqueId() + ".json");
+        File file = new File(SESSIONS_PATH + File.separator + p.getUniqueId() + ".json");
         if (file.exists()){
             Reader reader = new FileReader(file);
             Session s = sessionGson.fromJson(reader, Session.class);

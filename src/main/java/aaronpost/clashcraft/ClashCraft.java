@@ -4,6 +4,7 @@ import aaronpost.clashcraft.Arenas.ArenaManager;
 import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.PersistentData.Serializer;
+import aaronpost.clashcraft.Raiding.Raids;
 import aaronpost.clashcraft.Schematics.Controller;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ClashCraft extends JavaPlugin {
-    static List<String> commands = Arrays.asList("test","debugtools","island", "createschematic", "savecoordinates");
+    static List<String> commands = Arrays.asList("test","debugtools","island", "createschematic", "savecoordinates", "raid");
     public static ClashCraft plugin;
     private Serializer s;
     @Override
@@ -100,6 +101,10 @@ public class ClashCraft extends JavaPlugin {
         Player player = getServer().getPlayer(sender.getName());
         if(!commands.contains(label)) {
             return false;
+        }
+        else if(label.equals("raid")) {
+            System.out.println(Raids.r.searchForRaid());
+            return true;
         }
         else if (label.equals("test")) {
             sender.sendMessage("hi");

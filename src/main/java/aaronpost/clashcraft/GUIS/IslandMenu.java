@@ -65,7 +65,15 @@ public class IslandMenu implements Listener {
                                 (new ResourcesMenu((Player) e.getWhoClicked()), ClashCraft.plugin);
                         HandlerList.unregisterAll(this);
                         break;
-                    case IRON_SWORD:
+                    case BOW:
+                        ClashCraft.plugin.getServer().getPluginManager().registerEvents
+                                (new ArmyBuildings((Player) e.getWhoClicked()), ClashCraft.plugin);
+                        HandlerList.unregisterAll(this);
+                        break;
+                    case SHIELD:
+                        ClashCraft.plugin.getServer().getPluginManager().registerEvents
+                                (new DefenseBuildings((Player) e.getWhoClicked()), ClashCraft.plugin);
+                        HandlerList.unregisterAll(this);
                         break;
                 }
             }

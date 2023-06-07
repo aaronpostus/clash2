@@ -13,12 +13,12 @@ public class TestUpdatable implements IUpdatable, IFixedUpdatable {
     }
 
     @Override
-    public void fixedUpdate() {
+    public void fixedUpdateRequest() {
         System.out.println("Update no " + (++counter));
     }
 
     @Override
-    public void catchUp(float hours) {
+    public void catchUpRequest(float hours) {
 
     }
 

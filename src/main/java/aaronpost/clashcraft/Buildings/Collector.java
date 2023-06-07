@@ -1,4 +1,5 @@
 package aaronpost.clashcraft.Buildings;
+import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Currency.Currency;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import org.bukkit.ChatColor;
@@ -8,8 +9,8 @@ public abstract class Collector extends Building {
     // reference to player's currency that we will add to
     private transient Currency currency;
     private float amount = 0f;
-    public Collector(Currency currency) {
-        super();
+    public Collector(Arena arena, Currency currency) {
+        super(arena);
         this.currency = currency;
     }
     public Collector(Currency currency, int x, int z) {
@@ -40,6 +41,7 @@ public abstract class Collector extends Building {
     public void catchUp(float hoursPassed) {
         tryToFill((float) hoursPassed * getCollectionRate());
     }
+    @Override
     public void startUpdates() {
         this.currency = super.getSession().getGold();
     }
@@ -49,7 +51,9 @@ public abstract class Collector extends Building {
     public int getAmountStored() {
         return (int) Math.ceil(amount);
     }
-    public void islandModeUpdate() {
+    @Override
+    public void update() {
+
         tryToFill(getCollectionRate() * BuildingGlobals.SECONDS_TO_HOURS);
     }
     private void tryToFill(float amountToFill) {

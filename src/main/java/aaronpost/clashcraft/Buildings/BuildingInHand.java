@@ -57,13 +57,11 @@ public class BuildingInHand implements Serializable, IUpdatable {
         this.z = -1;
     }
     public void place() {
-        if(island.canPlaceBuilding(building, x,z)) {
-            stopUpdates();
-            building.refreshReferences(arena);
-            building.place(x,z);
-            island.addBuilding(building, x,z);
-            island.removeBuildingInHand();
-        }
+        stopUpdates();
+        building.refreshReferences(arena);
+        building.placeRequest(x,z);
+        island.addBuilding(building, x,z);
+        island.removeBuildingInHand();
     }
 
     // Will check if schematic needs an update.
@@ -96,11 +94,11 @@ public class BuildingInHand implements Serializable, IUpdatable {
         }
     }
     private void addCantPlaceSilhouette(Location loc) {
-        Pair<Integer,Integer> gridLoc = arena.getGridLocFromAbsLoc(loc);
-        int x = (int)Math.ceil(loc.getX());
-        int z = (int)Math.ceil(loc.getZ());
-        int y = (int)Math.floor(arena.getLoc().getY() - 1);
-        for(int i = 0; i < building.getGridLengthX(); i++) {
+        Pair<Integer, Integer> gridLoc = arena.getGridLocFromAbsLoc(loc);
+        int x = (int) Math.ceil(loc.getX());
+        int z = (int) Math.ceil(loc.getZ());
+        int y = (int) Math.floor(arena.getLoc().getY() - 1);
+        for (int i = 0; i < building.getGridLengthX(); i++) {
             for (int j = 0; j < building.getGridLengthZ(); j++) {
                 Location blockLoc = arena.getLoc().clone();
                 blockLoc.setX(x + i);
@@ -108,18 +106,11 @@ public class BuildingInHand implements Serializable, IUpdatable {
                 blockLoc.setZ(z + j);
                 int gridX = gridLoc.first + i;
                 int gridZ = gridLoc.second + j;
-                if(arena.isValidGridLocation(gridX,gridZ)) {
-                    Block block = blockLoc.getBlock();
-                    if(island.hasBuilding(gridX,gridZ)) {
-                        if(island.getBuilding(gridLoc.first + i, gridLoc.second +j).equals(building)) {
-                            block.setType(Material.RED_CONCRETE);
-                            blockSilhoutte.add(block);
-                        }
-                    }
-                    else {
-                        block.setType(Material.RED_CONCRETE);
-                        blockSilhoutte.add(block);
-                    }
+                Block block = blockLoc.getBlock();
+                if (arena.isValidGridLocation(gridX, gridZ) && (!island.hasBuilding(gridX, gridZ) ||
+                        (island.hasBuilding(gridX, gridZ) && island.getBuilding(gridX, gridZ).equals(building)))) {
+                    block.setType(Material.RED_CONCRETE);
+                    blockSilhoutte.add(block);
                 }
             }
         }
@@ -187,7 +178,7 @@ public class BuildingInHand implements Serializable, IUpdatable {
     }
 
     @Override
-    public void catchUp(float hours) {
+    public void catchUpRequest(float hours) {
 
     }
 
@@ -200,7 +191,6 @@ public class BuildingInHand implements Serializable, IUpdatable {
     }
     @Override
     public void stopUpdates() {
-
         if(building.isNewBuilding()) { removeOldSilhouette(); };
     }
 }

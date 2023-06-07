@@ -30,9 +30,9 @@ public class PickBuildingUp implements IArenaCommand {
                             "building picked up at a time."));
             return;
         }
-        building.pickup();
+        building.pickupRequest();
         island.getBuildings().remove(building);
-        building.resetToGrass(arena);
+        building.resetToGrass();
         player.getInventory().addItem(building.getItemStack());
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
                 TextComponent.fromLegacyText(ChatColor.GRAY + "Picked up "

@@ -3,7 +3,6 @@ package aaronpost.clashcraft.Singletons;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Interfaces.IUpdatable;
-import aaronpost.clashcraft.Islands.Island;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -88,7 +87,7 @@ public class GameManager {
     // Called every tick. Should be used only when necessary.
     private void fixedUpdate() {
         for(IFixedUpdatable fixedUpdatable: fixedUpdatables) {
-            fixedUpdatable.fixedUpdate();
+            fixedUpdatable.fixedUpdateRequest();
         }
     }
 

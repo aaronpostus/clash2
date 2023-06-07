@@ -1,5 +1,6 @@
 package aaronpost.clashcraft.Buildings;
 
+import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Currency.Currency;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Schematics.Schematic;
@@ -14,11 +15,11 @@ public class GoldMine extends Collector {
         super(currency, x,z);
         // super.currency = Player's gold currency;
     }
-    public GoldMine(Currency currency) {
-        super(currency);
+    public GoldMine(Arena arena, Currency currency) {
+        super(arena, currency);
     }
     @Override
-    public boolean isMaxLevel() { return getLevel() == BuildingGlobals.GOLDMINE_MAX_LEVEL; }
+    public int getMaxLevel() { return BuildingGlobals.GOLDMINE_MAX_LEVEL; }
     @Override
     float getCollectionRate() { return BuildingGlobals.GOLDMINE_COLLECTION_RATE[getLevel() - 1]; }
     @Override
@@ -38,10 +39,13 @@ public class GoldMine extends Collector {
     }
 
     @Override
-    public void visualUpdate2() {
+    public void visualUpdate() {
 
     }
+    @Override
+    public void openMenu() {
 
+    }
     @Override
     public ItemStack getPlainItemStack() { return BuildingGlobals.GOLDMINE_ITEM_STACK.clone(); }
     @Override

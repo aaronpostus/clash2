@@ -1,5 +1,6 @@
 package aaronpost.clashcraft.Arenas;
 import aaronpost.clashcraft.Buildings.Building;
+import aaronpost.clashcraft.Buildings.GoldMine;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Islands.Island;
@@ -8,6 +9,8 @@ import aaronpost.clashcraft.Session;
 import aaronpost.clashcraft.Singletons.GameManager;
 import aaronpost.clashcraft.Singletons.Sessions;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -33,7 +36,7 @@ public class Arena {
         this.player = p;
         this.session = Sessions.s.getSession(p);
         this.island = session.getIsland();
-        this.island.setArena(this);
+        this.island.refreshReferences(this);
         Location tpLoc = loc.clone();
 
         tpLoc.setX(tpLoc.getX() - 2);
@@ -86,12 +89,20 @@ public class Arena {
                 session.refreshScoreboard();
                 float hoursOffline = session.retrieveHoursOffline();
                 if(hoursOffline > 0) {
-                    island.catchUp(hoursOffline);
+                    island.catchUpRequest(hoursOffline);
                 }
                 p.setAllowFlight(true);
             }
         },  10);
 
+    }
+    public void purchaseNewBuilding(Building building) {
+        island.putBuildingInHand(building);
+        // Gets building ItemStack with formatted lore, and gives it to player
+        player.getInventory().addItem(building.getItemStack());
+    }
+    public void sendActionBar(String str) {
+        this.player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(str));
     }
     public boolean isValidGridLocation(Location loc) {
         Pair<Integer,Integer> gridPos = getGridLocFromAbsLoc(loc);
@@ -99,7 +110,7 @@ public class Arena {
                 0 <= gridPos.second && gridPos.second < Arenas.GRID_Z_LENGTH;
     }
     public boolean isValidGridLocation(int x, int z) {
-        return x < Arenas.GRID_X_LENGTH && z < Arenas.GRID_Z_LENGTH && x > 0 && z > 0;
+        return x < Arenas.GRID_X_LENGTH && z < Arenas.GRID_Z_LENGTH && x >= 0 && z >= 0;
     }
     public Pair<Integer, Integer> getGridLocFromAbsLoc(Location origLoc) {
         Location loc = origLoc.clone();

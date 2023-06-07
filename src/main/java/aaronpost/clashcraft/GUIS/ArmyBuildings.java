@@ -2,6 +2,7 @@ package aaronpost.clashcraft.GUIS;
 
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Arenas.Arenas;
+import aaronpost.clashcraft.Buildings.Barracks;
 import aaronpost.clashcraft.Buildings.GoldMine;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Globals.Globals;
@@ -20,24 +21,15 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class ResourcesMenu implements Listener {
+public class ArmyBuildings implements Listener {
     private final Inventory categorySelect;
     private final Player p;
 
-    public ResourcesMenu(Player p) {
+    public ArmyBuildings(Player p) {
         this.p = p;
         categorySelect = p.getServer().createInventory(null, 27, ChatColor.GOLD + "+ Resources +");
-        ItemStack stack = BuildingGlobals.GOLDMINE_ITEM_STACK.clone();
+        ItemStack stack = BuildingGlobals.BARRACKS_ITEM_STACK.clone();
         categorySelect.setItem(10, stack);
-
-        stack = new ItemStack(Material.MAGENTA_CONCRETE);
-        categorySelect.setItem(12, stack);
-
-        stack = new ItemStack(Material.GRAY_CONCRETE);
-        categorySelect.setItem(14, stack);
-
-        stack = new ItemStack(Material.BRICKS);
-        categorySelect.setItem(16, stack);
 
         p.openInventory(categorySelect);
     }
@@ -63,27 +55,8 @@ public class ResourcesMenu implements Listener {
                 if(island.getBuildingInBuildingInHand() == null) {
                     ItemStack stack = new ItemStack(Material.AIR);
                     switch (e.getCurrentItem().getType()) {
-                        case CHEST: {
-                            arena.purchaseNewBuilding(new GoldMine(arena, session.getGold()));
-                            break;
-                        }
-                        case MAGENTA_CONCRETE:
-                            e.getWhoClicked().sendMessage(Globals.prefix + " Elixir Collector");
-                            HandlerList.unregisterAll(this);
-                            e.getWhoClicked().closeInventory();
-                            break;
-                        case GRAY_CONCRETE:
-                            e.getWhoClicked().sendMessage(Globals.prefix + " Dark Elixir Drill");
-                            HandlerList.unregisterAll(this);
-                            e.getWhoClicked().closeInventory();
-                            break;
-                        case BRICKS: {
-                            /** Creates a new building and puts it in the "hand" in the background
-                            BuildingInHand buildingInHand = new BuildingInHand(new BuilderHut(700, 700), true);
-                            island.putBuildingInHand(buildingInHand);
-                            // Gets building ItemStack with formatted lore, and gives it to player
-                            Building building = buildingInHand.getBuilding();
-                            stack = building.getItemStack();**/
+                        case TARGET: {
+                            arena.purchaseNewBuilding(new Barracks(arena));
                             break;
                         }
                     }

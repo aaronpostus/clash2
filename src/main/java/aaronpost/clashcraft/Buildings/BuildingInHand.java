@@ -150,28 +150,39 @@ public class BuildingInHand implements Serializable, IUpdatable {
             return;
         }
         Location loc = targetBlock.getLocation();
+        Location snappedLoc = getSnappedLocation(loc);
         // idling at the same location so do nothing
         /**if(!targetLocIsDifferent(loc)) {
             return;
         }**/
         // player is not looking at a valid grid location or building cannot fit there
-        if(!arena.isValidGridLocation(loc)) {
-            Pair<Integer, Integer> gridLoc = arena.getGridLocFromAbsLoc(loc);
-            this.x = gridLoc.first;
-            this.z = gridLoc.second;
+        if(!arena.isValidGridLocation(snappedLoc)) {
+            updateLoc(snappedLoc);
             removeOldSilhouette();
             return;
         }
-        else if(!island.canPlaceBuilding(building, loc)) {
+        else if(!island.canPlaceBuilding(building, snappedLoc)) {
             removeOldSilhouette();
-            addCantPlaceSilhouette(loc);
-            Pair<Integer, Integer> gridLoc = arena.getGridLocFromAbsLoc(loc);
-            this.x = gridLoc.first;
-            this.z = gridLoc.second;
+            addCantPlaceSilhouette(snappedLoc);
+            updateLoc(snappedLoc);
             return;
         }
+
         removeOldSilhouette();
-        addSilhouette(loc);
+        addSilhouette(snappedLoc);
+        updateLoc(snappedLoc);
+    }
+    private Location getSnappedLocation(Location loc) {
+        Pair<Integer, Integer> gridLoc = arena.getGridLocFromAbsLoc(loc);
+        if(gridLoc.first % 2 != 0) {
+            loc.setX(loc.getX()-1);
+        }
+        if(gridLoc.second % 2 != 0) {
+            loc.setZ(loc.getZ()-1);
+        }
+        return loc;
+    }
+    private void updateLoc(Location loc) {
         Pair<Integer, Integer> gridLoc = arena.getGridLocFromAbsLoc(loc);
         this.x = gridLoc.first;
         this.z = gridLoc.second;

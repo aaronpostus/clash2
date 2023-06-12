@@ -24,6 +24,7 @@ public class PlaceBuilding implements IArenaCommand {
         Location loc = targetBlockExact.getLocation();
         Pair<Integer,Integer> gridLoc = buildingInHand.getSelectedGridPos();
         Building building = buildingInHand.getBuilding();
+        building.refreshReferences(arena);
         if(!island.canPlaceBuilding(building, gridLoc.first, gridLoc.second)) {
             building.sendMessage("Cannot place here.");
             return;

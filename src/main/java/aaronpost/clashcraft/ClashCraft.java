@@ -27,7 +27,7 @@ import java.util.Objects;
 public class ClashCraft extends JavaPlugin {
     static List<String> commands = Arrays.asList("test","debugtools","island", "createschematic", "savecoordinates", "raid");
     public static ClashCraft plugin;
-    private Serializer s;
+    public static Serializer serializer;
     @Override
     public void onEnable() {
         plugin = this;
@@ -35,8 +35,8 @@ public class ClashCraft extends JavaPlugin {
         GameManager gm = GameManager.getInstance();
         gm.startUpdates();
 
-        s = new Serializer();
-        getServer().getPluginManager().registerEvents(s,this);
+        serializer = new Serializer();
+        getServer().getPluginManager().registerEvents(serializer,this);
         getServer().getPluginManager().registerEvents(new Controller(), this);
         getServer().getPluginManager().registerEvents(new ArenaManager(), this);
         getServer().getPluginManager().registerEvents(new Interaction(), this);
@@ -45,7 +45,7 @@ public class ClashCraft extends JavaPlugin {
         getServer().getOnlinePlayers().toArray(list);
         ArrayList<Schematic> schematics = new ArrayList<>();
         try {
-            schematics = (ArrayList<Schematic>) s.deserializeSchematics();
+            schematics = (ArrayList<Schematic>) serializer.deserializeSchematics();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,7 +54,7 @@ public class ClashCraft extends JavaPlugin {
 
         for(Player p: list) {
             try {
-                Session session = s.deserializeSession(p);
+                Session session = serializer.deserializeSession(p);
                 if(session != null) {
                     ClashCraft.plugin.getLogger().info(p.getName() + "'s session has been loaded!");
                     Sessions.s.addSession(p, session);
@@ -73,7 +73,7 @@ public class ClashCraft extends JavaPlugin {
         Bukkit.getOnlinePlayers().toArray(list);
 
         try {
-            s.serializeSchematics();
+            serializer.serializeSchematics();
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -81,7 +81,7 @@ public class ClashCraft extends JavaPlugin {
             try {
                 Session session = Sessions.s.getSession(p);
                 if(session != null) {
-                    s.serializeSession(p, session);
+                    serializer.serializeSession(p, session);
                 }
                 ClashCraft.plugin.getLogger().info(p.getName() + "'s session has been saved!");
                 if(Arenas.a.playerAtArena(p)) {
@@ -103,7 +103,7 @@ public class ClashCraft extends JavaPlugin {
             return false;
         }
         else if(label.equals("raid")) {
-            System.out.println(Raids.r.searchForRaid());
+            System.out.println(Raids.r.tryRaid(player));
             return true;
         }
         else if (label.equals("test")) {

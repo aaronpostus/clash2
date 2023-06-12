@@ -191,21 +191,19 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         }
         this.location = arena.getLoc();
     }
-    private void loadBuildings() {
+    public void loadBuildings() {
         for(Building building: getBuildings()) {
-            player.sendMessage(ChatColor.GRAY + "Loaded " + building.getPlainDisplayName() + ChatColor.GRAY
-                    + " Level " + building.getLevel());
+            //player.sendMessage(ChatColor.GRAY + "Loaded " + building.getPlainDisplayName() + ChatColor.GRAY
+            //        + " Level " + building.getLevel());
             building.paste();
-        }
-        if(buildingInHand != null) {
-            player.sendMessage(ChatColor.GRAY + "You have a building in your hand: " +
-                    buildingInHand.getBuilding().getPlainDisplayName());
         }
     }
     @Override
     public void startUpdates() {
         loadBuildings();
         if(buildingInHand != null) {
+            player.sendMessage(ChatColor.GRAY + "You have a building in your hand: " +
+                    buildingInHand.getBuilding().getPlainDisplayName());
             buildingInHand.startUpdates();
         }
         for(Building building : getBuildings()) {

@@ -1,6 +1,5 @@
 package aaronpost.clashcraft.Arenas;
 import aaronpost.clashcraft.Buildings.Building;
-import aaronpost.clashcraft.Buildings.GoldMine;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Islands.Island;
@@ -152,6 +151,16 @@ public class Arena {
         this.unload();
         this.island = victimIsland;
         this.currentState = RAID_STATE;
+    }
+    public Location getAbsLocationFromNavGridLoc(int x, int z) {
+        return getAbsLocationFromNavGridLoc(x,z,0);
+    }
+    public Location getAbsLocationFromNavGridLoc(int x, int z, int heightAboveGround) {
+        Location loc = this.getLoc().clone();
+        loc.setX(x + loc.getX() - 2);
+        loc.setZ(z + loc.getZ() - 2);
+        loc.setY(heightAboveGround + loc.getY());
+        return loc;
     }
     public void unload() {
         GameManager.getInstance().removeFixedUpdatable(island);

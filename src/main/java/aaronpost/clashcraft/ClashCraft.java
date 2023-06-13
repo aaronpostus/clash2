@@ -103,7 +103,7 @@ public class ClashCraft extends JavaPlugin {
             return false;
         }
         else if(label.equals("raid")) {
-            System.out.println(Raids.r.tryRaid(player));
+            System.out.println(Raids.r.tryRaid(player, Integer.parseInt(args[0]),Integer.parseInt(args[1])));
             return true;
         }
         else if (label.equals("test")) {

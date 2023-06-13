@@ -18,17 +18,20 @@ public class Raids {
     public Raids() {
 
     }
-    public boolean tryRaid(Player raider) {
+    public boolean tryRaid(Player raider, int x, int z) {
         File sessionFile = new File(Serializer.SESSIONS_PATH);
         File[] files = sessionFile.listFiles();
         Server server = ClashCraft.plugin.getServer();
+        if(files == null) {
+            return false;
+        }
         for(File playerFile: files) {
             String fileName = playerFile.getName();
             UUID uuid = UUID.fromString(fileName.substring(0, fileName.lastIndexOf('.')));
             if(server.getPlayer(uuid) == null) {
                 Arena arena = Arenas.a.findPlayerArena(raider);
                 arena.unload();
-                raids.add(new Raid(arena, uuid));
+                raids.add(new Raid(arena, uuid, x, z));
                 return true;
             }
         }

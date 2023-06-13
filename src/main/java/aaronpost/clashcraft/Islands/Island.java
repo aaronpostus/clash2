@@ -3,6 +3,7 @@ import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Buildings.BuildingInHand;
+import aaronpost.clashcraft.Buildings.Wall;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Interfaces.IUpdatable;
 import aaronpost.clashcraft.Pair;
@@ -119,6 +120,7 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         }
         return gridLocs;
     }
+    public Arena getArena() { return arena; }
     public boolean canPlaceBuilding(Building building, int x, int z) {
         return canAddBuildingHelper(building,new Pair<Integer,Integer>(x,z));
     }
@@ -153,13 +155,68 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         this.buildingInHand = new BuildingInHand(building, arena);
     }
 
-    // maybe pass through a list of ICommands instead
-    public void interactionQuery(Island.Interactions interactionType, int x, int y) {
-        //
-        Building building;
-        switch (interactionType) {
-            case LEFT_CLICK:
+    // Get a list of locations in the outer ring for a building
+    public List<Pair<Integer, Integer>> getOuterRing(Building building) {
+        List<Pair<Integer,Integer>> outerRing = new ArrayList<>();
+        Pair<Integer,Integer> buildingLoc = building.getGridLoc();
+        for(int x = buildingLoc.first; x < buildingLoc.first + building.getGridLengthX(); x++) {
+            outerRing.add(new Pair<>(x, buildingLoc.second));
         }
+        for(int z = buildingLoc.second + 1; z < buildingLoc.second + building.getGridLengthZ(); z++) {
+            outerRing.add(new Pair<>(buildingLoc.first + building.getGridLengthX() -1, z));
+        }
+        for(int x = buildingLoc.first + building.getGridLengthX() - 2; x >= buildingLoc.first; x--) {
+            outerRing.add(new Pair<>(x, buildingLoc.second + building.getGridLengthZ() - 1));
+        }
+        for(int z = buildingLoc.second + building.getGridLengthZ() - 2; z >= buildingLoc.second; z--) {
+            outerRing.add(new Pair<>(buildingLoc.first, z));
+        }
+        return outerRing;
+    }
+    public Pair<Integer,Integer> getAdjacentWall(int x, int z) {
+        if(hasWall(x+1,z)) {
+            return new Pair<>(x+1,z);
+        }
+        if(hasWall(x-1,z)) {
+            return new Pair<>(x-1,z);
+        }
+        if(hasWall(x,z+1)) {
+            return new Pair<>(x,z+1);
+        }
+        if(hasWall(x,z-1)) {
+            return new Pair<>(x,z-1);
+        }
+        return null;
+    }
+    private boolean hasWall(int x, int z) {
+        if(!arena.isValidGridLocation(x,z)) {
+            return false;
+        }
+        if(!hasBuilding(x,z)) {
+            return false;
+        }
+        return getBuilding(x, z) instanceof Wall;
+    }
+    // Get a list of locations in the inner locs for a building
+    public List<Pair<Integer, Integer>> getInnerLocs(Building building) {
+        List<Pair<Integer,Integer>> innerLocs = new ArrayList<>();
+        Pair<Integer,Integer> buildingLoc = building.getGridLoc();
+        for(int i = buildingLoc.first + 1; i < buildingLoc.first + building.getGridLengthX() - 1; i++) {
+            for(int j = buildingLoc.second + 1; j < buildingLoc.second + building.getGridLengthZ() - 1; j++) {
+                innerLocs.add(new Pair<>(i,j));
+            }
+        }
+        return innerLocs;
+    }
+    public List<Pair<Integer, Integer>> getLocs(Building building) {
+        List<Pair<Integer,Integer>> locs = new ArrayList<>();
+        Pair<Integer,Integer> buildingLoc = building.getGridLoc();
+        for(int i = buildingLoc.first; i < buildingLoc.first + building.getGridLengthX(); i++) {
+            for(int j = buildingLoc.second; j < buildingLoc.second + building.getGridLengthZ(); j++) {
+                locs.add(new Pair<>(i,j));
+            }
+        }
+        return locs;
     }
     @Override
     public void update() {

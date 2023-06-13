@@ -7,6 +7,7 @@ import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Buildings.BuildingStates.IBuildingState;
 import aaronpost.clashcraft.Interfaces.IDisplayable;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
+import aaronpost.clashcraft.Pair;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Session;
 import aaronpost.clashcraft.Singletons.Sessions;
@@ -128,6 +129,9 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     }
     public void sendMessage(String message) {
         arena.sendActionBar(getPlainDisplayName() + ChatColor.DARK_GRAY + ": " + ChatColor.GRAY + message);
+    }
+    public Pair<Integer, Integer> getGridLoc() {
+        return new Pair<>(x,z);
     }
     public void place(int x, int z) {
         setRelativeLocation(x,z);

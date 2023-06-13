@@ -1,5 +1,6 @@
 package pathfinding.grid;
 
+import aaronpost.clashcraft.Buildings.Building;
 import pathfinding.NavigationGraph;
 import pathfinding.NavigationNode;
 import pathfinding.PathFinder;
@@ -11,6 +12,7 @@ import java.util.List;
 public class GridCell implements NavigationGridGraphNode {
 	public int x;
 	public int y;
+	public Building building = null;
 	
 	/* for path finders*/
 	private float f, g, h;

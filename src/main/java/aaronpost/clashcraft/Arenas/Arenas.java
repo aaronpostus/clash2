@@ -13,6 +13,9 @@ public class Arenas {
     public static Arenas a = new Arenas();
     public static int GRID_X_LENGTH = 90;
     public static int GRID_Z_LENGTH = 90;
+    // we allow troops to walk on the outside ring
+    public static int NAV_GRID_X_LENGTH = GRID_X_LENGTH + 4;
+    public static int NAV_GRID_Z_LENGTH = GRID_X_LENGTH + 4;
     public static Location spawn = new Location(Globals.world, 54, 68, 11);
 
     public Arenas() {

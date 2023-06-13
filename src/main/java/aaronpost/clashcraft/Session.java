@@ -23,14 +23,17 @@ public class Session implements Serializable {
     private long timeUpdatesStopped = -1;
     private List<Currency> currencies = new ArrayList<>();
     private final UUID u;
-
+    private String playerUsername;
     public Session(Player p) {
-        u = p.getUniqueId();
-        island = new Island();
-        currencies.add(new Gold(this));
+        this.u = p.getUniqueId();
+        this.island = new Island();
+        this.currencies.add(new Gold(this));
+        this.playerUsername = p.getName();
     }
     public void saveLogOffTime() {
         timeUpdatesStopped = System.currentTimeMillis();
+        // there is a bug caused by this where it will use the old username for one logon session but who cares
+        this.playerUsername = Bukkit.getOfflinePlayer(u).getName();
     }
     public float retrieveHoursOffline() {
         if(timeUpdatesStopped == -1) {

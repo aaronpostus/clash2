@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class Serializer implements Listener {
@@ -131,7 +132,10 @@ public class Serializer implements Listener {
         w.close();
     }
     public Session deserializeSession(Player p) throws IOException {
-        File file = new File(SESSIONS_PATH + File.separator + p.getUniqueId() + ".json");
+        return deserializeSession(p.getUniqueId());
+    }
+    public Session deserializeSession(UUID uuid) throws IOException {
+        File file = new File(SESSIONS_PATH + File.separator + uuid + ".json");
         if (file.exists()){
             Reader reader = new FileReader(file);
             Session s = sessionGson.fromJson(reader, Session.class);
@@ -140,4 +144,5 @@ public class Serializer implements Listener {
         }
         return null;
     }
+
 }

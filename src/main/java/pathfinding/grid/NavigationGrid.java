@@ -92,7 +92,6 @@ public class NavigationGrid<T extends NavigationGridGraphNode> implements Naviga
 	    return this.contains(x, y) && this.nodes[x][y].isWalkable();
 	};
 
-
 	/**
 	 * Determine wether the given x,y pair is within the bounds of this grid
 	 * @param x - The x / column coordinate of the node.

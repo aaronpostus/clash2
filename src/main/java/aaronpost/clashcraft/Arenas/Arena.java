@@ -1,10 +1,10 @@
 package aaronpost.clashcraft.Arenas;
 import aaronpost.clashcraft.Buildings.Building;
-import aaronpost.clashcraft.Buildings.GoldMine;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Islands.Island;
 import aaronpost.clashcraft.Pair;
+import aaronpost.clashcraft.Raiding.Raid;
 import aaronpost.clashcraft.Session;
 import aaronpost.clashcraft.Singletons.GameManager;
 import aaronpost.clashcraft.Singletons.Sessions;
@@ -17,12 +17,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import static aaronpost.clashcraft.Arenas.Arena.ArenaState.ISLAND_STATE;
+import static aaronpost.clashcraft.Arenas.Arena.ArenaState.RAID_STATE;
+
 public class Arena {
     private final Location loc;
     private Player player = null;
     private Island island = null;
     private Session session = null;
-
+    public enum ArenaState { ISLAND_STATE, RAID_STATE }
+    public ArenaState currentState = ISLAND_STATE;
+    private Raid currentRaid = null;
     public Arena(Location loc) {
         this.loc = loc;
     }
@@ -32,6 +37,7 @@ public class Arena {
     }
 
     public void assignPlayer(Player p) {
+        this.currentState = ISLAND_STATE;
         p.getInventory().clear();
         this.player = p;
         this.session = Sessions.s.getSession(p);
@@ -96,6 +102,9 @@ public class Arena {
         },  10);
 
     }
+    public void setIsland(Island island) {
+        this.island = island;
+    }
     public void purchaseNewBuilding(Building building) {
         island.putBuildingInHand(building);
         // Gets building ItemStack with formatted lore, and gives it to player
@@ -118,17 +127,48 @@ public class Arena {
         return new Pair<Integer,Integer>((int)(loc.getX() - loc2.getX()), (int)(loc.getZ() - loc2.getZ()));
     }
     public void unassign() {
-        GameManager.getInstance().removeFixedUpdatable(island);
-        GameManager.getInstance().removeUpdatable(island);
-        Arenas.a.sendToSpawn(player);
+        this.unload();
+
         player.getInventory().clear();
+        Arenas.a.sendToSpawn(player);
         this.player.setAllowFlight(false);
-        this.island.stopUpdates();
-        this.player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-        this.session.saveLogOffTime();
+        System.out.println("currentraid" + (currentRaid != null));
+        if(currentState == RAID_STATE) {
+            this.currentRaid.stopUpdates();
+            this.currentRaid = null;
+        }
+
         this.player = null;
         this.island = null;
         this.session = null;
+    }
+    public void assignRaid(Raid raid, Island victimIsland) {
+        if(currentState == RAID_STATE) {
+            this.currentRaid.stopUpdates();
+        }
+        this.currentRaid = raid;
+        this.player.getInventory().clear();
+        this.unload();
+        this.island = victimIsland;
+        this.currentState = RAID_STATE;
+    }
+    public Location getAbsLocationFromNavGridLoc(int x, int z) {
+        return getAbsLocationFromNavGridLoc(x,z,0);
+    }
+    public Location getAbsLocationFromNavGridLoc(int x, int z, int heightAboveGround) {
+        Location loc = this.getLoc().clone();
+        loc.setX(x + loc.getX() - 2);
+        loc.setZ(z + loc.getZ() - 2);
+        loc.setY(heightAboveGround + loc.getY());
+        return loc;
+    }
+    public void unload() {
+        GameManager.getInstance().removeFixedUpdatable(island);
+        GameManager.getInstance().removeUpdatable(island);
+
+        this.island.stopUpdates();
+        this.player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        this.session.saveLogOffTime();
     }
 
     public Location getLoc() {

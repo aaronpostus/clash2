@@ -11,20 +11,21 @@ import org.bukkit.Material;
 import pathfinding.grid.GridCell;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class TroopAgent {
-    private Pair<Integer,Integer> agentPos;
-    private Island island;
-    private Arena arena;
-    private IslandNavGraph navGraph;
+    private final Pair<Integer,Integer> agentPos;
+    private final Island island;
+    private final Arena arena;
+    private final IslandNavGraph navGraph;
+
     public TroopAgent(Arena arena,IslandNavGraph navGraph, int x, int z) {
         this.arena = arena;
         this.island = arena.getIsland();
         this.navGraph = navGraph;
         this.agentPos = new Pair<>(x,z);
+    }
+    public void setAgentOptions(TroopAgentOptions options) {
     }
 
     public List<Building> pickBuildings() {
@@ -83,8 +84,6 @@ public class TroopAgent {
         for(GridCell cell: cells){
             arena.getAbsLocationFromNavGridLoc(cell.x, cell.y,9).getBlock().setType(Material.BLUE_STAINED_GLASS);
         }
-        //System.out.println(cheapestPath.get(cheapestPath.size() -1).x + "   " + cheapestPath.get(cheapestPath.size() -1).y);
-        //System.out.println(navGraph.buildingCenters.get(cheapestBuilding).first + "    " + navGraph.buildingCenters.get(cheapestBuilding).second);
         return cheapestBuilding;
     }
     public Pair<Integer,List<GridCell>> calculateCheapestPath(int x1, int z1, Building building) {

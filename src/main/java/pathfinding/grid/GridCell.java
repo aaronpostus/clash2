@@ -18,8 +18,8 @@ public class GridCell implements NavigationGridGraphNode {
 	private float f, g, h;
 	private boolean isWalkable;
 	private GridCell parent;
-	private ObjectIntMap<Class<? extends PathFinder>> closedOnJob = new ObjectIntMap<Class<? extends PathFinder>>();
-	private ObjectIntMap<Class<? extends PathFinder>> openedOnJob = new ObjectIntMap<Class<? extends PathFinder>>();
+	private final ObjectIntMap<Class<? extends PathFinder>> closedOnJob = new ObjectIntMap<Class<? extends PathFinder>>();
+	private final ObjectIntMap<Class<? extends PathFinder>> openedOnJob = new ObjectIntMap<Class<? extends PathFinder>>();
 
 	//for BTree
 	private int index;

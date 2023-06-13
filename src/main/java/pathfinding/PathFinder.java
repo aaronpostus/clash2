@@ -10,5 +10,5 @@ public interface PathFinder<T extends NavigationNode> {
 	 * @param endNode 
 	 * @return The path from start(exclusive) to end(inclusive) or null, if no path was found.
 	 */
-	public List<T> findPath(T startNode, T endNode, NavigationGraph<T> grid);
+    List<T> findPath(T startNode, T endNode, NavigationGraph<T> grid);
 }

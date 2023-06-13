@@ -26,9 +26,10 @@ public class Serializer implements Listener {
     public static final String SESSIONS_PATH = ClashCraft.plugin.getDataFolder().getAbsolutePath() + File.separator + "Sessions";
     public static final String SCHEMATICS_PATH = ClashCraft.plugin.getDataFolder().getAbsolutePath() + File.separator + "Schematics";
     private final Gson sessionGson;
-    private final String path = "aaronpost.clashcraft.";
+
     public Serializer() {
         GsonBuilder builder = new GsonBuilder();
+        String path = "aaronpost.clashcraft.";
         builder.registerTypeAdapter(Building.class, new DeserializerAdapter<Building>(path + "Buildings."));
         builder.registerTypeAdapter(Currency.class, new DeserializerAdapter<Currency>(path + "Currency."));
         builder.registerTypeAdapter(IBuildingState.class, new DeserializerAdapter<IBuildingState>(path +

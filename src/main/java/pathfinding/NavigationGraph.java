@@ -2,9 +2,6 @@ package pathfinding;
 
 import java.util.List;
 
-import pathfinding.grid.NavigationGridGraph;
-import pathfinding.grid.NavigationGridGraphNode;
-
 /**
  * A collection of {@link NavigationNode}.
  * 

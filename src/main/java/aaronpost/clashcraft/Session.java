@@ -11,17 +11,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 import java.io.Serializable;
-import java.time.Duration;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 public class Session implements Serializable {
     private final Island island;
-    private transient Scoreboard scoreboard;
     private transient Arena arena;
     private long timeUpdatesStopped = -1;
-    private List<Currency> currencies = new ArrayList<>();
+    private final List<Currency> currencies = new ArrayList<>();
     private final UUID u;
     private String playerUsername;
     public Session(Player p) {
@@ -44,7 +41,7 @@ public class Session implements Serializable {
     }
     public void refreshScoreboard() {
         Player player = getPlayer();
-        scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective objective = scoreboard.registerNewObjective("x", "y", ChatColor.BOLD +
                 StringUtils.upperCase(player.getName() + "'s Island"));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);

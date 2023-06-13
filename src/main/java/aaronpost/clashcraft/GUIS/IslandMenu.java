@@ -14,12 +14,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class IslandMenu implements Listener {
-    private final Inventory categorySelect;
     private final Player p;
 
     public IslandMenu(Player p) {
         this.p = p;
-        categorySelect = p.getServer().createInventory(null, 27, ChatColor.GOLD + "+ Shop +");
+        Inventory categorySelect = p.getServer().createInventory(null, 27, ChatColor.GOLD + "+ Shop +");
         ItemStack stack = new ItemStack(Material.BOW);
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(ChatColor.RED + "Army");

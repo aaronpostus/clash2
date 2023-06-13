@@ -3,7 +3,6 @@ package aaronpost.clashcraft.GUIS;
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.Buildings.Barracks;
-import aaronpost.clashcraft.Buildings.GoldMine;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Islands.Island;
@@ -19,15 +18,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class ArmyBuildings implements Listener {
-    private final Inventory categorySelect;
     private final Player p;
 
     public ArmyBuildings(Player p) {
         this.p = p;
-        categorySelect = p.getServer().createInventory(null, 27, ChatColor.GOLD + "+ Resources +");
+        Inventory categorySelect = p.getServer().createInventory(null, 27, ChatColor.GOLD + "+ Resources +");
         ItemStack stack = BuildingGlobals.BARRACKS_ITEM_STACK.clone();
         categorySelect.setItem(10, stack);
 

@@ -10,7 +10,6 @@ import pathfinding.NavigationGraph;
 import pathfinding.PathFinder;
 import pathfinding.Util;
 import pathfinding.grid.GridCell;
-import pathfinding.grid.NavigationGrid;
 import pathfinding.grid.NavigationGridGraph;
 import pathfinding.grid.NavigationGridGraphNode;
 import pathfinding.grid.heuristics.EuclideanDistance;
@@ -26,10 +25,10 @@ import pathfinding.grid.heuristics.EuclideanDistance;
  */
 public class JumpPointFinder<T extends NavigationGridGraphNode> implements PathFinder<T> {
 	BHeap<T> openList;
-	private GridFinderOptions options;
+	private final GridFinderOptions options;
 	int jobId;
 
-	private Heuristic euclideanDist = new EuclideanDistance();
+	private final Heuristic euclideanDist = new EuclideanDistance();
 
 	public JumpPointFinder(Class<T> clazz, GridFinderOptions options) {
 		this.options = options;

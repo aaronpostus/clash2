@@ -7,13 +7,11 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.time.Duration;
-
 public class BuildingGlobals {
     public static NamespacedKey NAMESPACED_KEY_UUID = new NamespacedKey(ClashCraft.plugin, "buildingUUID");
     public static NamespacedKey NAMESPACED_KEY_IDENTIFIER = new NamespacedKey(ClashCraft.plugin, "buildingInHand");
-    public static enum BuildingStates { InHandNew, InHand, Upgrading, UpgradeComplete, IslandMode, DefenseMode }
-    public static enum ClickAction { PrimaryAction, CompleteBuildingAction }
+    public enum BuildingStates { InHandNew, InHand, Upgrading, UpgradeComplete, IslandMode, DefenseMode }
+    public enum ClickAction { PrimaryAction, CompleteBuildingAction }
     // Collectors
     public static float MILLISECONDS_TO_SECONDS = (1f/1000f);
     public static float SECONDS_TO_HOURS = (1f/60f/60f);

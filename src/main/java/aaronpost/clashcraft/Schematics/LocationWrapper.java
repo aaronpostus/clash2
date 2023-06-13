@@ -8,8 +8,10 @@ import org.bukkit.block.Block;
 import java.io.Serializable;
 
 public class LocationWrapper implements Serializable {
-    private double x, y, z;
-    private String world;
+    private final double x;
+    private final double y;
+    private final double z;
+    private final String world;
     public LocationWrapper(Location loc) {
         x = loc.getX();
         y = loc.getY();

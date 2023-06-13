@@ -1,7 +1,6 @@
 package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Arenas.Arena;
-import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Interfaces.IUpdatable;
 import aaronpost.clashcraft.Islands.Island;
@@ -29,7 +28,7 @@ import java.util.List;
  */
 public class BuildingInHand implements Serializable, IUpdatable {
     // Cant be saved
-    private Building building;
+    private final Building building;
     private transient Arena arena;
     private transient Island island;
     private transient Player player;
@@ -202,6 +201,6 @@ public class BuildingInHand implements Serializable, IUpdatable {
     }
     @Override
     public void stopUpdates() {
-        if(building.isNewBuilding()) { removeOldSilhouette(); };
+        if(building.isNewBuilding()) { removeOldSilhouette(); }
     }
 }

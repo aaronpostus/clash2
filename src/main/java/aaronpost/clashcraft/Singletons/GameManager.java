@@ -14,8 +14,8 @@ import java.util.List;
 public class GameManager {
     private static GameManager instance = null;
     public boolean active;
-    private List<IUpdatable> updatables;
-    private List<IFixedUpdatable> fixedUpdatables;
+    private final List<IUpdatable> updatables;
+    private final List<IFixedUpdatable> fixedUpdatables;
     private BukkitTask fixedUpdate, update;
 
     private GameManager() {

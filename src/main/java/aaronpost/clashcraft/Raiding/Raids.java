@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class Raids {
     public static Raids r = new Raids();
-    private List<Raid> raids = new ArrayList<>();
+    private final List<Raid> raids = new ArrayList<>();
     public Raids() {
 
     }

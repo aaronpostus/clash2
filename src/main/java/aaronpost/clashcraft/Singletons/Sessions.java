@@ -2,7 +2,6 @@ package aaronpost.clashcraft.Singletons;
 
 import aaronpost.clashcraft.Session;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.HashMap;

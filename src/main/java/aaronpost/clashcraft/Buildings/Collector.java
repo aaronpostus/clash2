@@ -39,7 +39,7 @@ public abstract class Collector extends Building {
         amount = 0f;
     }
     public void catchUp(float hoursPassed) {
-        tryToFill((float) hoursPassed * getCollectionRate());
+        tryToFill(hoursPassed * getCollectionRate());
     }
     @Override
     public void startUpdates() {

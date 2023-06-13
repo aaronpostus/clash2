@@ -1,7 +1,6 @@
 package aaronpost.clashcraft.Arenas;
 
 import aaronpost.clashcraft.Globals.Globals;
-import aaronpost.clashcraft.Islands.Island;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -9,7 +8,7 @@ import java.util.ArrayList;
 
 public class Arenas {
 
-    private ArrayList<Arena> arenas = new ArrayList<>();
+    private final ArrayList<Arena> arenas = new ArrayList<>();
     public static Arenas a = new Arenas();
     public static int GRID_X_LENGTH = 90;
     public static int GRID_Z_LENGTH = 90;

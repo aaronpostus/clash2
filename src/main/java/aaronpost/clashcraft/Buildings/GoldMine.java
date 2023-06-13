@@ -7,7 +7,6 @@ import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
-import java.time.Duration;
 
 // Author: Aaron Post
 public class GoldMine extends Collector {

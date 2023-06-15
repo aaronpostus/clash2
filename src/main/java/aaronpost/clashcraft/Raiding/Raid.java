@@ -8,19 +8,20 @@ import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Interfaces.IUpdatable;
 import aaronpost.clashcraft.Islands.Island;
 import aaronpost.clashcraft.Raiding.TroopAI.TroopAgent;
+import aaronpost.clashcraft.Raiding.Troops.Barbarian;
 import aaronpost.clashcraft.Session;
 import aaronpost.clashcraft.Singletons.GameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 public class Raid implements IUpdatable, IFixedUpdatable {
     //List<Building> buildingsExcludingWalls;
     private final Arena arena;
     private final IslandNavGraph navGraph;
+    private final TroopManager troopManager;
     public Raid(Arena arena, UUID uuid, int x, int z) {
         this.arena = arena;
         Player raider = arena.getPlayer();
@@ -39,12 +40,8 @@ public class Raid implements IUpdatable, IFixedUpdatable {
         GameManager.getInstance().addUpdatable(this);
         GameManager.getInstance().addFixedUpdatable(this);
         this.navGraph = new IslandNavGraph(victimIsland);
-        TroopAgent agent = new TroopAgent(arena,navGraph,x,z);
-        List<Building> cheapestBuildings = agent.pickBuildings();
-        for(Building building1: cheapestBuildings) {
-            ClashCraft.plugin.getLogger().info(building1.getDisplayName());
-        }
-        Building selectedBuilding = agent.pickBuilding(cheapestBuildings);
+        this.troopManager = new TroopManager();
+        this.troopManager.addTroop(new Barbarian(this,x,z));
         //ClashCraft.plugin.getLogger().info("Selected " + selectedBuilding.getDisplayName());
         //List<Building> buildings = raiderIsland.getBuildings();
         //remove walls from this
@@ -55,7 +52,7 @@ public class Raid implements IUpdatable, IFixedUpdatable {
 
     @Override
     public void update() {
-        //this.navGraph.refreshNavMesh();
+        this.troopManager.updateTroops();
     }
 
     @Override
@@ -72,7 +69,11 @@ public class Raid implements IUpdatable, IFixedUpdatable {
     }
     @Override
     public void stopUpdates() {
+        troopManager.deleteAllTroops();
         GameManager.getInstance().removeUpdatable(this);
         GameManager.getInstance().removeFixedUpdatable(this);
+    }
+    public void addTroop(Troop troop) {
+        troopManager.addTroop(troop);
     }
 }

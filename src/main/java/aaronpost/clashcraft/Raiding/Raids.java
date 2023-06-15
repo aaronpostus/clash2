@@ -19,6 +19,9 @@ public class Raids {
 
     }
     public boolean tryRaid(Player raider, int x, int z) {
+        // Needs to be modified to not server multiple players the same offline island at the same time
+        // Also needs to prevent showing the player the same island multiple times
+
         File sessionFile = new File(Serializer.SESSIONS_PATH);
         File[] files = sessionFile.listFiles();
         Server server = ClashCraft.plugin.getServer();

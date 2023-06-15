@@ -4,6 +4,7 @@ import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Islands.Island;
 import aaronpost.clashcraft.Pair;
+import aaronpost.clashcraft.Raiding.Path;
 import aaronpost.clashcraft.Raiding.Raid;
 import aaronpost.clashcraft.Session;
 import aaronpost.clashcraft.Singletons.GameManager;
@@ -12,10 +13,14 @@ import aaronpost.clashcraft.Singletons.Sessions;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import pathfinding.grid.GridCell;
+
+import java.util.List;
 
 import static aaronpost.clashcraft.Arenas.Arena.ArenaState.ISLAND_STATE;
 import static aaronpost.clashcraft.Arenas.Arena.ArenaState.RAID_STATE;
@@ -101,6 +106,24 @@ public class Arena {
             }
         },  10);
 
+    }
+    public Raid getCurrentRaid() {
+        return currentRaid;
+    }
+    public void drawDebugPath(Path path, Material mat) {
+        // clear previous paths
+        for(int i=0; i < Arenas.NAV_GRID_X_LENGTH; i++){
+            for(int j=0; j < Arenas.NAV_GRID_Z_LENGTH; j++) {
+                Block block = getAbsLocationFromNavGridLoc(i,j, 9).getBlock();
+                if(block.getType() == mat) {
+                    block.setType(Material.AIR);
+                }
+            }
+        }
+        List<GridCell> cells = path.getCells();
+        for(GridCell cell: cells){
+            getAbsLocationFromNavGridLoc(cell.x, cell.y,9).getBlock().setType(Material.BLUE_STAINED_GLASS);
+        }
     }
     public void setIsland(Island island) {
         this.island = island;

@@ -1,9 +1,6 @@
 package aaronpost.clashcraft.Schematics;
 
-import aaronpost.clashcraft.ClashCraft;
-import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -18,7 +15,7 @@ public class Schematic implements Serializable {
     private final int xLength, yLength, zLength;
     private int yOffset;
     private final List<LocationWrapper> blockLocs = new ArrayList<>();
-    private List<LocationWrapper> eventBlockLocs = new ArrayList<>();
+    private final List<LocationWrapper> eventBlockLocs = new ArrayList<>();
     public Schematic(Block b1, Block b2, String name) {
         this.yOffset = 0;
         this.name = name;

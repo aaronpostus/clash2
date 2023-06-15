@@ -18,15 +18,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class ResourcesMenu implements Listener {
-    private final Inventory categorySelect;
     private final Player p;
 
     public ResourcesMenu(Player p) {
         this.p = p;
-        categorySelect = p.getServer().createInventory(null, 27, ChatColor.GOLD + "+ Resources +");
+        Inventory categorySelect = p.getServer().createInventory(null, 27, ChatColor.GOLD + "+ Resources +");
         ItemStack stack = BuildingGlobals.GOLDMINE_ITEM_STACK.clone();
         categorySelect.setItem(10, stack);
 

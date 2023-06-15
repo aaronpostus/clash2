@@ -14,11 +14,14 @@ import java.util.UUID;
 
 public class Raids {
     public static Raids r = new Raids();
-    private List<Raid> raids = new ArrayList<>();
+    private final List<Raid> raids = new ArrayList<>();
     public Raids() {
 
     }
     public boolean tryRaid(Player raider, int x, int z) {
+        // Needs to be modified to not server multiple players the same offline island at the same time
+        // Also needs to prevent showing the player the same island multiple times
+
         File sessionFile = new File(Serializer.SESSIONS_PATH);
         File[] files = sessionFile.listFiles();
         Server server = ClashCraft.plugin.getServer();

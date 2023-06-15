@@ -2,12 +2,11 @@ package aaronpost.clashcraft.Commands;
 
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Interfaces.IArenaCommand;
+import aaronpost.clashcraft.Raiding.Raids;
 
-public class BuildingInteractionQuery implements IArenaCommand {
-    public BuildingInteractionQuery() {
-
-    }
+public class SearchForRaid implements IArenaCommand {
+    @Override
     public void execute(Arena arena) {
-        //arena.findBuildingAtLocation()
+        Raids.r.tryRaid(arena.getPlayer(), 0,0);
     }
 }

@@ -1,9 +1,19 @@
 package aaronpost.clashcraft.Buildings.BuildingStates;
 
 import aaronpost.clashcraft.Buildings.Building;
+import aaronpost.clashcraft.Raiding.Raid;
 
 public class DefenseState extends IBuildingState {
-    public IBuildingState previousState;
+    private IBuildingState previousState;
+    private Raid raid;
+    private Building building;
+    public DefenseState(Building building, Raid raid, IBuildingState previousState) {
+        this.previousState = previousState;
+        this.raid = raid;
+    }
+    public void restoreState() {
+        building.state = previousState;
+    }
     @Override
     public void update() {
 

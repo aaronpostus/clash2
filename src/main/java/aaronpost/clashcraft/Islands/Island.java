@@ -16,13 +16,12 @@ import java.util.*;
 
 public class Island implements Serializable, IFixedUpdatable, IUpdatable {
     private BuildingInHand buildingInHand;
-    private transient Location location;
     private transient Player player;
     private transient Arena arena;
-    private UUID[][] nodes;
-    private Map<UUID, Building> buildings;
+    private final UUID[][] nodes;
+    private final Map<UUID, Building> buildings;
 
-    public static enum Interactions {
+    public enum Interactions {
         LEFT_CLICK, RIGHT_CLICK
     }
 
@@ -246,12 +245,10 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         if(buildingInHand != null) {
             this.buildingInHand.setArena(arena);
         }
-        this.location = arena.getLoc();
+        Location location = arena.getLoc();
     }
     public void loadBuildings() {
         for(Building building: getBuildings()) {
-            //player.sendMessage(ChatColor.GRAY + "Loaded " + building.getPlainDisplayName() + ChatColor.GRAY
-            //        + " Level " + building.getLevel());
             building.paste();
         }
     }

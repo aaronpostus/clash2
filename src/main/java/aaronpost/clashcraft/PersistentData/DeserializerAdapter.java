@@ -1,6 +1,5 @@
 package aaronpost.clashcraft.PersistentData;
 
-import aaronpost.clashcraft.Currency.Currency;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;

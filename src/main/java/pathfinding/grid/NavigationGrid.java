@@ -19,7 +19,7 @@ import pathfinding.grid.finders.GridFinderOptions;
 public class NavigationGrid<T extends NavigationGridGraphNode> implements NavigationGridGraph<T> {
 	protected int width;
 	protected int height;
-	private List<T> neighbors = new ArrayList<T>();
+	private final List<T> neighbors = new ArrayList<T>();
 	
 	/** The nodes contained in the grid. They are stored as Grid[x][y] */
 	protected T[][] nodes;
@@ -90,7 +90,7 @@ public class NavigationGrid<T extends NavigationGridGraphNode> implements Naviga
 	 */
 	public boolean isWalkable(int x, int y) {
 	    return this.contains(x, y) && this.nodes[x][y].isWalkable();
-	};
+	}
 
 	/**
 	 * Determine wether the given x,y pair is within the bounds of this grid
@@ -100,7 +100,7 @@ public class NavigationGrid<T extends NavigationGridGraphNode> implements Naviga
 	 */
 	public boolean contains(int x, int y) {
 	    return (x >= 0 && x < this.width) && (y >= 0 && y < this.height);
-	};
+	}
 
 
 	/**
@@ -114,8 +114,8 @@ public class NavigationGrid<T extends NavigationGridGraphNode> implements Naviga
 	 */
 	public void setWalkable(int x, int y, boolean walkable) {
 	    this.nodes[x][y].setWalkable(walkable);
-	};
-	
+	}
+
 
 	@Override
 	public List<T> getNeighbors(T cell) {
@@ -223,8 +223,8 @@ public class NavigationGrid<T extends NavigationGridGraphNode> implements Naviga
 	public boolean isWalkable(T node) {
 		GridCell c = (GridCell)node;
 		return isWalkable(c.x, c.y);
-	};
-	
+	}
+
 	public T[][] getNodes(){
 		return nodes;
 	}

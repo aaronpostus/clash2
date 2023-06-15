@@ -3,8 +3,6 @@ package aaronpost.clashcraft.Singletons;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Interfaces.IUpdatable;
 
-import java.time.Duration;
-
 public class TestUpdatable implements IUpdatable, IFixedUpdatable {
     int counter = 0;
     @Override

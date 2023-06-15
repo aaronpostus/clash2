@@ -3,7 +3,6 @@ package pathfinding.grid.finders;
 import java.util.List;
 
 import pathfinding.finders.ThetaStarFinder;
-import pathfinding.grid.GridCell;
 import pathfinding.grid.NavigationGridGraph;
 import pathfinding.grid.NavigationGridGraphNode;
 

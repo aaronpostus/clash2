@@ -2,7 +2,6 @@ package aaronpost.clashcraft.GUIS;
 
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Arenas.Arenas;
-import aaronpost.clashcraft.Buildings.Barracks;
 import aaronpost.clashcraft.Buildings.Wall;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Globals.Globals;
@@ -21,12 +20,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class DefenseBuildings implements Listener {
-    private final Inventory categorySelect;
     private final Player p;
 
     public DefenseBuildings(Player p) {
         this.p = p;
-        categorySelect = p.getServer().createInventory(null, 27, ChatColor.GOLD + "+ Defenses +");
+        Inventory categorySelect = p.getServer().createInventory(null, 27, ChatColor.GOLD + "+ Defenses +");
         ItemStack stack = BuildingGlobals.WALL_ITEM_STACK.clone();
         categorySelect.setItem(10, stack);
 

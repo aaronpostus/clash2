@@ -11,9 +11,6 @@ public class BHeap<T extends BHeapNode> {
 	public int size = 0;
 
 	private BHeapNode[] nodes;
-	//private final boolean isMaxHeap;
-	//Comparator<T> comparator;
-	//Class<T> clazz;
 	Comparator<T> comparator;
 
 	public BHeap(Comparator<T> comparator) {
@@ -21,8 +18,6 @@ public class BHeap<T extends BHeapNode> {
 	}
 
 	public BHeap (Comparator<T> comparator, int capacity) {
-		//this.isMaxHeap = isMaxHeap;
-		//this.clazz = clazz;
 		nodes = new BHeapNode[capacity];// new GridCell[capacity];
 		this.comparator = comparator;
 	}
@@ -109,8 +104,6 @@ public class BHeap<T extends BHeapNode> {
 			//float rightValue;
 			if (rightIndex >= size) {
 				rightNode = null;
-				//rightValue = isMaxHeap ? Float.MIN_VALUE : Float.MAX_VALUE;
-				//rightValue = Float.MAX_VALUE;
 			} else {
 				rightNode = nodes[rightIndex];
 				//rightValue = rightNode.getValue();

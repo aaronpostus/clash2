@@ -30,9 +30,6 @@ public class PlaceBuilding implements IArenaCommand {
             return;
         }
         building.sendMessage("Placing.");
-//        Pair<Double, Double> gridLoc = arena.getGridLocFromAbsLoc(loc);
-//        int x = gridLoc.first.intValue();
-//        int z = gridLoc.second.intValue();
         island.placeBuildingInHand();
         //building.place(x, z);
         PlayerInventory inventory = player.getInventory();

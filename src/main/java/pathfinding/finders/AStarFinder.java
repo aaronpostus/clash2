@@ -2,7 +2,6 @@ package pathfinding.finders;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 
 import pathfinding.BHeap;
@@ -21,7 +20,7 @@ import pathfinding.Util;
  */
 public class AStarFinder<T extends NavigationNode> implements PathFinder<T>{
 	
-	private PathFinderOptions defaultOptions;
+	private final PathFinderOptions defaultOptions;
 	BHeap<T> openList;
 	public int jobId;
 		

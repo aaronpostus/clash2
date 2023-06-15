@@ -4,7 +4,6 @@ import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Buildings.BuildingStates.*;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Globals.Globals;
-import aaronpost.clashcraft.Buildings.BuildingStates.IBuildingState;
 import aaronpost.clashcraft.Interfaces.IDisplayable;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Pair;
@@ -26,7 +25,9 @@ import java.util.UUID;
 public abstract class Building implements IDisplayable, IFixedUpdatable, Serializable {
     public IBuildingState state;
     private final UUID uuid;
-    private int x, z, level = 1, nextLevel = 1;
+    private int x;
+    private int z;
+    private int nextLevel = 1;
     private transient Arena arena;
     private transient Session session;
     private transient Location absoluteLocation;
@@ -114,7 +115,9 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public int getLayersBuilt() { return layersBuilt; }
     public void setLayersBuilt(int layers) { this.layersBuilt = layers; }
     public float getPercentageBuilt() { return (buildTime / (float) getTimeToBuild(nextLevel)); }
-    public int getLevel() { return level; }
+    public int getLevel() {
+        int level = 1;
+        return level; }
 
     public boolean isNewBuilding() { return state instanceof InHandNewState; }
     public ItemStack getItemStack() {

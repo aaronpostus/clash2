@@ -1,7 +1,5 @@
 package pathfinding;
 
-import pathfinding.util.*;
-
 import java.util.ArrayList;
 import java.util.List;
 

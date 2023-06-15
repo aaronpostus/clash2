@@ -1,18 +1,11 @@
 package aaronpost.clashcraft;
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Arenas.Arenas;
-import aaronpost.clashcraft.Buildings.Building;
-import aaronpost.clashcraft.Buildings.BuildingInHand;
 import aaronpost.clashcraft.Commands.*;
-import aaronpost.clashcraft.GUIS.IslandMenu;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Interfaces.IArenaCommand;
 import aaronpost.clashcraft.Islands.Island;
-import aaronpost.clashcraft.Singletons.Sessions;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -25,19 +18,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Interaction implements Listener {
-    private Map<NamespacedKey, IArenaCommand> interactions;
-    private IArenaCommand leftClick = new LeftClickBuilding();
+    private final Map<NamespacedKey, IArenaCommand> interactions;
+    private final IArenaCommand leftClick = new LeftClickBuilding();
     public Interaction() {
         interactions = new HashMap<>();
         interactions.put(Globals.NM_KEY_SHOP_ITEM, new OpenShopMenu());

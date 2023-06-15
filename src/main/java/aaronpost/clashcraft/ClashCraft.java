@@ -3,6 +3,7 @@ package aaronpost.clashcraft;
 import aaronpost.clashcraft.Arenas.ArenaManager;
 import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.Globals.Globals;
+import aaronpost.clashcraft.Input.InputListener;
 import aaronpost.clashcraft.PersistentData.Serializer;
 import aaronpost.clashcraft.Raiding.Raids;
 import aaronpost.clashcraft.Schematics.Controller;
@@ -40,6 +41,7 @@ public class ClashCraft extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new Controller(), this);
         getServer().getPluginManager().registerEvents(new ArenaManager(), this);
         getServer().getPluginManager().registerEvents(new Interaction(), this);
+        getServer().getPluginManager().registerEvents(new InputListener(), this);
 
         Player[] list = new Player[getServer().getOnlinePlayers().size()];
         getServer().getOnlinePlayers().toArray(list);

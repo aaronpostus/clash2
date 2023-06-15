@@ -23,7 +23,7 @@ import pathfinding.grid.NavigationGridGraph;
  */
 public abstract class ThetaStarFinder<T extends NavigationNode> implements PathFinder<T>{
 
-	private PathFinderOptions defaultOptions;
+	private final PathFinderOptions defaultOptions;
 	BHeap<T> openList;
 	public int jobId;
 		

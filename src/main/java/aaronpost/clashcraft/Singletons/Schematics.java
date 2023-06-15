@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Schematics implements Serializable {
-    private List<Schematic> schematics = new ArrayList<>();
+    private final List<Schematic> schematics = new ArrayList<>();
     public static Schematics s = new Schematics();
 
     public void addSchematic(Schematic s) {

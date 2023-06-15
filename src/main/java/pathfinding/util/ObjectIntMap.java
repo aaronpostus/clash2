@@ -38,7 +38,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
     int[] valueTable;
     int capacity, stashSize;
 
-    private float loadFactor;
+    private final float loadFactor;
     private int hashShift, mask, threshold;
     private int stashCapacity;
     private int pushIterations;
@@ -667,7 +667,7 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
     }
 
     static public class Entries<K> extends MapIterator<K> implements Iterable<Entry<K>>, Iterator<Entry<K>> {
-        private Entry<K> entry = new Entry();
+        private final Entry<K> entry = new Entry();
 
         public Entries (ObjectIntMap<K> map) {
             super(map);
@@ -718,13 +718,6 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
             return value;
         }
 
-//        /** Returns a new array containing the remaining values. */
-//        public IntArray toArray () {
-//            IntArray array = new IntArray(true, map.size);
-//            while (hasNext)
-//                array.add(next());
-//            return array;
-//        }
     }
 
     static public class Keys<K> extends MapIterator<K> implements Iterable<K>, Iterator<K> {
@@ -749,21 +742,6 @@ public class ObjectIntMap<K> implements Iterable<ObjectIntMap.Entry<K>> {
         public Keys<K> iterator () {
             return this;
         }
-
-//        /** Returns a new array containing the remaining keys. */
-//        public Array<K> toArray () {
-//            Array array = new Array(true, map.size);
-//            while (hasNext)
-//                array.add(next());
-//            return array;
-//        }
-
-//        /** Adds the remaining keys to the array. */
-//        public Array<K> toArray (Array<K> array) {
-//            while (hasNext)
-//                array.add(next());
-//            return array;
-//        }
 
         public void remove () {
             super.remove();

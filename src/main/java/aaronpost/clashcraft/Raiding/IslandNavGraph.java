@@ -19,15 +19,11 @@ public class IslandNavGraph {
     private final NavigationGrid<GridCell> navGrid;
     private final AStarGridFinder<GridCell> finder;
     public static final int NAV_OFFSET = 2;
-    private final Island island;
-    private Arena arena;
-    private final List<Building> buildings;
     public Map<Building, List<Pair<Integer, Integer>>> outerRings = new HashMap<>();
     public Map<Building, Pair<Integer,Integer>> buildingCenters = new HashMap<>();
     public IslandNavGraph(Island island) {
-        this.island = island;
-        this.arena = island.getArena();
-        this.buildings = island.getBuildings();
+        Arena arena = island.getArena();
+        List<Building> buildings = island.getBuildings();
         this.cells = new GridCell[Arenas.NAV_GRID_X_LENGTH][Arenas.NAV_GRID_Z_LENGTH];
         for(int i = 0; i < Arenas.NAV_GRID_X_LENGTH; i++) {
             for(int j = 0; j < Arenas.NAV_GRID_Z_LENGTH; j++) {

@@ -72,6 +72,10 @@ public class Barracks extends Building {
     public Schematic getSchematic() {
         return Schematics.s.getSchematic(BuildingGlobals.BARRACKS_SCHEMATICS[getLevel() - 1]);
     }
+    @Override
+    public Schematic getBrokenSchematic() {
+        return Schematics.s.getSchematic(BuildingGlobals.BROKEN_BARRACKS_SCHEMATICS[getLevel() - 1]);
+    }
 
     @Override
     public int getMaxLevel() {

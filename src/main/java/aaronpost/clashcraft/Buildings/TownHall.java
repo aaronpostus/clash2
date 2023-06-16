@@ -1,17 +1,15 @@
 package aaronpost.clashcraft.Buildings;
 
-import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
-public class Wall extends Building {
-    public Wall(Arena arena) {
-        super(arena);
+public class TownHall extends Building {
+    public TownHall(int x, int z) {
+        super(x,z);
     }
-
     @Override
     public void click() {
 
@@ -36,32 +34,30 @@ public class Wall extends Building {
     public void visualUpdate() {
 
     }
-    public Schematic getBrokenSchematic() {
-        return Schematics.s.getSchematic(BuildingGlobals.BROKEN_WALL_SCHEMATIC);
-    }
+
     @Override
     public ItemStack getPlainItemStack() {
-        return BuildingGlobals.WALL_ITEM_STACK.clone();
+        return null;
     }
 
     @Override
     public String getPlainDisplayName() {
-        return BuildingGlobals.WALL_DISPLAY_NAME;
+        return null;
     }
 
     @Override
     public ChatColor getPrimaryColor() {
-        return BuildingGlobals.WALL_COLOR;
+        return null;
     }
 
     @Override
     public int getGridLengthX() {
-        return BuildingGlobals.WALL_GRID_LENGTH;
+        return 0;
     }
 
     @Override
     public int getGridLengthZ() {
-        return BuildingGlobals.WALL_GRID_LENGTH;
+        return 0;
     }
 
     @Override
@@ -71,12 +67,17 @@ public class Wall extends Building {
 
     @Override
     public Schematic getSchematic() {
-        return Schematics.s.getSchematic(BuildingGlobals.WALL_SCHEMATICS[getLevel() -1]);
+        return Schematics.s.getSchematic(BuildingGlobals.TOWN_HALL_SCHEMATICS[getLevel()-1]);
+    }
+
+    @Override
+    public Schematic getBrokenSchematic() {
+        return Schematics.s.getSchematic(BuildingGlobals.BROKEN_TOWN_HALL_SCHEMATICS[getLevel()-1]);
     }
 
     @Override
     public int getMaxLevel() {
-        return BuildingGlobals.WALL_MAX_LEVEL;
+        return 0;
     }
 
     @Override

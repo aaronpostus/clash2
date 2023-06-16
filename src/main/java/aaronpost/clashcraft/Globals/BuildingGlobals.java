@@ -18,6 +18,8 @@ public class BuildingGlobals {
     public static ChatColor GOLDMINE_PRIMARY_COLOR = ChatColor.GOLD;
     public static String[] GOLDMINE_SCHEMATIC = new String[] { "GoldMine1", "GoldMine2", "GoldMine3", "GoldMine4",
                                                                 "GoldMine5"};
+    public static String[] GOLDMINE_BROKEN_SCHEMATIC = new String[] { "GoldMine1", "GoldMine2", "GoldMine3", "GoldMine4",
+            "GoldMine5"};
     public static ItemStack GOLDMINE_ITEM_STACK = new ItemStack(Material.CHEST);
     public static String GOLDMINE_DISPLAY_NAME = GOLDMINE_PRIMARY_COLOR + "Gold Mine";
     static {
@@ -39,6 +41,7 @@ public class BuildingGlobals {
     // Barracks
     public static ChatColor BARRACKS_COLOR = ChatColor.RED;
     public static String[] BARRACKS_SCHEMATICS = new String[] { "Barracks1"};
+    public static String[] BROKEN_BARRACKS_SCHEMATICS = new String[] { "Barracks1_Broken"};
     public static ItemStack BARRACKS_ITEM_STACK = new ItemStack(Material.TARGET);
     public static final Material BARRACKS_ITEM_MATERIAL = BARRACKS_ITEM_STACK.getType();
     public static String BARRACKS_DISPLAY_NAME = BARRACKS_COLOR + "Barracks";
@@ -59,6 +62,7 @@ public class BuildingGlobals {
     // Walls
     public static ChatColor WALL_COLOR = ChatColor.GOLD;
     public static String[] WALL_SCHEMATICS = new String[] { "Wall1" };
+    public static String BROKEN_WALL_SCHEMATIC = "Wall_Broken";
     public static ItemStack WALL_ITEM_STACK = new ItemStack(Material.OAK_FENCE);
     public static final Material WALL_ITEM_MATERIAL = BARRACKS_ITEM_STACK.getType();
     public static String WALL_DISPLAY_NAME = WALL_COLOR + "Wall";
@@ -75,4 +79,7 @@ public class BuildingGlobals {
     public static int[] WALL_TOWN_HALL_LEVEL = new int[]{ 2 };
     public static int WALL_MAX_LEVEL = 1;
 
+    //TOWNHALL
+    public static String[] TOWN_HALL_SCHEMATICS = new String[] { "TownHall1"};
+    public static String[] BROKEN_TOWN_HALL_SCHEMATICS = new String[] { "TownHall1_Broken"};
 }

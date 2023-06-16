@@ -36,6 +36,10 @@ public class GoldMine extends Collector {
     public Schematic getSchematic() {
         return Schematics.s.getSchematic(BuildingGlobals.GOLDMINE_SCHEMATIC[getLevel() - 1]);
     }
+    @Override
+    public Schematic getBrokenSchematic() {
+        return Schematics.s.getSchematic(BuildingGlobals.GOLDMINE_BROKEN_SCHEMATIC[getLevel() - 1]);
+    }
 
     @Override
     public void visualUpdate() {

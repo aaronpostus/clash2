@@ -99,6 +99,7 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public abstract int getGridLengthZ();
     public abstract long getTimeToBuild(int level);
     public abstract Schematic getSchematic();
+    public abstract Schematic getBrokenSchematic();
     public abstract int getMaxLevel();
     public boolean isMaxLevel() {
         return getLevel() == getMaxLevel();

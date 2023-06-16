@@ -6,10 +6,8 @@ import aaronpost.clashcraft.Raiding.TroopAI.TroopStates.ITroopState;
 import aaronpost.clashcraft.Raiding.TroopAI.TroopStates.NoTargetState;
 import net.citizensnpcs.api.ai.PathStrategy;
 import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.trait.waypoint.LinearWaypointProvider;
-import net.citizensnpcs.trait.waypoint.Waypoint;
-import net.citizensnpcs.trait.waypoint.WaypointProvider;
-import net.citizensnpcs.trait.waypoint.Waypoints;
+import net.citizensnpcs.npc.ai.CitizensNavigator;
+import net.citizensnpcs.trait.waypoint.*;
 import net.citizensnpcs.util.PlayerAnimation;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
@@ -34,17 +32,21 @@ public abstract class Troop {
     }
     public void target() {
         troopPath = agent.target();
-        PathStrategy pathStrategy = npc.getNavigator().getPathStrategy();
         npc.getNavigator().cancelNavigation();
         addWaypoints();
         arena.drawDebugPath(troopPath, Material.BLUE_STAINED_GLASS);
     }
     private void addWaypoints() {
-        Waypoints waypoints = this.npc.getOrAddTrait(Waypoints.class);
-        LinearWaypointProvider provider = (LinearWaypointProvider) this.npc.getOrAddTrait(Waypoints.class).getCurrentProvider();
+
+        LinearWaypointProvider provider = (LinearWaypointProvider) npc.getOrAddTrait(Waypoints.class).getCurrentProvider();
+        Waypoint lastWP = new Waypoint();
         for(Location waypoint: this.troopPath.getWaypointsToTarget()) {
-            provider.addWaypoint(new Waypoint(waypoint));
+            Waypoint wp = new Waypoint(waypoint);
+            // should only do this if its the last one
+            provider.addWaypoint(wp);
+            lastWP = wp;
         }
+        lastWP.addTrigger(new WaypointEnd(this,provider));
     }
     public boolean hasTarget() {
         return troopPath.hasTarget();

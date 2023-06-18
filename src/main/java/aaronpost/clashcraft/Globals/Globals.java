@@ -9,6 +9,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 public class Globals {
     public static World world = ClashCraft.plugin.getServer().getWorld("World");
@@ -87,4 +88,37 @@ public class Globals {
     public static NamespacedKey NM_KEY_BLDNG_PICK_UP_ITEM = new NamespacedKey(ClashCraft.plugin, "buildingPickUp");
     public static NamespacedKey NM_KEY_SPAWN_ITEM = new NamespacedKey(ClashCraft.plugin, "spawn");
     public static NamespacedKey NM_KEY_LEFT_CLICK_BLDNG = new NamespacedKey(ClashCraft.plugin, "leftClickBuilding");
+
+    public static ItemStack SHOP_ITEM;
+    static {
+        SHOP_ITEM=new ItemStack(Material.BOOK);
+        ItemMeta meta = SHOP_ITEM.getItemMeta();
+        meta.setDisplayName(ChatColor.GOLD + "Shop");
+        meta.getPersistentDataContainer().set(Globals.NM_KEY_SHOP_ITEM, PersistentDataType.STRING, "shop");
+        SHOP_ITEM.setItemMeta(meta);
+    }
+    public static ItemStack RETURN_TO_SPAWN_ITEM;
+    static {
+        RETURN_TO_SPAWN_ITEM = new ItemStack(Material.ENDER_PEARL);
+        ItemMeta meta = RETURN_TO_SPAWN_ITEM.getItemMeta();
+        meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Return to Spawn");
+        meta.getPersistentDataContainer().set(Globals.NM_KEY_SPAWN_ITEM, PersistentDataType.STRING, "spawn");
+        RETURN_TO_SPAWN_ITEM.setItemMeta(meta);
+    }
+    public static ItemStack PICK_UP_ITEM;
+    static {
+        PICK_UP_ITEM = new ItemStack(Material.LEAD);
+        ItemMeta meta = PICK_UP_ITEM.getItemMeta();
+        meta.setDisplayName(ChatColor.RED + "Pick Building Up");
+        meta.getPersistentDataContainer().set(Globals.NM_KEY_BLDNG_PICK_UP_ITEM, PersistentDataType.STRING, "pickup");
+        PICK_UP_ITEM.setItemMeta(meta);
+    }
+    public static ItemStack OPEN_BUILDING_MENU_ITEM;
+    static {
+        OPEN_BUILDING_MENU_ITEM = new ItemStack(Material.FLOWER_BANNER_PATTERN);
+        ItemMeta meta = OPEN_BUILDING_MENU_ITEM.getItemMeta();
+        meta.setDisplayName(ChatColor.AQUA + "Open Building Menu");
+        meta.getPersistentDataContainer().set(Globals.NM_KEY_BLDNG_MENU_ITEM, PersistentDataType.STRING, "buildingMenu");
+        OPEN_BUILDING_MENU_ITEM.setItemMeta(meta);
+    }
 }

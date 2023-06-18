@@ -24,7 +24,7 @@ public class Barracks extends Building {
     @Override
     public void openMenu() {
         Player player = getArena().getPlayer();
-        ClashCraft.guiManager.openGUI(new BarracksMenu(player), player);
+        ClashCraft.guiManager.openGUI(new BarracksMenu(this,player), player);
     }
 
     @Override

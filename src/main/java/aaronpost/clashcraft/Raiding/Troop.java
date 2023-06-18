@@ -1,19 +1,16 @@
 package aaronpost.clashcraft.Raiding;
 
 import aaronpost.clashcraft.Arenas.Arena;
+import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Raiding.TroopAI.TroopAgent;
 import aaronpost.clashcraft.Raiding.TroopAI.TroopStates.ITroopState;
 import aaronpost.clashcraft.Raiding.TroopAI.TroopStates.NoTargetState;
-import net.citizensnpcs.api.ai.PathStrategy;
 import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.npc.ai.CitizensNavigator;
 import net.citizensnpcs.trait.waypoint.*;
 import net.citizensnpcs.util.PlayerAnimation;
-import org.bukkit.EntityEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.units.qual.A;
 
 public abstract class Troop {
     private final NPC npc;
@@ -56,7 +53,11 @@ public abstract class Troop {
         addWaypoints();
 
     }
+    public Building getTarget() {
+        return troopPath.getTarget();
+    }
     public void playAttackAnimation() {
+        //npc.faceLocation(agent.getLocationToLookAt(getTarget()));
         PlayerAnimation.ARM_SWING.play((Player) npc.getEntity());
     }
     public void update() {

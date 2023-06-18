@@ -1,10 +1,13 @@
 package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Arenas.Arena;
+import aaronpost.clashcraft.ClashCraft;
+import aaronpost.clashcraft.GUIS.BarracksMenu;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class Barracks extends Building {
@@ -15,12 +18,13 @@ public class Barracks extends Building {
 
     @Override
     public void click() {
-
+        openMenu();
     }
 
     @Override
     public void openMenu() {
-
+        Player player = getArena().getPlayer();
+        ClashCraft.guiManager.openGUI(new BarracksMenu(player), player);
     }
 
     @Override

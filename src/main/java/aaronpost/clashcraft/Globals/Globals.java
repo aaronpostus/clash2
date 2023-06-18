@@ -1,11 +1,14 @@
 package aaronpost.clashcraft.Globals;
 
 import aaronpost.clashcraft.ClashCraft;
+import aaronpost.clashcraft.OfflineSkull;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class Globals {
     public static World world = ClashCraft.plugin.getServer().getWorld("World");
@@ -25,6 +28,14 @@ public class Globals {
     public static String BARBARIAN_TITLE = ChatColor.YELLOW + "Barbarian";
     public static int BARBARIAN_POSITION = 13;
     public static int[] BARBARIAN_COST = {15, 30, 60, 100, 150, 200, 250, 300, 350, 400};
+    public static final ItemStack BARBARIAN_HEAD;
+
+    static {
+        BARBARIAN_HEAD = OfflineSkull.getSkull(Globals.BARBARIAN_URL[0]);
+        ItemMeta meta = BARBARIAN_HEAD.getItemMeta();
+        meta.setDisplayName(Globals.BARBARIAN_TITLE);
+        BARBARIAN_HEAD.setItemMeta(meta);
+    }
     public static String[] ARCHER_URL = { "http://textures.minecraft.net/texture/e95016226b3d7dfcc165c6c7bb60a5a2c619f52e880868faac4315e31153c248" };
     public static String ARCHER_TITLE = ChatColor.LIGHT_PURPLE + "Archer";
     public static int[] ARCHER_COST = {30, 60, 120, 200, 300, 400, 500, 600, 700, 800};
@@ -33,12 +44,43 @@ public class Globals {
     public static String[] ARCHER_SIGNATURE = { "QCaNLM2UgQE6z600LiJ7xrL+mpGZ5CwMw4L6IDZx8vkdX/BbwAN7sQ0qOsBiaa5IyEbPZR2/gObKYljxgPFXHxCrDkLrQbcUoajMuydwnQ4/O+JnIB8klEsLpas4vLulsFx5U0IW8dS8iXFjA8wVElu+jaDg8WiAY4HT/9jRuEDSm9hm86NIMsthpo8dIBIktYThNpL7wAf154wzmspgfycF2TOVe9uUOYa3O669lZX23HcdF7Nj1NgPrJ1nvq1njqsyMYI0nx7gUMrjHqk8+Z0hbyzDhh3OQxlLgQqk0VrOj1o/c15r8pAn4I0d1B3wFAg7bcICmEVe0RV0kxeg1DyZoulB0QOuOyDPNOHyi5p46MDakQWGcvj/ToRK3TGbD1odNrRAU8N+8QS5PP8uiDtmfpIbuV7YYWNFc7bT097SLZzYd5kXRV2EyStqupttqPp55lKBEVUmOxq7+KIJVkWAH3FyC0MxIn6pqgczx299Mc9tYpPjN3k31jtCcoBM/GS83IpMjx5hW0gvy6VLw9RD//u0ejuFMwy+rQbToRdMr8Z4n+YAltFhWiFz29a3nhajC4RwkmimpP4bAPif45cuV3LF+1awSbcDo2Sg9Us+L3RADNxLhoh4Yagte6j2VtqoDuHiSnMjbMvYwcdnacZo0kfnGWbilrClVSeN/lA=" };
     public static String[] ARCHER_USERNAME = { "skin4a376b0e" };
     public static int ARCHER_POSITION = 12;
+    public static final ItemStack ARCHER_HEAD;
+
+    static {
+        ARCHER_HEAD = OfflineSkull.getSkull(Globals.ARCHER_URL[0]);
+        ItemMeta meta = ARCHER_HEAD.getItemMeta();
+        meta.setDisplayName(Globals.ARCHER_TITLE);
+        ARCHER_HEAD.setItemMeta(meta);
+    }
+    public static final ItemStack NOT_TRAINING;
+
+    static {
+        NOT_TRAINING = new ItemStack(Material.RED_STAINED_GLASS);
+        ItemMeta meta = NOT_TRAINING.getItemMeta();
+        meta.setDisplayName(ChatColor.RED + "Not training.");
+        NOT_TRAINING.setItemMeta(meta);
+    }
+
+    public static final ItemStack TRAINING;
+
+    static {
+        TRAINING = new ItemStack(Material.GREEN_STAINED_GLASS);
+        ItemMeta meta = NOT_TRAINING.getItemMeta();
+        meta.setDisplayName(ChatColor.GREEN + "Training: ");
+        TRAINING.setItemMeta(meta);
+    }
+
+    public static final ItemStack CAN_TRAIN_ITEM = new ItemStack(Material.LIME_CONCRETE);
+    public static final ItemStack CANNOT_TRAIN_ITEM = new ItemStack(Material.RED_CONCRETE);
     public static int COST_POSITION = 8;
 
     // GOLD
     public static ItemStack GOLD_ITEM_STACK = new ItemStack(Material.GOLD_INGOT);
     public static String GOLD_DISPLAY_NAME = ChatColor.YELLOW + "Gold";
 
+    // ELIXIR
+    public static ItemStack ELIXIR_ITEM_STACK = new ItemStack(Material.MAGENTA_DYE);
+    public static String ELIXIR_DISPLAY_NAME = ChatColor.LIGHT_PURPLE + "Elixir";
 
     public static NamespacedKey NM_KEY_SHOP_ITEM = new NamespacedKey(ClashCraft.plugin, "shop");
     public static NamespacedKey NM_KEY_BLDNG_MENU_ITEM= new NamespacedKey(ClashCraft.plugin, "buildingMenu");

@@ -2,6 +2,7 @@ package aaronpost.clashcraft.Raiding;
 
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Buildings.Building;
+import aaronpost.clashcraft.Buildings.Wall;
 import org.bukkit.Location;
 import pathfinding.grid.GridCell;
 import java.util.ArrayList;
@@ -56,6 +57,9 @@ public class Path {
                 break;
             }
         }
+        if(!(target instanceof Wall)) {
+            pathLength++;
+        }
         List<GridCell> pathToTarget = new ArrayList<>();
         for(int i = 0; i < pathLength; i++) {
             pathToTarget.add(currentPath.get(i));
@@ -78,9 +82,6 @@ public class Path {
         System.out.println(nextTarget != null);
         List<GridCell> pointsToKeep = new ArrayList<>();
         for(int i = 0; i < currentPath.size(); i++) {
-            if(!currentPath.get(i).isWalkable()) {
-                System.out.println("472");
-            }
             // remove if not a building
             Building building = currentPath.get(i).building;
             if(((i % 5 == 0) && currentPath.get(i).isWalkable()) || building == currentTarget) {

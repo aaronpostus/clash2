@@ -8,6 +8,7 @@ import aaronpost.clashcraft.Pair;
 import aaronpost.clashcraft.Raiding.IslandNavGraph;
 import aaronpost.clashcraft.Raiding.Path;
 import aaronpost.clashcraft.Raiding.Raid;
+import org.bukkit.Location;
 import pathfinding.grid.GridCell;
 
 import java.util.ArrayList;
@@ -32,7 +33,10 @@ public class TroopAgent {
     public void setAgentOptions(TroopAgentOptions options) {
         this.troopAgentOptions = options;
     }
-
+    public Location getLocationToLookAt(Building building) {
+        Pair<Integer,Integer> loc = navGraph.buildingCenters.get(building);
+        return arena.getAbsLocationFromNavGridLoc(loc.first, loc.second, 1);
+    }
     private List<Building> pickBuildings() {
         List<Building> closestBuildings = new ArrayList<>();
         float[] shortestDistances = {Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE};

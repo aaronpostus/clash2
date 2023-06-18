@@ -43,7 +43,7 @@ public abstract class Collector extends Building {
     }
     @Override
     public void startUpdates() {
-        this.currency = super.getSession().getGold();
+        this.currency = super.getSession().getCurrency("gold");
     }
     public void stopUpdates() {
 

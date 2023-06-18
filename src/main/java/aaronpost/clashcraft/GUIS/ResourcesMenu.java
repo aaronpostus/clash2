@@ -62,7 +62,7 @@ public class ResourcesMenu implements Listener {
                     ItemStack stack = new ItemStack(Material.AIR);
                     switch (e.getCurrentItem().getType()) {
                         case CHEST: {
-                            arena.purchaseNewBuilding(new GoldMine(arena, session.getGold()));
+                            arena.purchaseNewBuilding(new GoldMine(arena, session.getCurrency("gold")));
                             break;
                         }
                         case MAGENTA_CONCRETE:

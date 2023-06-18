@@ -2,6 +2,8 @@ package aaronpost.clashcraft;
 
 import aaronpost.clashcraft.Arenas.ArenaManager;
 import aaronpost.clashcraft.Arenas.Arenas;
+import aaronpost.clashcraft.GUIS.Manager.GUIListener;
+import aaronpost.clashcraft.GUIS.Manager.GUIManager;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Input.InputListener;
 import aaronpost.clashcraft.PersistentData.Serializer;
@@ -28,6 +30,7 @@ import java.util.Objects;
 public class ClashCraft extends JavaPlugin {
     static List<String> commands = Arrays.asList("test","debugtools","island", "createschematic", "savecoordinates", "raid");
     public static ClashCraft plugin;
+    public static GUIManager guiManager;
     public static Serializer serializer;
     @Override
     public void onEnable() {
@@ -38,6 +41,12 @@ public class ClashCraft extends JavaPlugin {
 
         serializer = new Serializer();
         getServer().getPluginManager().registerEvents(serializer,this);
+
+        guiManager = new GUIManager();
+
+        GUIListener guiListener = new GUIListener(guiManager);
+        Bukkit.getPluginManager().registerEvents(guiListener, this);
+
         getServer().getPluginManager().registerEvents(new Controller(), this);
         getServer().getPluginManager().registerEvents(new ArenaManager(), this);
         getServer().getPluginManager().registerEvents(new Interaction(), this);

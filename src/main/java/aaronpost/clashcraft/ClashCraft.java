@@ -1,5 +1,6 @@
 package aaronpost.clashcraft;
 
+import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Arenas.ArenaManager;
 import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.GUIS.Manager.GUIListener;
@@ -13,6 +14,10 @@ import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import aaronpost.clashcraft.Singletons.GameManager;
 import aaronpost.clashcraft.Singletons.Sessions;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.MemoryNPCDataStore;
+import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.api.npc.SimpleNPCDataStore;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -28,7 +33,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ClashCraft extends JavaPlugin {
-    static List<String> commands = Arrays.asList("test","debugtools","island", "createschematic", "savecoordinates", "raid");
+    static List<String> commands = Arrays.asList("test","debugtools","island", "createschematic", "savecoordinates", "raid","debug");
     public static ClashCraft plugin;
     public static GUIManager guiManager;
     public static Serializer serializer;
@@ -38,7 +43,6 @@ public class ClashCraft extends JavaPlugin {
         plugin.getDataFolder();
         GameManager gm = GameManager.getInstance();
         gm.startUpdates();
-
         serializer = new Serializer();
         getServer().getPluginManager().registerEvents(serializer,this);
 
@@ -96,7 +100,7 @@ public class ClashCraft extends JavaPlugin {
                 }
                 ClashCraft.plugin.getLogger().info(p.getName() + "'s session has been saved!");
                 if(Arenas.a.playerAtArena(p)) {
-                    Arenas.a.findPlayerArena(p).unassign();
+                    Arenas.a.unassignPlayer(p,Arenas.a.findPlayerArena(p));
                     ClashCraft.plugin.getLogger().info(p.getName() + "'s arena has been unassigned.");
                 }
 
@@ -121,6 +125,18 @@ public class ClashCraft extends JavaPlugin {
             sender.sendMessage("hi");
             //GridGraph<Integer> gridGraph = new GridGraph<Integer>(3,3);
             return true;
+        }
+        else if (label.equals("debug")) {
+            if(sender.isOp()) {
+                Session s = Sessions.s.getSession(player);
+                s.toggleDebugMode();
+                player.sendMessage(Globals.prefix + " Debug status: " + s.isDebugMode());
+                return true;
+            }
+            else {
+                player.sendMessage(Globals.prefix + " This is an admin command.");
+                return true;
+            }
         }
         else if (label.equals("debugtools")) {
             ItemStack stack = new ItemStack(Material.RED_CONCRETE);
@@ -169,14 +185,15 @@ public class ClashCraft extends JavaPlugin {
             if(!Arenas.a.playerAtArena(player)) {
                 if (Arenas.a.hasAvailableArena()) {
                     player.sendMessage(Globals.prefix + ChatColor.GRAY + " Sent you to your island.");
-                    Arenas.a.findAvailableArena().assignPlayer(player);
+                    Arena arena = Arenas.a.findAvailableArena();
+                    Arenas.a.assignPlayer(player, arena);
                 } else {
                     player.sendMessage(Globals.prefix + ChatColor.GRAY + " No arenas are available. Please wait for someone to unload their island.");
                     Arenas.a.sendToSpawn(player);
                 }
             } else {
                 player.sendMessage(Globals.prefix + ChatColor.GRAY + " Sent you to spawn.");
-                Arenas.a.findPlayerArena(player).unassign();
+                Arenas.a.unassignPlayer(player,Arenas.a.findPlayerArena(player));
             }
             return true;
         }

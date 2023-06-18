@@ -1,10 +1,12 @@
 package aaronpost.clashcraft.Raiding.Troops;
 
+import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Raiding.Raid;
 import aaronpost.clashcraft.Raiding.Troop;
 import aaronpost.clashcraft.Raiding.TroopAI.TroopAgent;
 import aaronpost.clashcraft.Raiding.TroopAI.TroopAgentOptions;
 import aaronpost.clashcraft.Raiding.TroopManager;
+import aaronpost.clashcraft.Singletons.GameManager;
 import net.citizensnpcs.Citizens;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;

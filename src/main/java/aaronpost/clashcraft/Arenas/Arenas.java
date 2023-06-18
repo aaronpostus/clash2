@@ -1,14 +1,18 @@
 package aaronpost.clashcraft.Arenas;
 
 import aaronpost.clashcraft.Globals.Globals;
+import aaronpost.clashcraft.Singletons.Sessions;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Arenas {
 
     private final ArrayList<Arena> arenas = new ArrayList<>();
+    private final Map<Player,Arena> playerArenaMap = new HashMap<>();
     public static Arenas a = new Arenas();
     public static int GRID_X_LENGTH = 90;
     public static int GRID_Z_LENGTH = 90;
@@ -38,16 +42,19 @@ public class Arenas {
         }
         return false;
     }
+    public void assignPlayer(Player player, Arena arena) {
+        Sessions.s.playerStates.put(player, Sessions.PlayerState.ISLAND);
+        playerArenaMap.put(player,arena);
+        arena.assignPlayer(player);
+    }
+    public void unassignPlayer(Player player, Arena arena) {
+        Sessions.s.playerStates.put(player, Sessions.PlayerState.DEFAULT);
+        playerArenaMap.remove(player);
+        arena.unassign();
+    }
 
     public Arena findPlayerArena(Player p) {
-        for(Arena arena: arenas) {
-            if(arena.getPlayer() != null) {
-                if (arena.getPlayer().equals(p)) {
-                    return arena;
-                }
-            }
-        }
-        return null;
+        return playerArenaMap.get(p);
     }
 
     public boolean hasAvailableArena() {

@@ -8,7 +8,6 @@ import aaronpost.clashcraft.Interfaces.IArenaCommand;
 public class OpenShopMenu implements IArenaCommand {
     @Override
     public void execute(Arena arena) {
-        ClashCraft.plugin.getServer().getPluginManager().registerEvents(
-                new IslandMenu(arena.getPlayer()), ClashCraft.plugin);
+        ClashCraft.guiManager.openGUI(new IslandMenu(),arena.getPlayer());
     }
 }

@@ -28,9 +28,9 @@ public class BuildingGlobals {
         GOLDMINE_ITEM_STACK.setItemMeta(meta);
     }
     public static float[] GOLDMINE_COLLECTION_RATE = new float[]{ 200, 400, 600, 800, 1000 };
-    public static float[] GOLDMINE_CAPACITY = new float[]{ 1000, 2000, 3000, 5000, 10000 };
+    public static int[] GOLDMINE_CAPACITY = new int[]{ 1000, 2000, 3000, 5000, 10000 };
     public static long[] GOLDMINE_BUILD_TIME = new long[]{ 10, 60, 4 * 60, 10 * 60, 40 * 60 };
-    public static float[] GOLDMINE_COST = new float[] { 150, 300, 700, 1400, 3000 };
+    public static int[] GOLDMINE_COST = new int[] { 150, 300, 700, 1400, 3000 };
     public static int[] GOLDMINE_HITPOINTS = new int[]{ 400, 440, 480, 520, 560 };
     public static int GOLDMINE_GRID_LENGTH = 6;
 
@@ -69,7 +69,7 @@ public class BuildingGlobals {
     static {
         ItemMeta meta = WALL_ITEM_STACK.getItemMeta();
         meta.setDisplayName(WALL_DISPLAY_NAME);
-        BARRACKS_ITEM_STACK.setItemMeta(meta);
+        WALL_ITEM_STACK.setItemMeta(meta);
     }
     public static float[] WALL_COST = new float[] { 50 };
     public static int[] WALL_HITPOINTS = new int[]{ 300 };

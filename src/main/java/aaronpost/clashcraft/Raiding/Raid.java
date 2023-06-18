@@ -11,6 +11,7 @@ import aaronpost.clashcraft.Raiding.TroopAI.TroopAgent;
 import aaronpost.clashcraft.Raiding.Troops.Barbarian;
 import aaronpost.clashcraft.Session;
 import aaronpost.clashcraft.Singletons.GameManager;
+import aaronpost.clashcraft.Singletons.Sessions;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -23,8 +24,10 @@ public class Raid implements IUpdatable, IFixedUpdatable {
     private final IslandNavGraph navGraph;
     private final TroopManager troopManager;
     public Raid(Arena arena, UUID uuid, int x, int z) {
+
         this.arena = arena;
         Player raider = arena.getPlayer();
+        Sessions.s.playerStates.put(raider, Sessions.PlayerState.RAIDING);
         Island raiderIsland = arena.getIsland();
         Island victimIsland;
         try {
@@ -42,9 +45,6 @@ public class Raid implements IUpdatable, IFixedUpdatable {
         this.navGraph = new IslandNavGraph(victimIsland);
         this.troopManager = new TroopManager();
         this.troopManager.addTroop(new Barbarian(this,x,z));
-        //ClashCraft.plugin.getLogger().info("Selected " + selectedBuilding.getDisplayName());
-        //List<Building> buildings = raiderIsland.getBuildings();
-        //remove walls from this
 
     }
     public Arena getArena() { return arena; }

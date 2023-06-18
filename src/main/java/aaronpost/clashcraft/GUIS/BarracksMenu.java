@@ -8,14 +8,15 @@ import aaronpost.clashcraft.GUIS.Manager.InventoryGUI;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Session;
 import aaronpost.clashcraft.Singletons.Sessions;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 // Author: Aaron Post
@@ -45,6 +46,8 @@ public class BarracksMenu extends InventoryGUI {
         this.addButton(10, createTroopButton("Barbarian", 10));
         this.addButton(11, createTroopButton("Archer", 11));
 
+        updateTrainItemStack();
+
         super.decorate(player);
     }
 
@@ -56,21 +59,24 @@ public class BarracksMenu extends InventoryGUI {
                 .creator(player -> getTroopItemStack(key))
                 .consumer(event -> {
                    Player player = (Player) event.getWhoClicked();
+                   Location loc = player.getEyeLocation();
                    int amount = amountToTrain.get(key);
                    switch (event.getClick()) {
                        case LEFT:
                            if(amount < 64) {
                                amountToTrain.put(key,++amount);
+                               player.playSound(loc, Sound.BLOCK_NOTE_BLOCK_PLING, 0.25f,1f);
                            }
                            break;
                        case RIGHT:
                            if(amount > 0) {
                                amountToTrain.put(key,--amount);
+                               player.playSound(loc, Sound.BLOCK_NOTE_BLOCK_PLING, 0.25f,-1f);
                            }
                            break;
                    }
                    this.getInventory().setItem(index,getTroopItemStack(key));
-                   player.sendMessage("barbarian");
+                   updateTrainItemStack();
                 });
     }
     private ItemStack getTroopItemStack(String key) {
@@ -82,7 +88,26 @@ public class BarracksMenu extends InventoryGUI {
         stack.setAmount(amountToTrain);
         return stack;
     }
-//    private ItemStack getTrainItemStack(String key) {
-//
-//    }
+    private int getHousingSpace() {
+        //todo
+        return 0;
+    }
+    private int getCost() {
+        return 0;
+    }
+    private void updateTrainItemStack() {
+        //if(island.canAccommodateHousing())
+        ItemStack trainItem = Globals.CAN_TRAIN_ITEM.clone();
+        ItemMeta meta = trainItem.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(ChatColor.GREEN + "Train");
+        }
+        List<String> lore = new ArrayList<>();
+        lore.add("Troops");
+        if (meta != null) {
+            meta.setLore(lore);
+        }
+        trainItem.setItemMeta(meta);
+        this.getInventory().setItem(26,trainItem);
+    }
 }

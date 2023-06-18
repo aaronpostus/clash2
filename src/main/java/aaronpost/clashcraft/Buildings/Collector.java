@@ -1,8 +1,11 @@
 package aaronpost.clashcraft.Buildings;
 import aaronpost.clashcraft.Arenas.Arena;
+import aaronpost.clashcraft.Buildings.BuildingMenus.CollectorMenu;
+import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Currency.Currency;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 
 // Author: Aaron Post
 public abstract class Collector extends Building {
@@ -33,10 +36,20 @@ public abstract class Collector extends Building {
         getSession().refreshScoreboard();
         if(storageFull) {
             super.sendMessage("Storages full.");
-            // add a message that tells the player that their storages are full
+            getArena().playSound(Sound.BLOCK_NOTE_BLOCK_BASS,1f,1f);
+        }
+        else {
+            getArena().playSound(Sound.BLOCK_AMETHYST_BLOCK_BREAK,1f,1f);
         }
 
         amount = 0f;
+    }
+    @Override
+    public void openMenu() {
+        ClashCraft.guiManager.openGUI(new CollectorMenu(this), getArena().getPlayer());
+    }
+    public Currency getCurrency() {
+        return currency;
     }
     public void catchUp(float hoursPassed) {
         tryToFill(hoursPassed * getCollectionRate());
@@ -49,7 +62,7 @@ public abstract class Collector extends Building {
 
     }
     public int getAmountStored() {
-        return (int) Math.ceil(amount);
+        return (int) Math.floor(amount);
     }
     @Override
     public void update() {

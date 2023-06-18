@@ -113,6 +113,7 @@ public class Arena {
         this.island = island;
     }
     public void purchaseNewBuilding(Building building) {
+        building.getArena().playSound(Sound.ENTITY_PLAYER_LEVELUP, 1f,5f);
         island.putBuildingInHand(building);
         // Gets building ItemStack with formatted lore, and gives it to player
         player.getInventory().addItem(building.getItemStack());
@@ -158,6 +159,9 @@ public class Arena {
         this.unload();
         this.island = victimIsland;
         this.currentState = RAID_STATE;
+    }
+    public void playSound(Sound sound, float vol, float pitch) {
+        player.playSound(player.getEyeLocation(), sound, vol,pitch);
     }
     public Location getAbsLocationFromNavGridLoc(int x, int z) {
         return getAbsLocationFromNavGridLoc(x,z,0);

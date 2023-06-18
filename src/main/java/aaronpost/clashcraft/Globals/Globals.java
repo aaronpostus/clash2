@@ -11,7 +11,36 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.concurrent.TimeUnit;
+
 public class Globals {
+    public static String timeFromSeconds(long seconds) {
+        int day = (int) TimeUnit.SECONDS.toDays(seconds);
+        long hours = TimeUnit.SECONDS.toHours(seconds) - (day * 24);
+        long minutes = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds) * 60);
+        long secondsRemaining = seconds - (TimeUnit.SECONDS.toMinutes(seconds) * 60);
+
+        StringBuilder sb = new StringBuilder();
+        boolean includeDays = (day != 0);
+        boolean includeHours = (hours != 0);
+        boolean includeMinutes = (minutes != 0);
+        boolean includeSeconds = (secondsRemaining != 0);
+
+        if (includeDays) {
+            sb.append(day).append((day == 1) ? " day " : " days ");
+        }
+        if (includeHours) {
+            sb.append(hours).append((hours == 1) ? " hr " : " hrs ");
+        }
+        if (includeMinutes) {
+            sb.append(minutes).append((minutes == 1) ? " min " : " mins ");
+        }
+        if (includeSeconds) {
+            sb.append(secondsRemaining).append((secondsRemaining == 1) ? " sec " : " secs ");
+        }
+
+        return sb.toString().trim();
+    }
     public static World world = ClashCraft.plugin.getServer().getWorld("World");
     public static String prefix = ChatColor.GRAY + "[" + ChatColor.GOLD + "Clash" + ChatColor.GRAY + "]" + ChatColor.YELLOW;
     public static String RIGHT_ARROW_URL = "http://textures.minecraft.net/texture/1a4f68c8fb279e50ab786f9fa54c88ca4ecfe1eb5fd5f0c38c54c9b1c7203d7a";
@@ -120,5 +149,43 @@ public class Globals {
         meta.setDisplayName(ChatColor.AQUA + "Open Building Menu");
         meta.getPersistentDataContainer().set(Globals.NM_KEY_BLDNG_MENU_ITEM, PersistentDataType.STRING, "buildingMenu");
         OPEN_BUILDING_MENU_ITEM.setItemMeta(meta);
+    }
+    public static ItemStack ARMY_SHOP_ICON;
+    static {
+        ARMY_SHOP_ICON = new ItemStack(Material.BOW);
+        ItemMeta meta = ARMY_SHOP_ICON.getItemMeta();
+        meta.setDisplayName(ChatColor.RED + "Army");
+        ARMY_SHOP_ICON.setItemMeta(meta);
+    }
+    public static ItemStack RESOURCE_SHOP_ICON;
+    static {
+        RESOURCE_SHOP_ICON = new ItemStack(Material.CHEST);
+        ItemMeta meta = RESOURCE_SHOP_ICON.getItemMeta();
+        meta.setDisplayName(ChatColor.GOLD + "Resources");
+        RESOURCE_SHOP_ICON.setItemMeta(meta);
+    }
+
+    public static ItemStack DEFENSE_SHOP_ICON;
+    static {
+        DEFENSE_SHOP_ICON = new ItemStack(Material.SHIELD);
+        ItemMeta meta = DEFENSE_SHOP_ICON.getItemMeta();
+        meta.setDisplayName(ChatColor.DARK_PURPLE + "Defenses");
+        DEFENSE_SHOP_ICON.setItemMeta(meta);
+    }
+
+    public static ItemStack TRAP_SHOP_ICON;
+    static {
+        TRAP_SHOP_ICON = new ItemStack(Material.TNT);
+        ItemMeta meta = TRAP_SHOP_ICON.getItemMeta();
+        meta.setDisplayName(ChatColor.DARK_GRAY + "Traps");
+        TRAP_SHOP_ICON.setItemMeta(meta);
+    }
+
+    public static ItemStack MAXED_OUT_ITEM;
+    static {
+        MAXED_OUT_ITEM = new ItemStack(Material.NETHER_STAR);
+        ItemMeta meta = MAXED_OUT_ITEM.getItemMeta();
+        meta.setDisplayName(ChatColor.RED + "MAXED OUT");
+        MAXED_OUT_ITEM.setItemMeta(meta);
     }
 }

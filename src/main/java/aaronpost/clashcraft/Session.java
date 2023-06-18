@@ -22,12 +22,19 @@ public class Session implements Serializable {
     private final Map<String,Currency> currencies = new HashMap<>();
     private final UUID u;
     private String playerUsername;
+    private boolean debugMode = false;
     public Session(Player p) {
         this.u = p.getUniqueId();
         this.island = new Island();
         this.currencies.put("gold", new Gold(this));
         this.currencies.put("elixir", new Elixir(this));
         this.playerUsername = p.getName();
+    }
+    public void toggleDebugMode() {
+        debugMode = !debugMode;
+    }
+    public boolean isDebugMode() {
+        return debugMode;
     }
     public void saveLogOffTime() {
         timeUpdatesStopped = System.currentTimeMillis();

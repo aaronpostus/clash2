@@ -1,5 +1,6 @@
 package aaronpost.clashcraft.GUIS.Manager;
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -13,6 +14,7 @@ public class GUIManager {
     private final Map<Inventory, InventoryHandler> activeInventories = new HashMap<>();
 
     public void openGUI(InventoryGUI gui, Player player) {
+        player.playSound(player.getEyeLocation(),Sound.BLOCK_BONE_BLOCK_PLACE,0.5f,1f);
         this.registerHandledInventory(gui.getInventory(), gui);
         player.openInventory(gui.getInventory());
     }

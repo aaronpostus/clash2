@@ -1,5 +1,6 @@
 package aaronpost.clashcraft.Arenas;
 
+import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Singletons.Sessions;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -18,12 +19,14 @@ public class ArenaManager implements Listener {
         }
         p.setAllowFlight(false);
         Sessions.s.playerStates.remove(p);
+        ClashCraft.serializer.logoffPlayer(p);
     }
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         p.setAllowFlight(false);
         Arenas.a.sendToSpawn(p);
+        ClashCraft.serializer.logonPlayer(p);
         p.setGameMode(GameMode.ADVENTURE);
         Sessions.s.playerStates.put(p, Sessions.PlayerState.DEFAULT);
     }

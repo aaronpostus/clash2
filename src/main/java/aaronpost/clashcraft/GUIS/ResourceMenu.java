@@ -1,6 +1,7 @@
 package aaronpost.clashcraft.GUIS;
 
 import aaronpost.clashcraft.Arenas.Arena;
+import aaronpost.clashcraft.Buildings.BuilderHut;
 import aaronpost.clashcraft.Buildings.GoldMine;
 import aaronpost.clashcraft.GUIS.Manager.InventoryButton;
 import aaronpost.clashcraft.GUIS.Manager.InventoryGUI;
@@ -28,7 +29,9 @@ public class ResourceMenu extends InventoryGUI {
     @Override
     public void decorate(Player p) {
         this.getInventory().setItem(10, GoldMine.getShopItem());
+        this.getInventory().setItem(16, BuilderHut.getShopItem());
         this.addButton(10,purchaseBuilding("goldmine"));
+        this.addButton(16, purchaseBuilding("builderhut"));
     }
     private InventoryButton purchaseBuilding(String key) {
         return new InventoryButton().consumer(event -> {
@@ -38,6 +41,10 @@ public class ResourceMenu extends InventoryGUI {
                     arena.purchaseNewBuilding(new GoldMine(arena));
                     p.closeInventory();
                     //ClashCraft.guiManager.openGUI(new IslandMenuRefactor(),arena.getPlayer());
+                    break;
+                case "builderhut":
+                    arena.purchaseNewBuilding(new BuilderHut(arena));
+                    p.closeInventory();
                     break;
             }
         });

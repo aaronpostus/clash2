@@ -42,7 +42,7 @@ public class Globals {
         return sb.toString().trim();
     }
     public static World world = ClashCraft.plugin.getServer().getWorld("World");
-    public static String prefix = ChatColor.GRAY + "[" + ChatColor.GOLD + "Clash" + ChatColor.GRAY + "]" + ChatColor.YELLOW;
+    public static String prefix = ChatColor.DARK_GRAY + "[" + ChatColor.GOLD + "Clash" + ChatColor.DARK_GRAY + "]" + ChatColor.GRAY;
     public static String RIGHT_ARROW_URL = "http://textures.minecraft.net/texture/1a4f68c8fb279e50ab786f9fa54c88ca4ecfe1eb5fd5f0c38c54c9b1c7203d7a";
     public static String LEFT_ARROW_URL = "http://textures.minecraft.net/texture/737648ae7a564a5287792b05fac79c6b6bd47f616a559ce8b543e6947235bce";
     public static String INVENTORY_TITLE = ChatColor.DARK_RED + "+ Barracks Level ` +";

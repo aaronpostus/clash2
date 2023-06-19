@@ -1,16 +1,21 @@
 package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Arenas.Arena;
+import aaronpost.clashcraft.Buildings.BuildingMenus.BarracksMenu;
 import aaronpost.clashcraft.ClashCraft;
-import aaronpost.clashcraft.GUIS.BarracksMenu;
+import aaronpost.clashcraft.Buildings.BuildingMenus.BarracksTrainMenu;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
+import aaronpost.clashcraft.Raiding.Troop;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+
 public class Barracks extends Building {
+    //private List<Troop> troops
 
     public Barracks(Arena arena) {
         super(arena);
@@ -24,7 +29,7 @@ public class Barracks extends Building {
     @Override
     public void openMenu() {
         Player player = getArena().getPlayer();
-        ClashCraft.guiManager.openGUI(new BarracksMenu(this,player), player);
+        ClashCraft.guiManager.openGUI(new BarracksMenu(this), player);
     }
 
     @Override

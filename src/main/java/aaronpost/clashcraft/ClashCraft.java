@@ -44,7 +44,6 @@ public class ClashCraft extends JavaPlugin {
         GameManager gm = GameManager.getInstance();
         gm.startUpdates();
         serializer = new Serializer();
-        getServer().getPluginManager().registerEvents(serializer,this);
 
         guiManager = new GUIManager();
 

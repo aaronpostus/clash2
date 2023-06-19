@@ -153,7 +153,10 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
     public void putBuildingInHand(Building building) {
         this.buildingInHand = new BuildingInHand(building, arena);
     }
-
+    public Pair<Integer,Integer> getRandomWalkableLoc(Building building, Random random) {
+        List<Pair<Integer, Integer>> ring = getOuterRing(building);
+        return ring.get(random.nextInt(ring.size()));
+    }
     // Get a list of locations in the outer ring for a building
     public List<Pair<Integer, Integer>> getOuterRing(Building building) {
         List<Pair<Integer,Integer>> outerRing = new ArrayList<>();

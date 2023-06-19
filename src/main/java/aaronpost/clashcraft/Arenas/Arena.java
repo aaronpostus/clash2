@@ -10,17 +10,22 @@ import aaronpost.clashcraft.Session;
 import aaronpost.clashcraft.Singletons.GameManager;
 import aaronpost.clashcraft.Singletons.Sessions;
 
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import pathfinding.grid.GridCell;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static aaronpost.clashcraft.Arenas.Arena.ArenaState.ISLAND_STATE;
 import static aaronpost.clashcraft.Arenas.Arena.ArenaState.RAID_STATE;
@@ -33,6 +38,7 @@ public class Arena {
     public enum ArenaState { ISLAND_STATE, RAID_STATE }
     public ArenaState currentState = ISLAND_STATE;
     private Raid currentRaid = null;
+    private List<NPC> npcs = new ArrayList<>();
     public Arena(Location loc) {
         this.loc = loc;
     }
@@ -89,7 +95,17 @@ public class Arena {
                 p.setAllowFlight(true);
             }
         },  10);
-
+    }
+    public void deleteNPCS() {
+        for(NPC npc: npcs) {
+            npc.destroy();
+        }
+        npcs = new ArrayList<>();
+    }
+    public NPC createArenaNPC(EntityType entityType, Location loc) {
+        NPC npc = CitizensAPI.getNPCRegistry().createNPC(entityType, UUID.randomUUID().toString(), loc);
+        npcs.add(npc);
+        return npc;
     }
     public Raid getCurrentRaid() {
         return currentRaid;
@@ -113,7 +129,7 @@ public class Arena {
         this.island = island;
     }
     public void purchaseNewBuilding(Building building) {
-        building.getArena().playSound(Sound.ENTITY_PLAYER_LEVELUP, 1f,5f);
+        building.getArena().playSound(Sound.ENTITY_PLAYER_LEVELUP, 0.5f,5f);
         island.putBuildingInHand(building);
         // Gets building ItemStack with formatted lore, and gives it to player
         player.getInventory().addItem(building.getItemStack());
@@ -178,8 +194,8 @@ public class Arena {
         GameManager.getInstance().removeUpdatable(island);
 
         this.island.stopUpdates();
-        this.player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         this.session.saveLogOffTime();
+        this.player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
     }
 
     public Location getLoc() {

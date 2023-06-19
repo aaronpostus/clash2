@@ -82,4 +82,13 @@ public class BuildingGlobals {
     //TOWNHALL
     public static String[] TOWN_HALL_SCHEMATICS = new String[] { "TownHall1"};
     public static String[] BROKEN_TOWN_HALL_SCHEMATICS = new String[] { "TownHall1_Broken"};
+
+    //BUILDERHUT
+    public static ItemStack BUILDER_HUT_ITEM_STACK = new ItemStack(Material.BRICKS);
+    public static String BUILDER_HUT_DISPLAY_NAME = ChatColor.WHITE + "Builder Hut";
+    static {
+        ItemMeta meta = BUILDER_HUT_ITEM_STACK.getItemMeta();
+        meta.setDisplayName(BUILDER_HUT_DISPLAY_NAME);
+        BUILDER_HUT_ITEM_STACK.setItemMeta(meta);
+    }
 }

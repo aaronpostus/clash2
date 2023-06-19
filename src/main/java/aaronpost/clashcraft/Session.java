@@ -45,8 +45,7 @@ public class Session implements Serializable {
         if(timeUpdatesStopped == -1) {
             return -1;
         }
-        return ((float) (System.currentTimeMillis() - timeUpdatesStopped)) * BuildingGlobals.MILLISECONDS_TO_SECONDS *
-                BuildingGlobals.SECONDS_TO_HOURS;
+        return (System.currentTimeMillis() - timeUpdatesStopped) /1000f /60f / 60f;
     }
     public void refreshScoreboard() {
         Player player = getPlayer();

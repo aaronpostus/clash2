@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class Serializer implements Listener {
+public class Serializer {
     private final Logger logger = ClashCraft.plugin.getLogger();
     public static final String SESSIONS_PATH = ClashCraft.plugin.getDataFolder().getAbsolutePath() + File.separator + "Sessions";
     public static final String SCHEMATICS_PATH = ClashCraft.plugin.getDataFolder().getAbsolutePath() + File.separator + "Schematics";
@@ -37,21 +37,19 @@ public class Serializer implements Listener {
         builder.setPrettyPrinting();
         this.sessionGson = builder.create();
     }
-    @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent p) {
-        Session c = Sessions.s.getSession(p.getPlayer());
+    public void logoffPlayer(Player p) {
+        Session c = Sessions.s.getSession(p);
         if(c!=null) {
             try {
-                serializeSession(p.getPlayer(), c);
-                logger.info(p.getPlayer().getName() + "'s session has been saved!");
+                serializeSession(p, c);
+                logger.info(p.getName() + "'s session has been saved!");
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Sessions.s.removeSession(p.getPlayer());
+            Sessions.s.removeSession(p);
         }
     }
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent p) {
+    public void logonPlayer(Player p) {
         // Load their files up!
         Player player = p.getPlayer();
         File file = new File(SESSIONS_PATH + File.separator + player.getUniqueId() + ".json");

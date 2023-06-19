@@ -1,12 +1,10 @@
-package aaronpost.clashcraft.GUIS;
+package aaronpost.clashcraft.Buildings.BuildingMenus;
 
 import aaronpost.clashcraft.Buildings.Barracks;
-import aaronpost.clashcraft.Currency.Currency;
 import aaronpost.clashcraft.Currency.Elixir;
 import aaronpost.clashcraft.GUIS.Manager.InventoryButton;
 import aaronpost.clashcraft.GUIS.Manager.InventoryGUI;
 import aaronpost.clashcraft.Globals.Globals;
-import aaronpost.clashcraft.Session;
 import aaronpost.clashcraft.Singletons.Sessions;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -20,13 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 // Author: Aaron Post
-public class BarracksMenu extends InventoryGUI {
+public class BarracksTrainMenu extends InventoryGUI {
     private final ItemStack barbarianHead = Globals.BARBARIAN_HEAD.clone();
     private final ItemStack archerHead = Globals.ARCHER_HEAD.clone();
     private Map<String,Integer> amountToTrain = new HashMap<>();
     private Elixir elixir;
     private Barracks barracks;
-    public BarracksMenu(Barracks barracks, Player player) {
+    public BarracksTrainMenu(Barracks barracks, Player player) {
         amountToTrain.put("Barbarian",0);
         amountToTrain.put("Archer",0);
         this.elixir = (Elixir) Sessions.s.getSession(player).getCurrency("elixir");

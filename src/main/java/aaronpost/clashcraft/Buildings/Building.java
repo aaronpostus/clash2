@@ -147,6 +147,7 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         itemStack.setItemMeta(meta);
         return itemStack;
     }
+    public ItemStack getStatsItem() { return new ItemStack(Material.OAK_SIGN); }
     public void sendMessage(String message) {
         arena.sendActionBar(getPlainDisplayName() + ChatColor.DARK_GRAY + ": " + ChatColor.GRAY + message);
     }

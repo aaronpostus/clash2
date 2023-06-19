@@ -11,18 +11,17 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class PickBuildingUp implements IArenaCommand {
+    private Building building = null;
+    public PickBuildingUp() {
+
+    }
+    public PickBuildingUp(Building building) {
+        this.building = building;
+    }
     @Override
     public void execute(Arena arena) {
         Player player = arena.getPlayer();
         Island island = arena.getIsland();
-        Block targetBlockExact = player.getTargetBlockExact(500);
-        if(targetBlockExact == null) {
-            return;
-        }
-        Building building = island.findBuildingAtLocation(targetBlockExact.getLocation());
-        if(building == null) {
-            return;
-        }
         if(island.hasBuildingInHand()) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
                     TextComponent.fromLegacyText(ChatColor.GRAY + " You can only have " +
@@ -30,12 +29,23 @@ public class PickBuildingUp implements IArenaCommand {
                             "building picked up at a time."));
             return;
         }
-        building.pickupRequest();
-        island.getBuildings().remove(building);
-        building.resetToGrass();
-        player.getInventory().addItem(building.getItemStack());
+        Building tempBuilding = this.building;
+        if(tempBuilding == null) {
+            Block targetBlockExact = player.getTargetBlockExact(500);
+            if(targetBlockExact == null) {
+                return;
+            }
+            tempBuilding = island.findBuildingAtLocation(targetBlockExact.getLocation());
+            if(tempBuilding == null) {
+                return;
+            }
+        }
+        tempBuilding.pickupRequest();
+        island.getBuildings().remove(tempBuilding);
+        tempBuilding.resetToGrass();
+        player.getInventory().addItem(tempBuilding.getItemStack());
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
                 TextComponent.fromLegacyText(ChatColor.GRAY + "Picked up "
-                        + building.getPlainDisplayName()));
+                        + tempBuilding.getPlainDisplayName()));
     }
 }

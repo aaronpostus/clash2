@@ -52,6 +52,7 @@ public abstract class Collector extends Building {
         return currency;
     }
     public void catchUp(float hoursPassed) {
+        System.out.println(1);
         tryToFill(hoursPassed * getCollectionRate());
     }
     @Override
@@ -67,7 +68,7 @@ public abstract class Collector extends Building {
     @Override
     public void update() {
 
-        tryToFill(getCollectionRate() * BuildingGlobals.SECONDS_TO_HOURS);
+        tryToFill(getCollectionRate() / 3600);
     }
     private void tryToFill(float amountToFill) {
         amount += amountToFill;

@@ -42,6 +42,21 @@ public class GoldMine extends Collector {
     @Override
     public long getTimeToBuild(int level) { return BuildingGlobals.GOLDMINE_BUILD_TIME[level-1]; }
     @Override
+    public ItemStack getStatsItem() {
+        ItemStack stack = new ItemStack(Material.OAK_SIGN);
+        ItemMeta meta = stack.getItemMeta();
+        meta.setDisplayName(getDisplayName() + " Stats");
+        List<String> lore = new ArrayList<>();
+        int level = getLevel();
+        String currency = " " + getCurrency().getDisplayName().toLowerCase() + " ";
+        lore.add(ChatColor.GRAY + " " + BuildingGlobals.GOLDMINE_COST[level-1] + currency + ChatColor.GRAY + "/ hour");
+        lore.add(ChatColor.GRAY + " " + BuildingGlobals.GOLDMINE_CAPACITY[level-1] + currency + ChatColor.GRAY + "storage capacity");
+        lore.add(ChatColor.GRAY + " " + ChatColor.GRAY + BuildingGlobals.GOLDMINE_HITPOINTS[level-1] + " hitpoints");
+        meta.setLore(lore);
+        stack.setItemMeta(meta);
+        return stack;
+    }
+    @Override
     public List<String> getUpgradeDescription() {
         List<String> lore = new ArrayList<>();
         int level = getLevel();

@@ -1,5 +1,7 @@
 package aaronpost.clashcraft.Buildings;
 
+import aaronpost.clashcraft.Buildings.BuildingMenus.DefaultBuildingMenu;
+import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
@@ -52,12 +54,12 @@ public class TownHall extends Building {
 
     @Override
     public int getGridLengthX() {
-        return 0;
+        return 10;
     }
 
     @Override
     public int getGridLengthZ() {
-        return 0;
+        return 10;
     }
 
     @Override
@@ -76,9 +78,7 @@ public class TownHall extends Building {
     }
 
     @Override
-    public int getMaxLevel() {
-        return 0;
-    }
+    public int getMaxLevel() { return 1; }
 
     @Override
     public void startUpdates() {

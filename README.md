@@ -1,6 +1,7 @@
 # clash2
-A recreation of clash of clans in minecraft.   
-Ver 1.0 alpha will include functional buildings:
+A recreation of clash of clans in minecraft.      
+Ver 1.0 alpha will include functional buildings:   
+   
 1.) Gold mine   
 2.) Elixir collector   
 3.) Gold storage   

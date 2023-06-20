@@ -2,20 +2,20 @@
 A recreation of clash of clans in minecraft.      
 Ver 1.0 alpha will include functional buildings:   
    
-1.) Gold mine   
-2.) Elixir collector   
-3.) Gold storage   
-4.) Elixir storage   
+1.) Gold mine (Level 4 Alpha, Level 10 Beta)   
+2.) Elixir collector (Level 4 Alpha, Level 10 Beta)   
+3.) Gold storage (Level 3 Alpha, Level 9 Beta)   
+4.) Elixir storage (Level 3 Alpha, Level 9 Beta)   
 5.) Barracks (up to level 5 for alpha, 7 for beta)   
-6.) Army Camp   
-7.) Town hall   
-8.) Wall   
-9.) Cannon   
+6.) Army Camp (Level 2 Alpha, Level 5 Beta)   
+7.) Town hall (Level 2 Alpha, Level 5 Beta)   
+8.) Wall (Level 2 Alpha, Level 5 Beta)   
+9.) Cannon (Level 3 Alpha, Level 6 Beta)   
+10.) Archer tower (Level 2 Alpha, Level 6 Beta)   
 ..and working raids!   
 
 Planned buildings for beta 1.0 (up through TH5):   
    
-10.) Archer tower   
 11.) Mortar   
 12.) Clan castle   
 13.) Air defense   

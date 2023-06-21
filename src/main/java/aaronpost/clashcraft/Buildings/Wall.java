@@ -1,6 +1,8 @@
 package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Arenas.Arena;
+import aaronpost.clashcraft.Buildings.BuildingMenus.DefaultBuildingMenu;
+import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
@@ -14,12 +16,12 @@ public class Wall extends Building {
 
     @Override
     public void click() {
-
+        openMenu();
     }
 
     @Override
     public void openMenu() {
-
+        ClashCraft.guiManager.openGUI(new DefaultBuildingMenu(this),getArena().getPlayer());
     }
 
     @Override
@@ -36,7 +38,9 @@ public class Wall extends Building {
     public void visualUpdate() {
 
     }
-
+    public Schematic getBrokenSchematic() {
+        return Schematics.s.getSchematic(BuildingGlobals.BROKEN_WALL_SCHEMATIC);
+    }
     @Override
     public ItemStack getPlainItemStack() {
         return BuildingGlobals.WALL_ITEM_STACK.clone();

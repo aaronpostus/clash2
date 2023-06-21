@@ -7,6 +7,7 @@ import aaronpost.clashcraft.Buildings.Wall;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Interfaces.IUpdatable;
 import aaronpost.clashcraft.Pair;
+import aaronpost.clashcraft.PersistentData.IslandWrapper;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -18,8 +19,11 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
     private BuildingInHand buildingInHand;
     private transient Player player;
     private transient Arena arena;
-    private final UUID[][] nodes;
-    private final Map<UUID, Building> buildings;
+    // Grid of UUIDs used for pathfinding and building interaction. Generated on load.
+    private transient UUID[][] nodes;
+    // Map of UUIDs used to retrieve buildings by UUID quickly. Generated on load.
+    private transient Map<UUID, Building> buildings;
+    private List<Building> buildingsToSave;
 
     public enum Interactions {
         LEFT_CLICK, RIGHT_CLICK
@@ -31,6 +35,30 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         for (int i = 0; i < Arenas.GRID_X_LENGTH; i++) {
             for (int j = 0; j < Arenas.GRID_Z_LENGTH; j++) {
                 nodes[i][j] = null;
+            }
+        }
+    }
+    public void saveBuildings() {
+        this.buildingsToSave = new ArrayList<>();
+        buildingsToSave.addAll(buildings.values());
+    }
+    public void initializeUUIDGrid() {
+        nodes = new UUID[Arenas.GRID_X_LENGTH][Arenas.GRID_Z_LENGTH];
+        for (int i = 0; i < Arenas.GRID_X_LENGTH; i++) {
+            for (int j = 0; j < Arenas.GRID_Z_LENGTH; j++) {
+                nodes[i][j] = null;
+            }
+        }
+        buildings = new HashMap<>();
+        for(Building building: buildingsToSave) {
+            this.buildings.put(building.getUUID(),building);
+        }
+        for(Building building: buildings.values()) {
+            Pair<Integer,Integer> gridLoc = building.getGridLoc();
+            for(int i = gridLoc.first; i < gridLoc.first + building.getGridLengthX(); i++) {
+                for(int j = gridLoc.second; j < gridLoc.second + building.getGridLengthZ(); j++) {
+                    nodes[i][j]=building.getUUID();
+                }
             }
         }
     }
@@ -153,7 +181,17 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
     public void putBuildingInHand(Building building) {
         this.buildingInHand = new BuildingInHand(building, arena);
     }
-
+    public Pair<Integer,Integer> getRandomWalkableLoc(Building building, Random random) {
+        List<Pair<Integer, Integer>> ring = getOuterRing(building);
+        return ring.get(random.nextInt(ring.size()));
+    }
+    public Location getCenterBuildingLoc(Building building, int heightAboveGround) {
+        Pair<Integer,Integer> gridLoc = building.getGridLoc();
+        Location loc = arena.getAbsLocationFromGridLoc(gridLoc.first, gridLoc.second, heightAboveGround);
+        loc.setX(loc.getX() + (building.getGridLengthX() / 2f));
+        loc.setZ(loc.getZ() + (building.getGridLengthZ() / 2f));
+        return loc;
+    }
     // Get a list of locations in the outer ring for a building
     public List<Pair<Integer, Integer>> getOuterRing(Building building) {
         List<Pair<Integer,Integer>> outerRing = new ArrayList<>();

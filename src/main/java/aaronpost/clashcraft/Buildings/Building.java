@@ -12,6 +12,8 @@ import aaronpost.clashcraft.Session;
 import aaronpost.clashcraft.Singletons.Sessions;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -19,6 +21,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 // Author: Aaron Post
@@ -99,7 +103,20 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public abstract int getGridLengthZ();
     public abstract long getTimeToBuild(int level);
     public abstract Schematic getSchematic();
+    public abstract Schematic getBrokenSchematic();
     public abstract int getMaxLevel();
+    public List<String> getUpgradeDescription() { return Arrays.asList("No upgrade description yet", "Implement this");}
+    public ItemStack getUpgradeItem() {
+        if(getLevel() == getMaxLevel()) {
+            return Globals.MAXED_OUT_ITEM;
+        }
+        ItemStack item = new ItemStack(Material.ARROW);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.GRAY + "Upgrade to Level " + (getLevel() + 1));
+        meta.setLore(getUpgradeDescription());
+        item.setItemMeta(meta);
+        return item;
+    }
     public boolean isMaxLevel() {
         return getLevel() == getMaxLevel();
     }
@@ -111,7 +128,7 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public UUID getUUID() { return uuid; }
     public int getNextLevel() { return nextLevel; }
     public String getDisplayName() { return getPlainDisplayName() + ChatColor.GRAY + " Level " + getLevel(); }
-    public long getRemainingUpdateTime() { return getTimeToBuild(nextLevel); }
+    public long getRemainingUpdateTime() { return getTimeToBuild(nextLevel) - buildTime; }
     public int getLayersBuilt() { return layersBuilt; }
     public void setLayersBuilt(int layers) { this.layersBuilt = layers; }
     public float getPercentageBuilt() { return (buildTime / (float) getTimeToBuild(nextLevel)); }
@@ -130,6 +147,7 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         itemStack.setItemMeta(meta);
         return itemStack;
     }
+    public ItemStack getStatsItem() { return new ItemStack(Material.OAK_SIGN); }
     public void sendMessage(String message) {
         arena.sendActionBar(getPlainDisplayName() + ChatColor.DARK_GRAY + ": " + ChatColor.GRAY + message);
     }
@@ -142,6 +160,7 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         paste();
     }
     public void pickup() {
+        getArena().playSound(Sound.BLOCK_WOOD_BREAK,1f,1f);
         arena.getIsland().putBuildingInHand(this);
         resetToGrass();
     }

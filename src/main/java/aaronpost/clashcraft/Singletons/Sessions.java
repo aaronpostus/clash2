@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Sessions {
+    public enum PlayerState { DEFAULT, ISLAND, RAIDING }
+    public Map<Player,PlayerState> playerStates = new HashMap<>();
     private final Map<Player,Session> sessions = new HashMap<>();
     public static Sessions s = new Sessions();
     public void addSession(Player p, Session s) { sessions.put(p,s); }

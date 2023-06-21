@@ -1,35 +1,25 @@
 package aaronpost.clashcraft.Buildings;
 
-import aaronpost.clashcraft.Arenas.Arena;
-import aaronpost.clashcraft.Buildings.BuildingMenus.BarracksMenu;
+import aaronpost.clashcraft.Buildings.BuildingMenus.DefaultBuildingMenu;
 import aaronpost.clashcraft.ClashCraft;
-import aaronpost.clashcraft.Buildings.BuildingMenus.BarracksTrainMenu;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
-import aaronpost.clashcraft.Raiding.Troop;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-
-public class Barracks extends Building {
-    //private List<Troop> troops
-
-    public Barracks(Arena arena) {
-        super(arena);
+public class TownHall extends Building {
+    public TownHall(int x, int z) {
+        super(x,z);
     }
-
     @Override
     public void click() {
-        openMenu();
+
     }
 
     @Override
     public void openMenu() {
-        Player player = getArena().getPlayer();
-        ClashCraft.guiManager.openGUI(new BarracksMenu(this), player);
+
     }
 
     @Override
@@ -49,47 +39,46 @@ public class Barracks extends Building {
 
     @Override
     public ItemStack getPlainItemStack() {
-        return BuildingGlobals.BARRACKS_ITEM_STACK;
+        return null;
     }
 
     @Override
     public String getPlainDisplayName() {
-        return BuildingGlobals.BARRACKS_DISPLAY_NAME;
+        return null;
     }
 
     @Override
     public ChatColor getPrimaryColor() {
-        return BuildingGlobals.BARRACKS_COLOR;
+        return null;
     }
 
     @Override
     public int getGridLengthX() {
-        return BuildingGlobals.BARRACKS_GRID_LENGTH;
+        return 10;
     }
 
     @Override
     public int getGridLengthZ() {
-        return BuildingGlobals.BARRACKS_GRID_LENGTH;
+        return 10;
     }
 
     @Override
     public long getTimeToBuild(int level) {
-        return BuildingGlobals.BARRACKS_BUILD_TIME[level - 1];
+        return 0;
     }
 
     @Override
     public Schematic getSchematic() {
-        return Schematics.s.getSchematic(BuildingGlobals.BARRACKS_SCHEMATICS[getLevel() - 1]);
-    }
-    @Override
-    public Schematic getBrokenSchematic() {
-        return Schematics.s.getSchematic(BuildingGlobals.BROKEN_BARRACKS_SCHEMATICS[getLevel() - 1]);
+        return Schematics.s.getSchematic(BuildingGlobals.TOWN_HALL_SCHEMATICS[getLevel()-1]);
     }
 
     @Override
-    public int getMaxLevel() {
-        return BuildingGlobals.BARRACKS_MAX_LEVEL;
+    public Schematic getBrokenSchematic() {
+        return Schematics.s.getSchematic(BuildingGlobals.BROKEN_TOWN_HALL_SCHEMATICS[getLevel()-1]);
     }
+
+    @Override
+    public int getMaxLevel() { return 1; }
 
     @Override
     public void startUpdates() {

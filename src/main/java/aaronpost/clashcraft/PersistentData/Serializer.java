@@ -4,6 +4,7 @@ import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Currency.Currency;
 import aaronpost.clashcraft.Buildings.BuildingStates.IBuildingState;
+import aaronpost.clashcraft.Islands.Island;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import aaronpost.clashcraft.Session;
@@ -11,17 +12,14 @@ import aaronpost.clashcraft.Singletons.Sessions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class Serializer implements Listener {
+public class Serializer {
     private final Logger logger = ClashCraft.plugin.getLogger();
     public static final String SESSIONS_PATH = ClashCraft.plugin.getDataFolder().getAbsolutePath() + File.separator + "Sessions";
     public static final String SCHEMATICS_PATH = ClashCraft.plugin.getDataFolder().getAbsolutePath() + File.separator + "Schematics";
@@ -34,24 +32,24 @@ public class Serializer implements Listener {
         builder.registerTypeAdapter(Currency.class, new DeserializerAdapter<Currency>(path + "Currency."));
         builder.registerTypeAdapter(IBuildingState.class, new DeserializerAdapter<IBuildingState>(path +
                 "Buildings.BuildingStates."));
+        builder.registerTypeAdapter(Island.class, new IslandAdapter());
         builder.setPrettyPrinting();
         this.sessionGson = builder.create();
     }
-    @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent p) {
-        Session c = Sessions.s.getSession(p.getPlayer());
+    public void logoffPlayer(Player p) {
+        Session c = Sessions.s.getSession(p);
         if(c!=null) {
+            c.getIsland().saveBuildings();
             try {
-                serializeSession(p.getPlayer(), c);
-                logger.info(p.getPlayer().getName() + "'s session has been saved!");
+                serializeSession(p, c);
+                logger.info(p.getName() + "'s session has been saved!");
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Sessions.s.removeSession(p.getPlayer());
+            Sessions.s.removeSession(p);
         }
     }
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent p) {
+    public void logonPlayer(Player p) {
         // Load their files up!
         Player player = p.getPlayer();
         File file = new File(SESSIONS_PATH + File.separator + player.getUniqueId() + ".json");

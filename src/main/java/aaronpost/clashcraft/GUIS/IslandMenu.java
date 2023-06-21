@@ -1,81 +1,59 @@
 package aaronpost.clashcraft.GUIS;
 
+import aaronpost.clashcraft.Arenas.Arena;
+import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.ClashCraft;
+import aaronpost.clashcraft.GUIS.Manager.InventoryButton;
+import aaronpost.clashcraft.GUIS.Manager.InventoryGUI;
+import aaronpost.clashcraft.Globals.Globals;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-public class IslandMenu implements Listener {
-    private final Player p;
+public class IslandMenu extends InventoryGUI {
+    private Player p;
 
-    public IslandMenu(Player p) {
+    @Override
+    protected Inventory createInventory() {
+        return Bukkit.createInventory(null, 27, ChatColor.GOLD + "+ Shop +");
+    }
+    @Override
+    public void decorate(Player p) {
         this.p = p;
-        Inventory categorySelect = p.getServer().createInventory(null, 27, ChatColor.GOLD + "+ Shop +");
-        ItemStack stack = new ItemStack(Material.BOW);
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(ChatColor.RED + "Army");
-        stack.setItemMeta(meta);
-        categorySelect.setItem(10, stack);
 
-        stack = new ItemStack(Material.CHEST);
-        meta = stack.getItemMeta();
-        meta.setDisplayName(ChatColor.GOLD + "Resources");
-        stack.setItemMeta(meta);
-        categorySelect.setItem(12, stack);
+        this.getInventory().setItem(10, Globals.ARMY_SHOP_ICON.clone());
+        this.addButton(10,createSubmenuButton("army"));
 
-        stack = new ItemStack(Material.SHIELD);
-        meta = stack.getItemMeta();
-        meta.setDisplayName(ChatColor.DARK_PURPLE + "Defenses");
-        stack.setItemMeta(meta);
-        categorySelect.setItem(14, stack);
+        this.getInventory().setItem(12,Globals.RESOURCE_SHOP_ICON.clone());
+        this.addButton(12,createSubmenuButton("resources"));
 
-        stack = new ItemStack(Material.TNT);
-        meta = stack.getItemMeta();
-        meta.setDisplayName(ChatColor.DARK_GRAY + "Traps");
-        stack.setItemMeta(meta);
-        categorySelect.setItem(16, stack);
+        this.getInventory().setItem(14,Globals.DEFENSE_SHOP_ICON.clone());
+        this.addButton(14,createSubmenuButton("defenses"));
 
-        p.openInventory(categorySelect);
+        this.getInventory().setItem(16,Globals.TRAP_SHOP_ICON.clone());
+        this.addButton(16,createSubmenuButton("traps"));
     }
-
-    @EventHandler
-    public void onInvenClose(InventoryCloseEvent e) {
-        if(e.getPlayer().equals(p)) {
-            HandlerList.unregisterAll(this);
-        }
-    }
-
-    @EventHandler
-    public void onItemClick(InventoryClickEvent e) {
-        if(e.getWhoClicked().equals(p)) {
-            e.setCancelled(true);
-            if(e.getCurrentItem() != null) {
-                switch (e.getCurrentItem().getType()) {
-                    case CHEST:
-                        ClashCraft.plugin.getServer().getPluginManager().registerEvents
-                                (new ResourcesMenu((Player) e.getWhoClicked()), ClashCraft.plugin);
-                        HandlerList.unregisterAll(this);
-                        break;
-                    case BOW:
-                        ClashCraft.plugin.getServer().getPluginManager().registerEvents
-                                (new ArmyBuildings((Player) e.getWhoClicked()), ClashCraft.plugin);
-                        HandlerList.unregisterAll(this);
-                        break;
-                    case SHIELD:
-                        ClashCraft.plugin.getServer().getPluginManager().registerEvents
-                                (new DefenseBuildings((Player) e.getWhoClicked()), ClashCraft.plugin);
-                        HandlerList.unregisterAll(this);
-                        break;
-                }
+    private InventoryButton createSubmenuButton(String key) {
+        return new InventoryButton().consumer(event -> {
+            Player player = (Player) event.getWhoClicked();
+            Arena a = Arenas.a.findPlayerArena(p);
+            switch(key) {
+                case "army":
+                    ClashCraft.guiManager.openGUI(new ArmyMenu(a),p);
+                    break;
+                case "resources":
+                    ClashCraft.guiManager.openGUI(new ResourceMenu(a),p);
+                    break;
+                case "defenses":
+                    ClashCraft.guiManager.openGUI(new DefenseMenu(a),p);
+                    break;
+                case "traps":
+                    p.sendMessage(Globals.prefix + "Traps coming soon!");
+                    p.closeInventory();
+                    //ClashCraft.guiManager.openGUI(new IslandMenuRefactor(),arena.getPlayer());
+                    break;
             }
-        }
+        });
     }
 }

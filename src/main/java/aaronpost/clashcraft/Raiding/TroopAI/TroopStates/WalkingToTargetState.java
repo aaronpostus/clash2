@@ -17,6 +17,8 @@ public class WalkingToTargetState implements ITroopState {
 
     @Override
     public void buildingDestroyed(Building building) {
-        troop.skipTarget();
+        if(troop.getTarget().equals(building)) {
+            troop.skipTarget();
+        }
     }
 }

@@ -1,6 +1,7 @@
 package aaronpost.clashcraft.Buildings.BuildingStates;
 
 import aaronpost.clashcraft.Buildings.Building;
+import org.bukkit.Sound;
 
 public class InHandState extends IBuildingState {
     private transient Building building;
@@ -41,6 +42,7 @@ public class InHandState extends IBuildingState {
     @Override
     public void place(int x, int z) {
         building.state = new IslandState(building);
+        building.getArena().playSound(Sound.BLOCK_WOOD_PLACE,1f,1f);
         building.place(x,z);
     }
 

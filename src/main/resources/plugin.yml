@@ -21,3 +21,6 @@ commands:
   raid:
     description: go raiding
     usage: /raid
+  debug:
+    description: debug command for op
+    usage: /debug

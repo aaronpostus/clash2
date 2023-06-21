@@ -10,17 +10,22 @@ import aaronpost.clashcraft.Session;
 import aaronpost.clashcraft.Singletons.GameManager;
 import aaronpost.clashcraft.Singletons.Sessions;
 
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import pathfinding.grid.GridCell;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static aaronpost.clashcraft.Arenas.Arena.ArenaState.ISLAND_STATE;
 import static aaronpost.clashcraft.Arenas.Arena.ArenaState.RAID_STATE;
@@ -33,6 +38,7 @@ public class Arena {
     public enum ArenaState { ISLAND_STATE, RAID_STATE }
     public ArenaState currentState = ISLAND_STATE;
     private Raid currentRaid = null;
+    private List<NPC> npcs = new ArrayList<>();
     public Arena(Location loc) {
         this.loc = loc;
     }
@@ -54,39 +60,25 @@ public class Arena {
         tpLoc.setZ(tpLoc.getZ());
         tpLoc.setY(tpLoc.getY());
 
-        ItemStack shop = new ItemStack(Material.BOOK);
-        ItemMeta meta = shop.getItemMeta();
-        meta.setDisplayName(ChatColor.GOLD + "Shop");
-        meta.getPersistentDataContainer().set(Globals.NM_KEY_SHOP_ITEM, PersistentDataType.STRING, "shop");
-        shop.setItemMeta(meta);
+        ItemStack shop = Globals.SHOP_ITEM.clone();
 
-        ItemStack returnToSpawn = new ItemStack(Material.ENDER_PEARL);
-        meta = returnToSpawn.getItemMeta();
-        meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Return to Spawn");
-        meta.getPersistentDataContainer().set(Globals.NM_KEY_SPAWN_ITEM, PersistentDataType.STRING, "spawn");
-        returnToSpawn.setItemMeta(meta);
+        ItemStack returnToSpawn = Globals.RETURN_TO_SPAWN_ITEM.clone();
 
-        ItemStack pickUpTool = new ItemStack(Material.LEAD);
-        meta = pickUpTool.getItemMeta();
-        meta.setDisplayName(ChatColor.RED + "Pick Building Up");
-        meta.getPersistentDataContainer().set(Globals.NM_KEY_BLDNG_PICK_UP_ITEM, PersistentDataType.STRING, "pickup");
-        pickUpTool.setItemMeta(meta);
+        ItemStack pickUpTool = Globals.PICK_UP_ITEM.clone();
 
-        ItemStack openBuildingMenu = new ItemStack(Material.FLOWER_BANNER_PATTERN);
-        meta = openBuildingMenu.getItemMeta();
-        meta.setDisplayName(ChatColor.AQUA + "Open Building Menu");
-        meta.getPersistentDataContainer().set(Globals.NM_KEY_BLDNG_MENU_ITEM, PersistentDataType.STRING, "buildingMenu");
-        openBuildingMenu.setItemMeta(meta);
+        ItemStack openBuildingMenu = Globals.OPEN_BUILDING_MENU_ITEM.clone();
 
         Bukkit.getScheduler().runTaskLater(ClashCraft.plugin, new Runnable() {
             @Override
             public void run() {
+                player.sendMessage(Globals.prefix + ChatColor.GRAY + " Loaded your island.");
                 p.teleport(tpLoc);
                 p.getInventory().setItem(0, shop);
                 p.getInventory().setItem(6, openBuildingMenu);
                 p.getInventory().setItem(7, pickUpTool);
                 p.getInventory().setItem(8, returnToSpawn);
                 p.setGameMode(GameMode.ADVENTURE);
+                playSound(Sound.ENTITY_BAT_TAKEOFF, 1f,1f);
 
                 Building buildingInHand = island.getBuildingInBuildingInHand();
 
@@ -105,7 +97,17 @@ public class Arena {
                 p.setAllowFlight(true);
             }
         },  10);
-
+    }
+    public void deleteNPCS() {
+        for(NPC npc: npcs) {
+            npc.destroy();
+        }
+        npcs = new ArrayList<>();
+    }
+    public NPC createArenaNPC(EntityType entityType, Location loc) {
+        NPC npc = CitizensAPI.getNPCRegistry().createNPC(entityType, UUID.randomUUID().toString(), loc);
+        npcs.add(npc);
+        return npc;
     }
     public Raid getCurrentRaid() {
         return currentRaid;
@@ -129,6 +131,7 @@ public class Arena {
         this.island = island;
     }
     public void purchaseNewBuilding(Building building) {
+        building.getArena().playSound(Sound.ENTITY_PLAYER_LEVELUP, 0.5f,5f);
         island.putBuildingInHand(building);
         // Gets building ItemStack with formatted lore, and gives it to player
         player.getInventory().addItem(building.getItemStack());
@@ -175,8 +178,18 @@ public class Arena {
         this.island = victimIsland;
         this.currentState = RAID_STATE;
     }
+    public void playSound(Sound sound, float vol, float pitch) {
+        player.playSound(player.getEyeLocation(), sound, vol,pitch);
+    }
     public Location getAbsLocationFromNavGridLoc(int x, int z) {
         return getAbsLocationFromNavGridLoc(x,z,0);
+    }
+    public Location getAbsLocationFromGridLoc(int x, int z, int heightAboveGround) {
+        Location loc = this.getLoc().clone();
+        loc.setX(x + loc.getX());
+        loc.setZ(z + loc.getZ());
+        loc.setY(heightAboveGround + loc.getY());
+        return loc;
     }
     public Location getAbsLocationFromNavGridLoc(int x, int z, int heightAboveGround) {
         Location loc = this.getLoc().clone();
@@ -190,8 +203,8 @@ public class Arena {
         GameManager.getInstance().removeUpdatable(island);
 
         this.island.stopUpdates();
-        this.player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         this.session.saveLogOffTime();
+        this.player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
     }
 
     public Location getLoc() {

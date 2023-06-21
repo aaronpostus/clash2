@@ -183,7 +183,6 @@ public class ClashCraft extends JavaPlugin {
         else if (label.equals("island")) {
             if(!Arenas.a.playerAtArena(player)) {
                 if (Arenas.a.hasAvailableArena()) {
-                    player.sendMessage(Globals.prefix + ChatColor.GRAY + " Sent you to your island.");
                     Arena arena = Arenas.a.findAvailableArena();
                     Arenas.a.assignPlayer(player, arena);
                 } else {
@@ -193,6 +192,8 @@ public class ClashCraft extends JavaPlugin {
             } else {
                 player.sendMessage(Globals.prefix + ChatColor.GRAY + " Sent you to spawn.");
                 Arenas.a.unassignPlayer(player,Arenas.a.findPlayerArena(player));
+                player.playSound(player.getEyeLocation(), Sound.ENTITY_BAT_TAKEOFF, 1f,1f);
+
             }
             return true;
         }

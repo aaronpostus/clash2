@@ -1,7 +1,9 @@
 package aaronpost.clashcraft.Buildings.BuildingStates;
 
 import aaronpost.clashcraft.Buildings.Building;
+import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Schematics.Schematic;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 
 public class BuildingState extends IBuildingState {
@@ -49,7 +51,7 @@ public class BuildingState extends IBuildingState {
         }
         else {
             building.getArena().playSound(Sound.BLOCK_NOTE_BLOCK_BASS, 1f,1f);
-            building.sendMessage(Math.floor(p*100)+"% complete.");
+            building.sendMessage(ChatColor.GRAY + Globals.timeFromSeconds(building.getRemainingUpdateTime()) + " remaining.");
         }
     }
 

@@ -71,12 +71,14 @@ public class Arena {
         Bukkit.getScheduler().runTaskLater(ClashCraft.plugin, new Runnable() {
             @Override
             public void run() {
+                player.sendMessage(Globals.prefix + ChatColor.GRAY + " Loaded your island.");
                 p.teleport(tpLoc);
                 p.getInventory().setItem(0, shop);
                 p.getInventory().setItem(6, openBuildingMenu);
                 p.getInventory().setItem(7, pickUpTool);
                 p.getInventory().setItem(8, returnToSpawn);
                 p.setGameMode(GameMode.ADVENTURE);
+                playSound(Sound.ENTITY_BAT_TAKEOFF, 1f,1f);
 
                 Building buildingInHand = island.getBuildingInBuildingInHand();
 
@@ -181,6 +183,13 @@ public class Arena {
     }
     public Location getAbsLocationFromNavGridLoc(int x, int z) {
         return getAbsLocationFromNavGridLoc(x,z,0);
+    }
+    public Location getAbsLocationFromGridLoc(int x, int z, int heightAboveGround) {
+        Location loc = this.getLoc().clone();
+        loc.setX(x + loc.getX());
+        loc.setZ(z + loc.getZ());
+        loc.setY(heightAboveGround + loc.getY());
+        return loc;
     }
     public Location getAbsLocationFromNavGridLoc(int x, int z, int heightAboveGround) {
         Location loc = this.getLoc().clone();

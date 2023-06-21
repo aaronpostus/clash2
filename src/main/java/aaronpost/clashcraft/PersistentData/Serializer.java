@@ -4,6 +4,7 @@ import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Currency.Currency;
 import aaronpost.clashcraft.Buildings.BuildingStates.IBuildingState;
+import aaronpost.clashcraft.Islands.Island;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import aaronpost.clashcraft.Session;
@@ -11,10 +12,7 @@ import aaronpost.clashcraft.Singletons.Sessions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +32,14 @@ public class Serializer {
         builder.registerTypeAdapter(Currency.class, new DeserializerAdapter<Currency>(path + "Currency."));
         builder.registerTypeAdapter(IBuildingState.class, new DeserializerAdapter<IBuildingState>(path +
                 "Buildings.BuildingStates."));
+        builder.registerTypeAdapter(Island.class, new IslandAdapter());
         builder.setPrettyPrinting();
         this.sessionGson = builder.create();
     }
     public void logoffPlayer(Player p) {
         Session c = Sessions.s.getSession(p);
         if(c!=null) {
+            c.getIsland().saveBuildings();
             try {
                 serializeSession(p, c);
                 logger.info(p.getName() + "'s session has been saved!");

@@ -1,13 +1,25 @@
 package aaronpost.clashcraft.Globals;
 
 import aaronpost.clashcraft.ClashCraft;
+import aaronpost.clashcraft.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class BuildingGlobals {
+    public static final int ELIXIRCOLLECTOR_MAX_LEVEL = 2;
+    public static final float[] ELIXIRCOLLECTOR_COLLECTION_RATE = new float[] {200,400};
+    public static final int[] ELIXIRCOLLECTOR_CAPACITY = new int[] {1000,2000};
+    public static final int ELIXIRCOLLECTOR_GRID_LENGTH = 6;
+    public static final long[] ELIXIRCOLLECTOR_BUILD_TIME = new long[] {10L, 60L};
+    public static final int[] ELIXIRCOLLECTOR_COST = new int[] { 150, 300 };
+    public static final int[] ELIXIRCOLLECTOR_HITPOINTS = new int[] { 400, 440 };
+    public static final ItemStack ELIXIRCOLLECTOR_ITEM_STACK = new ItemStack(Material.MAGENTA_CONCRETE);
+    public static final String ELIXIRCOLLECTOR_DISPLAY_NAME = ChatColor.LIGHT_PURPLE + "Elixir Collector";
+    public static final String[] ELIXIRCOLLECTOR_SCHEMATIC = new String[] { "ElixirCollector1", "ElixirCollector2" };
     public static NamespacedKey NAMESPACED_KEY_UUID = new NamespacedKey(ClashCraft.plugin, "buildingUUID");
     public static NamespacedKey NAMESPACED_KEY_IDENTIFIER = new NamespacedKey(ClashCraft.plugin, "buildingInHand");
     public enum BuildingStates { InHandNew, InHand, Upgrading, UpgradeComplete, IslandMode, DefenseMode }

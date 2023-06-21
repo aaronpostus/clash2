@@ -128,7 +128,7 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public UUID getUUID() { return uuid; }
     public int getNextLevel() { return nextLevel; }
     public String getDisplayName() { return getPlainDisplayName() + ChatColor.GRAY + " Level " + getLevel(); }
-    public long getRemainingUpdateTime() { return getTimeToBuild(nextLevel); }
+    public long getRemainingUpdateTime() { return getTimeToBuild(nextLevel) - buildTime; }
     public int getLayersBuilt() { return layersBuilt; }
     public void setLayersBuilt(int layers) { this.layersBuilt = layers; }
     public float getPercentageBuilt() { return (buildTime / (float) getTimeToBuild(nextLevel)); }

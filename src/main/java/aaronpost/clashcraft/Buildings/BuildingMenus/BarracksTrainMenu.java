@@ -63,13 +63,25 @@ public class BarracksTrainMenu extends InventoryGUI {
                        case LEFT:
                            if(amount < 64) {
                                amountToTrain.put(key,++amount);
-                               player.playSound(loc, Sound.BLOCK_NOTE_BLOCK_PLING, 0.25f,1f);
+                               if(amount == 1) {
+                                   player.playSound(loc, Sound.BLOCK_NOTE_BLOCK_PLING, 0.25f,1f);
+                               }
+                               else {
+                                   player.playSound(loc, Sound.BLOCK_DISPENSER_DISPENSE, 0.25f,1f);
+                               }
+
                            }
                            break;
                        case RIGHT:
                            if(amount > 0) {
                                amountToTrain.put(key,--amount);
-                               player.playSound(loc, Sound.BLOCK_NOTE_BLOCK_PLING, 0.25f,-1f);
+                               if(amount == 0) {
+                                   player.playSound(loc, Sound.BLOCK_NOTE_BLOCK_PLING, 0.25f,-1f);
+                               }
+                               else {
+                                   player.playSound(loc, Sound.BLOCK_DISPENSER_DISPENSE, 0.25f,1f);
+                               }
+
                            }
                            break;
                    }

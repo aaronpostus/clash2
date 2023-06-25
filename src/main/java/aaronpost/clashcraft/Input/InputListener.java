@@ -12,20 +12,20 @@ import org.bukkit.inventory.ItemStack;
 
 public class InputListener implements Listener {
     //List<InputActions>
-    @EventHandler
-    public void onClick(PlayerInteractEvent i) {
-        Player p = i.getPlayer();
-        if(Arenas.a.playerAtArena(p)) {
-            Arena a = Arenas.a.findPlayerArena(p);
-            if(a.getCurrentRaid() != null) {
-                ItemStack item = p.getInventory().getItemInMainHand();
-                if(item.getType() == Material.GOLD_INGOT) {
-                   p.getInventory().remove(item);
-                    PlaceTroop pt = new PlaceTroop();
-                    pt.execute(a);
-                }
-
-            }
-        }
-    }
+//    @EventHandler
+//    public void onClick(PlayerInteractEvent i) {
+//        Player p = i.getPlayer();
+//        if(Arenas.a.playerAtArena(p)) {
+//            Arena a = Arenas.a.findPlayerArena(p);
+//            if(a.getCurrentRaid() != null) {
+//                ItemStack item = p.getInventory().getItemInMainHand();
+//                if(item.getType() == Material.GOLD_INGOT) {
+//                   p.getInventory().remove(item);
+//                    PlaceTroop pt = new PlaceTroop();
+//                    pt.execute(a);
+//                }
+//
+//            }
+//        }
+//    }
 }

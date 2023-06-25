@@ -23,29 +23,29 @@ public class Raid implements IUpdatable, IFixedUpdatable {
     private final Arena arena;
     private final IslandNavGraph navGraph;
     private final TroopManager troopManager;
-    public Raid(Arena arena, UUID uuid, int x, int z) {
+    private final Island raiderIsland,victimIsland;
+    public Raid(Arena arena, UUID uuid) {
 
         this.arena = arena;
         Player raider = arena.getPlayer();
         Sessions.s.playerStates.put(raider, Sessions.PlayerState.RAIDING);
-        Island raiderIsland = arena.getIsland();
-        Island victimIsland;
+        this.raiderIsland = arena.getIsland();
         try {
             Session victimSession = ClashCraft.serializer.deserializeSession(uuid);
-            victimIsland = victimSession.getIsland();
+            this.victimIsland = victimSession.getIsland();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        this.arena.assignRaid(this, victimIsland);
-        victimIsland.refreshReferences(arena);
-        victimIsland.loadBuildings();
+        this.arena.assignRaid(this, this.victimIsland);
+        this.victimIsland.refreshReferences(arena);
+        this.victimIsland.loadBuildings();
         raider.sendMessage(Globals.prefix+" Arrived at " + Bukkit.getOfflinePlayer(uuid).getName() + "'s island.");
         GameManager.getInstance().addUpdatable(this);
         GameManager.getInstance().addFixedUpdatable(this);
         this.navGraph = new IslandNavGraph(victimIsland);
         this.troopManager = new TroopManager();
-        this.troopManager.addTroop(new Barbarian(this,x,z));
-
+        raider.getInventory().addItem(Globals.BARBARIAN_HEAD.clone());
+        //this.troopManager.addTroop(new Barbarian(this,x,z));
     }
     public Arena getArena() { return arena; }
     public IslandNavGraph getNavGraph() { return navGraph; }
@@ -70,6 +70,7 @@ public class Raid implements IUpdatable, IFixedUpdatable {
     @Override
     public void stopUpdates() {
         troopManager.deleteAllTroops();
+        Raids.r.raids.remove(this);
         GameManager.getInstance().removeUpdatable(this);
         GameManager.getInstance().removeFixedUpdatable(this);
     }

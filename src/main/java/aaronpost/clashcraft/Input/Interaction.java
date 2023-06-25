@@ -1,11 +1,13 @@
-package aaronpost.clashcraft;
+package aaronpost.clashcraft.Input;
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.Commands.*;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Globals.Globals;
+import aaronpost.clashcraft.Globals.SkinGlobals;
 import aaronpost.clashcraft.Interfaces.IArenaCommand;
 import aaronpost.clashcraft.Islands.Island;
+import aaronpost.clashcraft.Pair;
 import aaronpost.clashcraft.Singletons.Sessions;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -31,9 +33,14 @@ import java.util.Map;
 
 public class Interaction implements Listener {
     private final Map<NamespacedKey, IArenaCommand> interactions;
+    private final Map<String, SkinGlobals.Troops> troopsMap;
     private final IArenaCommand leftClick = new LeftClickBuilding();
     public Interaction() {
         interactions = new HashMap<>();
+        troopsMap = new HashMap<>();
+        for(SkinGlobals.Troops t: SkinGlobals.Troops.values()) {
+            troopsMap.put(t.toString(),t);
+        }
         interactions.put(Globals.NM_KEY_SHOP_ITEM, new OpenShopMenu());
         interactions.put(Globals.NM_KEY_SPAWN_ITEM, new ReturnToSpawn());
         interactions.put(Globals.NM_KEY_BLDNG_PICK_UP_ITEM, new PickBuildingUp());
@@ -68,6 +75,35 @@ public class Interaction implements Listener {
             return;
         }
         Arena arena = Arenas.a.findPlayerArena(player);
+        if(state == Sessions.PlayerState.RAIDING) {
+            ItemStack item = player.getInventory().getItemInMainHand();
+            ItemMeta meta = item.getItemMeta();
+            if(meta == null) {
+                return;
+            }
+            PersistentDataContainer data = meta.getPersistentDataContainer();
+            for(String troop : troopsMap.keySet()) {
+                if(data.has(Globals.NM_KEY_PLACE_TROOP, PersistentDataType.STRING)) {
+                    String key = data.get(Globals.NM_KEY_PLACE_TROOP,PersistentDataType.STRING);
+                    if(troopsMap.containsKey(key)) {
+                        SkinGlobals.Troops troopType = troopsMap.get(key);
+                        Block block = player.getTargetBlockExact(500);
+                        if(block == null) {
+                            return;
+                        }
+                        Location loc = block.getLocation();
+                        if(!arena.isValidNavGridLocation(loc)) {
+                            System.out.println(1);
+                            return;
+                        }
+                        Pair<Integer,Integer> gridLoc = arena.getNavGridLocFromAbsLoc(loc);
+                        new PlaceTroop(troopType, gridLoc.first, gridLoc.second).execute(arena);
+                        return;
+                    }
+                }
+            }
+            return;
+        }
         Island island = arena.getIsland();
         interactEvent.setCancelled(true);
         ItemStack item = player.getInventory().getItemInMainHand();

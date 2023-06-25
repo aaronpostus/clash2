@@ -5,10 +5,8 @@ import aaronpost.clashcraft.Buildings.BuildingMenus.DefaultBuildingMenu;
 import aaronpost.clashcraft.Buildings.NPC.WanderNPC;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
-import aaronpost.clashcraft.Raiding.Troops.TroopNPCFactory;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
-import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -55,9 +53,9 @@ public class ArmyCamp extends Building {
 
     @Override
     public void update() {
-        if(npc != null) {
+        /**if(npc != null) {
             npc.fixedUpdateRequest();
-        }
+        }**/
     }
 
     @Override
@@ -112,9 +110,9 @@ public class ArmyCamp extends Building {
 
     @Override
     public void startUpdates() {
-        NPC barbarian = TroopNPCFactory.createBarbarianNPC(getArena().getLoc(),1);
+        /**NPC barbarian = TroopNPCFactory.createBarbarianNPC(getArena().getLoc(),1);
         npc = new WanderNPC(this,barbarian);
-        npc.startUpdates();
+        npc.startUpdates();**/
     }
 
     @Override

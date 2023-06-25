@@ -144,12 +144,24 @@ public class Arena {
         return 0 <= gridPos.first && gridPos.first < Arenas.GRID_X_LENGTH &&
                 0 <= gridPos.second && gridPos.second < Arenas.GRID_Z_LENGTH;
     }
+    public boolean isValidNavGridLocation(Location loc) {
+        Pair<Integer,Integer> gridPos = getNavGridLocFromAbsLoc(loc);
+        return 0 <= gridPos.first && gridPos.first < Arenas.NAV_GRID_X_LENGTH &&
+                0 <= gridPos.second && gridPos.second < Arenas.NAV_GRID_Z_LENGTH;
+    }
     public boolean isValidGridLocation(int x, int z) {
         return x < Arenas.GRID_X_LENGTH && z < Arenas.GRID_Z_LENGTH && x >= 0 && z >= 0;
     }
     public Pair<Integer, Integer> getGridLocFromAbsLoc(Location origLoc) {
         Location loc = origLoc.clone();
         Location loc2 = this.loc.clone();
+        return new Pair<Integer,Integer>((int)(loc.getX() - loc2.getX()), (int)(loc.getZ() - loc2.getZ()));
+    }
+    public Pair<Integer, Integer> getNavGridLocFromAbsLoc(Location origLoc) {
+        Location loc = origLoc.clone();
+        Location loc2 = this.loc.clone();
+        loc2.setX(loc2.getX() - 2);
+        loc2.setZ(loc2.getZ() - 2);
         return new Pair<Integer,Integer>((int)(loc.getX() - loc2.getX()), (int)(loc.getZ() - loc2.getZ()));
     }
     public void unassign() {

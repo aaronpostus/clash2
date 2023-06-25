@@ -28,7 +28,7 @@ public class Barbarian extends Troop {
     }
     private static NPC createNPC(Raid raid, int x, int z) {
         Location loc = raid.getArena().getAbsLocationFromNavGridLoc(x,z,1);
-        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, UUID.randomUUID().toString(), loc);
+        NPC npc = NPCFactory.createBarbarianNPC(loc,1);
         return npc;
     }
     private static TroopAgent createAgent(Raid raid, int x, int z) {

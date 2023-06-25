@@ -39,7 +39,6 @@ public abstract class Troop {
         Waypoint lastWP = new Waypoint();
         for(Location waypoint: this.troopPath.getWaypointsToTarget()) {
             Waypoint wp = new Waypoint(waypoint);
-            // should only do this if its the last one
             provider.addWaypoint(wp);
             lastWP = wp;
         }

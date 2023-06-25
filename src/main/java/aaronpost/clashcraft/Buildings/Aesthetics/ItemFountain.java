@@ -42,7 +42,6 @@ public class ItemFountain {
             @Override
             public void run() {
                 task.cancel();
-                System.out.println("Cancelled");
             }
         }.runTaskLater(ClashCraft.plugin, 20L * lengthInSec);
     }

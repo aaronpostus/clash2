@@ -7,6 +7,6 @@ import aaronpost.clashcraft.Raiding.Raids;
 public class SearchForRaid implements IArenaCommand {
     @Override
     public void execute(Arena arena) {
-        Raids.r.tryRaid(arena.getPlayer(), 0,0);
+        Raids.r.tryRaid(arena.getPlayer());
     }
 }

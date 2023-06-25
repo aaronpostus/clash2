@@ -8,17 +8,15 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Raids {
     public static Raids r = new Raids();
-    private final List<Raid> raids = new ArrayList<>();
+    public final Map<Raid,UUID> raids = new HashMap<>();
     public Raids() {
 
     }
-    public boolean tryRaid(Player raider, int x, int z) {
+    public boolean tryRaid(Player raider) {
         // Needs to be modified to not server multiple players the same offline island at the same time
         // Also needs to prevent showing the player the same island multiple times
 
@@ -34,7 +32,7 @@ public class Raids {
             if(server.getPlayer(uuid) == null) {
                 Arena arena = Arenas.a.findPlayerArena(raider);
                 arena.unload();
-                raids.add(new Raid(arena, uuid, x, z));
+                raids.put(new Raid(arena, uuid),uuid);
                 return true;
             }
         }

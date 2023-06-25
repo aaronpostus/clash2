@@ -79,7 +79,6 @@ public class Path {
         return currentTarget;
     }
     private void translateToWaypoints() {
-        System.out.println(nextTarget != null);
         List<GridCell> pointsToKeep = new ArrayList<>();
         for(int i = 0; i < currentPath.size(); i++) {
             // remove if not a building

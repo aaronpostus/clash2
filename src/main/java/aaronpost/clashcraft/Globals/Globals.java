@@ -59,11 +59,13 @@ public class Globals {
     public static int BARBARIAN_POSITION = 13;
     public static int[] BARBARIAN_COST = {15, 30, 60, 100, 150, 200, 250, 300, 350, 400};
     public static final ItemStack BARBARIAN_HEAD;
+    public static NamespacedKey NM_KEY_PLACE_TROOP = new NamespacedKey(ClashCraft.plugin, "placetroop");
 
     static {
         BARBARIAN_HEAD = OfflineSkull.getSkull(Globals.BARBARIAN_URL[0]);
         ItemMeta meta = BARBARIAN_HEAD.getItemMeta();
         meta.setDisplayName(Globals.BARBARIAN_TITLE);
+        meta.getPersistentDataContainer().set(NM_KEY_PLACE_TROOP,PersistentDataType.STRING, SkinGlobals.Troops.BARBARIAN.toString());
         BARBARIAN_HEAD.setItemMeta(meta);
     }
     public static String[] ARCHER_URL = { "http://textures.minecraft.net/texture/e95016226b3d7dfcc165c6c7bb60a5a2c619f52e880868faac4315e31153c248" };

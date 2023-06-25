@@ -117,6 +117,9 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         item.setItemMeta(meta);
         return item;
     }
+    public int getMaxHitpoints() {
+        return 100;
+    }
     public boolean isMaxLevel() {
         return getLevel() == getMaxLevel();
     }

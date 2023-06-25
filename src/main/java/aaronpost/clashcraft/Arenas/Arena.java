@@ -1,6 +1,9 @@
 package aaronpost.clashcraft.Arenas;
 import aaronpost.clashcraft.Buildings.Building;
+import aaronpost.clashcraft.Buildings.BuildingStates.BuildingState;
+import aaronpost.clashcraft.Buildings.BuildingStates.DefenseState;
 import aaronpost.clashcraft.ClashCraft;
+import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Islands.Island;
 import aaronpost.clashcraft.Pair;
@@ -54,6 +57,11 @@ public class Arena {
         this.session = Sessions.s.getSession(p);
         this.island = session.getIsland();
         this.island.refreshReferences(this);
+        for(Building building: island.getBuildings()) {
+            if(building.state instanceof DefenseState) {
+                ((DefenseState) building.state).restoreState(building);
+            }
+        }
         Location tpLoc = loc.clone();
 
         tpLoc.setX(tpLoc.getX() - 2);

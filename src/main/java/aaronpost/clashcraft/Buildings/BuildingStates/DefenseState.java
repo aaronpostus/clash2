@@ -5,13 +5,18 @@ import aaronpost.clashcraft.Raiding.Raid;
 
 public class DefenseState extends IBuildingState {
     private IBuildingState previousState;
-    private Raid raid;
-    private Building building;
+    private transient Raid raid;
+    private transient Building building;
+    private transient float hp;
+    private transient int maxhp;
     public DefenseState(Building building, Raid raid, IBuildingState previousState) {
         this.previousState = previousState;
+        this.building = building;
         this.raid = raid;
+        this.maxhp = building.getMaxHitpoints();
+        this.hp = maxhp;
     }
-    public void restoreState() {
+    public void restoreState(Building building) {
         building.state = previousState;
     }
     @Override
@@ -26,7 +31,7 @@ public class DefenseState extends IBuildingState {
 
     @Override
     public void click() {
-
+        building.sendMessage("HP: " + (int) Math.ceil(hp) + "/" + maxhp);
     }
 
     @Override

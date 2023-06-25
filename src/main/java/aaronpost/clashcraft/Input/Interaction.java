@@ -78,31 +78,28 @@ public class Interaction implements Listener {
         if(state == Sessions.PlayerState.RAIDING) {
             ItemStack item = player.getInventory().getItemInMainHand();
             ItemMeta meta = item.getItemMeta();
-            if(meta == null) {
-                return;
-            }
-            PersistentDataContainer data = meta.getPersistentDataContainer();
-            for(String troop : troopsMap.keySet()) {
-                if(data.has(Globals.NM_KEY_PLACE_TROOP, PersistentDataType.STRING)) {
-                    String key = data.get(Globals.NM_KEY_PLACE_TROOP,PersistentDataType.STRING);
-                    if(troopsMap.containsKey(key)) {
-                        SkinGlobals.Troops troopType = troopsMap.get(key);
-                        Block block = player.getTargetBlockExact(500);
-                        if(block == null) {
-                            return;
+            if(meta != null) {
+                PersistentDataContainer data = meta.getPersistentDataContainer();
+                for (String troop : troopsMap.keySet()) {
+                    if (data.has(Globals.NM_KEY_PLACE_TROOP, PersistentDataType.STRING)) {
+                        String key = data.get(Globals.NM_KEY_PLACE_TROOP, PersistentDataType.STRING);
+                        if (troopsMap.containsKey(key)) {
+                            SkinGlobals.Troops troopType = troopsMap.get(key);
+                            Block block = player.getTargetBlockExact(500);
+                            if (block != null) {
+                                Location loc = block.getLocation();
+                                if (!arena.isValidNavGridLocation(loc)) {
+                                    return;
+                                }
+                                Pair<Integer, Integer> gridLoc = arena.getNavGridLocFromAbsLoc(loc);
+                                new PlaceTroop(troopType, gridLoc.first, gridLoc.second).execute(arena);
+                                return;
+                            }
                         }
-                        Location loc = block.getLocation();
-                        if(!arena.isValidNavGridLocation(loc)) {
-                            System.out.println(1);
-                            return;
-                        }
-                        Pair<Integer,Integer> gridLoc = arena.getNavGridLocFromAbsLoc(loc);
-                        new PlaceTroop(troopType, gridLoc.first, gridLoc.second).execute(arena);
-                        return;
                     }
                 }
             }
-            return;
+            //return;
         }
         Island island = arena.getIsland();
         interactEvent.setCancelled(true);

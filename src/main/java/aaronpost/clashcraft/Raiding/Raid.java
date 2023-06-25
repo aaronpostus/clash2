@@ -2,6 +2,8 @@ package aaronpost.clashcraft.Raiding;
 
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Buildings.Building;
+import aaronpost.clashcraft.Buildings.BuildingStates.DefenseState;
+import aaronpost.clashcraft.Buildings.BuildingStates.IBuildingState;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
@@ -35,6 +37,10 @@ public class Raid implements IUpdatable, IFixedUpdatable {
             this.victimIsland = victimSession.getIsland();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+        for(Building building: victimIsland.getBuildings()) {
+            IBuildingState state = building.state;
+            building.state = new DefenseState(building,this,state);
         }
         this.arena.assignRaid(this, this.victimIsland);
         this.victimIsland.refreshReferences(arena);

@@ -3,6 +3,7 @@ package aaronpost.clashcraft.Raiding;
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Buildings.Wall;
+import net.citizensnpcs.api.ai.goals.MoveToGoal;
 import org.bukkit.Location;
 import pathfinding.grid.GridCell;
 import java.util.ArrayList;
@@ -40,8 +41,7 @@ public class Path {
         }
         return copy;
     }
-
-    public List<Location> getWaypointsToTarget() {
+    public List<Location> getWaypoints() {
         List<GridCell> waypoints = getPathToTarget();
         List<Location> locWaypoints = new ArrayList<>();
         for(GridCell cell: waypoints) {

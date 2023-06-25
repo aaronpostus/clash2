@@ -2,15 +2,19 @@ package aaronpost.clashcraft.Raiding;
 
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Buildings.Building;
+import aaronpost.clashcraft.Raiding.TroopAI.FollowPathGoal;
 import aaronpost.clashcraft.Raiding.TroopAI.TroopAgent;
 import aaronpost.clashcraft.Raiding.TroopAI.TroopStates.ITroopState;
 import aaronpost.clashcraft.Raiding.TroopAI.TroopStates.NoTargetState;
+import net.citizensnpcs.api.ai.goals.MoveToGoal;
 import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.trait.waypoint.*;
 import net.citizensnpcs.util.PlayerAnimation;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Troop {
     private final NPC npc;
@@ -34,15 +38,8 @@ public abstract class Troop {
         arena.drawDebugPath(troopPath, Material.BLUE_STAINED_GLASS);
     }
     private void addWaypoints() {
-
-        LinearWaypointProvider provider = (LinearWaypointProvider) npc.getOrAddTrait(Waypoints.class).getCurrentProvider();
-        Waypoint lastWP = new Waypoint();
-        for(Location waypoint: this.troopPath.getWaypointsToTarget()) {
-            Waypoint wp = new Waypoint(waypoint);
-            provider.addWaypoint(wp);
-            lastWP = wp;
-        }
-        lastWP.addTrigger(new WaypointEnd(this,provider));
+        npc.getDefaultGoalController().clear();
+        npc.getDefaultGoalController().addGoal(FollowPathGoal.createFromLocations(npc,troopPath.getWaypoints()),1000);
     }
     public boolean hasTarget() {
         return troopPath.hasTarget();

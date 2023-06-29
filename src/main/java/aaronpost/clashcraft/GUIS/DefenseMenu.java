@@ -6,6 +6,7 @@ import aaronpost.clashcraft.Buildings.Wall;
 import aaronpost.clashcraft.GUIS.Manager.InventoryButton;
 import aaronpost.clashcraft.GUIS.Manager.InventoryGUI;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
+import aaronpost.clashcraft.Globals.GUIHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -26,6 +27,7 @@ public class DefenseMenu extends InventoryGUI {
     public void decorate(Player p) {
         this.getInventory().setItem(10, BuildingGlobals.WALL_ITEM_STACK.clone());
         this.addButton(10,purchaseBuilding("wall"));
+        GUIHelper.fillEmptyGUISpots(getInventory(),27);
     }
     private InventoryButton purchaseBuilding(String key) {
         return new InventoryButton().consumer(event -> {

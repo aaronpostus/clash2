@@ -22,7 +22,6 @@ public class Barracks extends Building {
     public Barracks(Arena arena) {
         super(arena);
     }
-
     public static ItemStack getShopItem() {
         ItemStack stack = BuildingGlobals.BARRACKS_ITEM_STACK.clone();
         ItemMeta meta = stack.getItemMeta();
@@ -30,31 +29,10 @@ public class Barracks extends Building {
         stack.setItemMeta(meta);
         return stack;
     }
-
-    @Override
-    public void click() {
-        openMenu();
-    }
-
     @Override
     public void openMenu() {
         Player player = getArena().getPlayer();
         ClashCraft.guiManager.openGUI(new BarracksMenu(this), player);
-    }
-
-    @Override
-    public void catchUp(float hoursToCatchUp) {
-
-    }
-
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    public void visualUpdate() {
-
     }
 
     @Override
@@ -95,19 +73,8 @@ public class Barracks extends Building {
     public Schematic getBrokenSchematic() {
         return Schematics.s.getSchematic(BuildingGlobals.BROKEN_BARRACKS_SCHEMATICS[getLevel() - 1]);
     }
-
     @Override
     public int getMaxLevel() {
         return BuildingGlobals.BARRACKS_MAX_LEVEL;
-    }
-
-    @Override
-    public void startUpdates() {
-
-    }
-
-    @Override
-    public void stopUpdates() {
-
     }
 }

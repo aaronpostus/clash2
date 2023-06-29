@@ -56,8 +56,7 @@ public class BuildingGlobals {
     public static ChatColor BARRACKS_COLOR = ChatColor.RED;
     public static String[] BARRACKS_SCHEMATICS = new String[] { "Barracks1"};
     public static String[] BROKEN_BARRACKS_SCHEMATICS = new String[] { "Barracks1_Broken"};
-    public static final ItemStack BARRACKS_ITEM_STACK = new ItemStack(Material.TARGET);
-    public static final Material BARRACKS_ITEM_MATERIAL = BARRACKS_ITEM_STACK.getType();
+    public static final ItemStack BARRACKS_ITEM_STACK = new ItemStack(Material.IRON_SWORD);
     public static String BARRACKS_DISPLAY_NAME = BARRACKS_COLOR + "Barracks";
     static {
         ItemMeta meta = BARRACKS_ITEM_STACK.getItemMeta();
@@ -147,4 +146,28 @@ public class BuildingGlobals {
     public static List<String> GOLD_STORAGE_CURRENCIES = List.of("gold");
     public static int[] GOLD_STORAGE_CAPACITY = new int[] { 1500, 3000 };
     public static long[] GOLD_STORAGE_BUILD_TIME = new long[] { 10L, 5 * 60L, };
+
+    // ELIXIR STORAGE
+    public static ItemStack ELIXIR_STORAGE_ITEM_STACK = new ItemStack(Material.MAGENTA_SHULKER_BOX);
+    public static String ELIXIR_STORAGE_DISPLAY_NAME = ChatColor.LIGHT_PURPLE + "Elixir Storage";
+    static {
+        ItemMeta meta = ELIXIR_STORAGE_ITEM_STACK.getItemMeta();
+        meta.setDisplayName(ELIXIR_STORAGE_DISPLAY_NAME);
+        ELIXIR_STORAGE_ITEM_STACK.setItemMeta(meta);
+    }
+    public static String[] ELIXIR_STORAGE_SCHEMATICS = new String[] { "ElixirStorage1", "ElixirStorage2" };
+    public static List<String> ELIXIR_STORAGE_CURRENCIES = List.of("elixir");
+    public static int[] ELIXIR_STORAGE_CAPACITY = new int[] { 1500, 3000 };
+    public static long[] ELIXIR_STORAGE_BUILD_TIME = new long[] { 10L, 5 * 60L, };
+
+
+
+    // todo
+    public static final ItemStack DARK_BARRACKS_ITEM_STACK = new ItemStack(Material.NETHERITE_SWORD);
+    public static String DARK_BARRACKS_DISPLAY_NAME = ChatColor.GRAY + "Dark Barracks";
+    static {
+        ItemMeta meta = DARK_BARRACKS_ITEM_STACK.getItemMeta();
+        meta.setDisplayName(DARK_BARRACKS_DISPLAY_NAME);
+        DARK_BARRACKS_ITEM_STACK.setItemMeta(meta);
+    }
 }

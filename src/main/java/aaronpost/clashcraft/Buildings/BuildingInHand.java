@@ -106,13 +106,24 @@ public class BuildingInHand implements Serializable, IUpdatable {
                 int gridX = gridLoc.first + i;
                 int gridZ = gridLoc.second + j;
                 Block block = blockLoc.getBlock();
-                if (arena.isValidGridLocation(gridX, gridZ) && (!island.hasBuilding(gridX, gridZ) ||
-                        (island.hasBuilding(gridX, gridZ) && island.getBuilding(gridX, gridZ).equals(building)))) {
+                if(shouldAddSilhoutte(gridX,gridZ, block)) {
                     block.setType(Material.RED_CONCRETE);
                     blockSilhoutte.add(block);
                 }
             }
         }
+    }
+    private boolean shouldAddSilhoutte(int gridX, int gridZ, Block block) {
+        if(!arena.isValidGridLocation(gridX, gridZ)) {
+            return false;
+        }
+        if(!island.hasBuilding(gridX, gridZ))  {
+            return true;
+        }
+        if(island.hasBuilding(gridX, gridZ)) {
+            return island.getBuilding(gridX, gridZ).equals(building) || block.getType().equals(Material.GRASS_BLOCK);
+        }
+        return false;
     }
     private boolean playerHoldingBuilding() {
         if(this.player == null) {

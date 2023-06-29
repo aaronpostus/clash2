@@ -1,7 +1,9 @@
 package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Arenas.Arena;
+import aaronpost.clashcraft.Buildings.BuildingMenus.DefaultBuildingMenu;
 import aaronpost.clashcraft.Buildings.BuildingStates.*;
+import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Commands.UpdateStorageCapacity;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Globals.Globals;
@@ -92,8 +94,8 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         state.visualUpdate();
     }
     // abstract methods -- you probably meant to access a "request" method instead.
-    public abstract void click();
-    public abstract void openMenu();
+    public void click() { openMenu(); }
+    public void openMenu() { ClashCraft.guiManager.openGUI(new DefaultBuildingMenu(this), getArena().getPlayer()); }
     public void catchUp(float hoursToCatchUp) { }
     public void update() { }
     public void startUpdates() { }

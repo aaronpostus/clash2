@@ -1,6 +1,9 @@
 package aaronpost.clashcraft.Arenas;
 import aaronpost.clashcraft.Buildings.Building;
+import aaronpost.clashcraft.Buildings.BuildingStates.BuildingState;
+import aaronpost.clashcraft.Buildings.BuildingStates.DefenseState;
 import aaronpost.clashcraft.ClashCraft;
+import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Islands.Island;
 import aaronpost.clashcraft.Pair;
@@ -54,6 +57,11 @@ public class Arena {
         this.session = Sessions.s.getSession(p);
         this.island = session.getIsland();
         this.island.refreshReferences(this);
+        for(Building building: island.getBuildings()) {
+            if(building.state instanceof DefenseState) {
+                ((DefenseState) building.state).restoreState(building);
+            }
+        }
         Location tpLoc = loc.clone();
 
         tpLoc.setX(tpLoc.getX() - 2);
@@ -68,14 +76,18 @@ public class Arena {
 
         ItemStack openBuildingMenu = Globals.OPEN_BUILDING_MENU_ITEM.clone();
 
+        ItemStack raidTool = Globals.RAID_ITEM.clone();
+
         Bukkit.getScheduler().runTaskLater(ClashCraft.plugin, new Runnable() {
             @Override
             public void run() {
                 player.sendMessage(Globals.prefix + ChatColor.GRAY + " Loaded your island.");
                 p.teleport(tpLoc);
                 p.getInventory().setItem(0, shop);
-                p.getInventory().setItem(6, openBuildingMenu);
-                p.getInventory().setItem(7, pickUpTool);
+
+                p.getInventory().setItem(5, openBuildingMenu);
+                p.getInventory().setItem(6, pickUpTool);
+                p.getInventory().setItem(7, raidTool);
                 p.getInventory().setItem(8, returnToSpawn);
                 p.setGameMode(GameMode.ADVENTURE);
                 playSound(Sound.ENTITY_BAT_TAKEOFF, 1f,1f);
@@ -144,12 +156,24 @@ public class Arena {
         return 0 <= gridPos.first && gridPos.first < Arenas.GRID_X_LENGTH &&
                 0 <= gridPos.second && gridPos.second < Arenas.GRID_Z_LENGTH;
     }
+    public boolean isValidNavGridLocation(Location loc) {
+        Pair<Integer,Integer> gridPos = getNavGridLocFromAbsLoc(loc);
+        return 0 <= gridPos.first && gridPos.first < Arenas.NAV_GRID_X_LENGTH &&
+                0 <= gridPos.second && gridPos.second < Arenas.NAV_GRID_Z_LENGTH;
+    }
     public boolean isValidGridLocation(int x, int z) {
         return x < Arenas.GRID_X_LENGTH && z < Arenas.GRID_Z_LENGTH && x >= 0 && z >= 0;
     }
     public Pair<Integer, Integer> getGridLocFromAbsLoc(Location origLoc) {
         Location loc = origLoc.clone();
         Location loc2 = this.loc.clone();
+        return new Pair<Integer,Integer>((int)(loc.getX() - loc2.getX()), (int)(loc.getZ() - loc2.getZ()));
+    }
+    public Pair<Integer, Integer> getNavGridLocFromAbsLoc(Location origLoc) {
+        Location loc = origLoc.clone();
+        Location loc2 = this.loc.clone();
+        loc2.setX(loc2.getX() - 2);
+        loc2.setZ(loc2.getZ() - 2);
         return new Pair<Integer,Integer>((int)(loc.getX() - loc2.getX()), (int)(loc.getZ() - loc2.getZ()));
     }
     public void unassign() {
@@ -192,6 +216,13 @@ public class Arena {
         return loc;
     }
     public Location getAbsLocationFromNavGridLoc(int x, int z, int heightAboveGround) {
+        Location loc = this.getLoc().clone();
+        loc.setX(x + loc.getX() - 2);
+        loc.setZ(z + loc.getZ() - 2);
+        loc.setY(heightAboveGround + loc.getY());
+        return loc;
+    }
+    public Location getAbsLocationFromNavGridLoc(int x, int z, float heightAboveGround) {
         Location loc = this.getLoc().clone();
         loc.setX(x + loc.getX() - 2);
         loc.setZ(z + loc.getZ() - 2);

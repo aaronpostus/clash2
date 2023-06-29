@@ -28,9 +28,9 @@ public class ArmyMenu extends InventoryGUI {
     }
     @Override
     public void decorate(Player p) {
-        this.getInventory().setItem(10, BuildingGlobals.BARRACKS_ITEM_STACK.clone());
+        this.getInventory().setItem(10, Barracks.getShopItem());
         this.addButton(10,purchaseBuilding("barracks"));
-        this.getInventory().setItem(12, new ItemStack(Material.CAMPFIRE));
+        this.getInventory().setItem(12, ArmyCamp.getShopItem());
         this.addButton(12,purchaseBuilding("armycamp"));
     }
     private InventoryButton purchaseBuilding(String key) {

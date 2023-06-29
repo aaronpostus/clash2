@@ -7,6 +7,7 @@ import aaronpost.clashcraft.GUIS.Manager.GUIListener;
 import aaronpost.clashcraft.GUIS.Manager.GUIManager;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Input.InputListener;
+import aaronpost.clashcraft.Input.Interaction;
 import aaronpost.clashcraft.PersistentData.Serializer;
 import aaronpost.clashcraft.Raiding.Raids;
 import aaronpost.clashcraft.Schematics.Controller;
@@ -14,10 +15,6 @@ import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import aaronpost.clashcraft.Singletons.GameManager;
 import aaronpost.clashcraft.Singletons.Sessions;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.MemoryNPCDataStore;
-import net.citizensnpcs.api.npc.NPCRegistry;
-import net.citizensnpcs.api.npc.SimpleNPCDataStore;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -95,6 +92,7 @@ public class ClashCraft extends JavaPlugin {
             try {
                 Session session = Sessions.s.getSession(p);
                 if(session != null) {
+                    session.getIsland().saveBuildings();
                     serializer.serializeSession(p, session);
                 }
                 ClashCraft.plugin.getLogger().info(p.getName() + "'s session has been saved!");
@@ -117,7 +115,10 @@ public class ClashCraft extends JavaPlugin {
             return false;
         }
         else if(label.equals("raid")) {
-            System.out.println(Raids.r.tryRaid(player, Integer.parseInt(args[0]),Integer.parseInt(args[1])));
+            boolean canRaid = Raids.r.tryRaid(player);
+            if(!canRaid) {
+                sender.sendMessage(Globals.prefix + ChatColor.RED + " No available islands to attack. Try again later.");
+            }
             return true;
         }
         else if (label.equals("test")) {
@@ -197,20 +198,14 @@ public class ClashCraft extends JavaPlugin {
             }
             return true;
         }
-        System.out.println(0);
         if(label.equals("createschematic")) {
             ItemStack item = player.getInventory().getItemInMainHand();
-            System.out.println(1);
             if(item.hasItemMeta()) {
-                System.out.println(2);
                 ItemMeta meta = item.getItemMeta();
                 if(meta.hasDisplayName()) {
-                    System.out.println(3);
                     if(meta.getDisplayName().equals(ChatColor.BLUE + "Schematic Wand")) {
-                        System.out.println(4);
                         ArrayList<String> lore = new ArrayList<>(Objects.requireNonNull(meta.getLore()));
                         if (Controller.checkForCompleteLore(lore, 2)) {
-                            System.out.println(5);
                             int x = Controller.getCoordFromString(lore.get(0));
                             int y = Controller.getCoordFromString(lore.get(1));
                             int z = Controller.getCoordFromString(lore.get(2));

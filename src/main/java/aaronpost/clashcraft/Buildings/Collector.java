@@ -47,7 +47,6 @@ public abstract class Collector extends Building {
         }
         else {
             float intensity = 5*(amount/getCapacity());
-            System.out.println(intensity);
             getArena().playSound(Sound.BLOCK_AMETHYST_BLOCK_BREAK,1f,1f);
             Location loc = getArena().getIsland().getCenterBuildingLoc(this,5);
             ItemFountain fountain = new ItemFountain(loc,getItemFountainMaterials(),intensity,3,3);
@@ -66,7 +65,6 @@ public abstract class Collector extends Building {
         return currency;
     }
     public void catchUp(float hoursPassed) {
-        System.out.println(1);
         tryToFill(hoursPassed * getCollectionRate());
     }
     public void setCurrencyName(String name) {

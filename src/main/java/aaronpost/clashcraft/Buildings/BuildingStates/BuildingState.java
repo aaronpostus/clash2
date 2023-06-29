@@ -26,7 +26,8 @@ public class BuildingState extends IBuildingState {
             }
         }
         else if (!pastedUpdate){
-            building.setLayersBuilt(schematic.layersToBuild(percentageBuilt) + 1);
+            // gift box
+            building.setLayersBuilt(-1);
             building.paste();
             pastedUpdate = true;
         }
@@ -39,6 +40,7 @@ public class BuildingState extends IBuildingState {
     }
     public void finishBuilding() {
         building.state = new IslandState(building);
+        building.finishBuilding();
         building.paste();
     }
     @Override
@@ -62,7 +64,15 @@ public class BuildingState extends IBuildingState {
 
     @Override
     public void catchUp(float hoursToCatchUp) {
-
+        building.buildCatchup(hoursToCatchUp);
+        float percentageBuilt = building.getPercentageBuilt();
+        if(percentageBuilt >= 1) {
+            building.setLayersBuilt(-1);
+        }
+        else {
+            building.setLayersBuilt(schematic.layersToBuild(percentageBuilt));
+        }
+        building.paste();
     }
 
     @Override

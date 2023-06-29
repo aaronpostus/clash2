@@ -5,10 +5,8 @@ import aaronpost.clashcraft.Buildings.BuildingMenus.DefaultBuildingMenu;
 import aaronpost.clashcraft.Buildings.NPC.WanderNPC;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
-import aaronpost.clashcraft.Raiding.Troops.TroopNPCFactory;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
-import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -27,13 +25,9 @@ public class ArmyCamp extends Building {
     }
 
     public static ItemStack getShopItem() {
-        ItemStack stack = BuildingGlobals.BUILDER_HUT_ITEM_STACK.clone();
+        ItemStack stack = BuildingGlobals.ARMY_CAMP_ITEM_STACK.clone();
         ItemMeta meta = stack.getItemMeta();
-        meta.setLore(Arrays.asList(ChatColor.GRAY + " A builder hut houses an NPC", ChatColor.GRAY + " who builds/upgrades buildings!",
-                ChatColor.GRAY + " One builder hut -> One task."
-                //,
-        //        ChatColor.GRAY + "Cost: " + BuildingGlobals.GOLDMINE_COST[0] + " " + Globals.ELIXIR_DISPLAY_NAME
-                ));
+        meta.setLore(Arrays.asList(ChatColor.GRAY + " An army camp houses " + ChatColor.RED + "troops", ChatColor.GRAY + " on your island before battle."));
         stack.setItemMeta(meta);
         return stack;
     }
@@ -55,9 +49,9 @@ public class ArmyCamp extends Building {
 
     @Override
     public void update() {
-        if(npc != null) {
+        /**if(npc != null) {
             npc.fixedUpdateRequest();
-        }
+        }**/
     }
 
     @Override
@@ -67,12 +61,12 @@ public class ArmyCamp extends Building {
 
     @Override
     public ItemStack getPlainItemStack() {
-        return BuildingGlobals.BUILDER_HUT_ITEM_STACK.clone();
+        return BuildingGlobals.ARMY_CAMP_ITEM_STACK.clone();
     }
 
     @Override
     public String getPlainDisplayName() {
-        return BuildingGlobals.BUILDER_HUT_DISPLAY_NAME;
+        return BuildingGlobals.ARMY_CAMP_DISPLAY_NAME;
     }
 
     @Override
@@ -112,9 +106,9 @@ public class ArmyCamp extends Building {
 
     @Override
     public void startUpdates() {
-        NPC barbarian = TroopNPCFactory.createBarbarianNPC(getArena().getLoc(),1);
+        /**NPC barbarian = TroopNPCFactory.createBarbarianNPC(getArena().getLoc(),1);
         npc = new WanderNPC(this,barbarian);
-        npc.startUpdates();
+        npc.startUpdates();**/
     }
 
     @Override

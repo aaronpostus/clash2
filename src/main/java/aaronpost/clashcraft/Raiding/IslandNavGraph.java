@@ -58,7 +58,7 @@ public class IslandNavGraph {
         this.finder = new AStarGridFinder<>(GridCell.class, opt);
         for(int i = 0; i < Arenas.NAV_GRID_X_LENGTH; i++) {
             for(int j = 0; j < Arenas.NAV_GRID_Z_LENGTH; j++) {
-                Material mat = Material.GREEN_STAINED_GLASS;
+                Material mat = Material.GLASS;
                 if(!navGrid.isWalkable(i,j)) {
                     if(this.cells[i][j].building instanceof Wall) {
                         mat = Material.ORANGE_STAINED_GLASS;
@@ -71,6 +71,9 @@ public class IslandNavGraph {
             }
         }
         refreshNavMesh();
+    }
+    public void destroy(Building building) {
+        buildingCenters.remove(building);
     }
     public void refreshNavMesh() {
         /**
@@ -139,5 +142,12 @@ public class IslandNavGraph {
     public List<GridCell> pathIfWallDestroyed(int x1, int z1, int x2, int z2, Wall buildingsDestroyed) {
         return pathIfWallsDestroyed(x1,z1,x2,z2, Collections.singletonList(buildingsDestroyed));
     }
-    //private boolean pathIfBuildingDestroyed()
+
+    public Pair<Integer, Integer> findClosestWalkableLoc(Pair<Integer, Integer> gridLoc) {
+        if(cells[gridLoc.first][gridLoc.second].isWalkable()) {
+            return gridLoc;
+        }
+        System.out.println("TROOP IS ON AN UNWALKABLE LOCATION.. THIS IS BAD");
+        return null;
+    }
 }

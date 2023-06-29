@@ -11,7 +11,9 @@ import aaronpost.clashcraft.Singletons.Schematics;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Barracks extends Building {
@@ -19,6 +21,14 @@ public class Barracks extends Building {
 
     public Barracks(Arena arena) {
         super(arena);
+    }
+
+    public static ItemStack getShopItem() {
+        ItemStack stack = BuildingGlobals.BARRACKS_ITEM_STACK.clone();
+        ItemMeta meta = stack.getItemMeta();
+        meta.setLore(Arrays.asList(ChatColor.GRAY + " Barracks train valiant " + ChatColor.RED + "troops", ChatColor.GRAY + " that can be used in battle."));
+        stack.setItemMeta(meta);
+        return stack;
     }
 
     @Override
@@ -49,7 +59,7 @@ public class Barracks extends Building {
 
     @Override
     public ItemStack getPlainItemStack() {
-        return BuildingGlobals.BARRACKS_ITEM_STACK;
+        return BuildingGlobals.BARRACKS_ITEM_STACK.clone();
     }
 
     @Override

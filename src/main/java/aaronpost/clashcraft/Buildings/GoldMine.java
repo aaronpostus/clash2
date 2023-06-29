@@ -5,6 +5,7 @@ import aaronpost.clashcraft.Buildings.BuildingMenus.CollectorMenu;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Currency.Currency;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
+import aaronpost.clashcraft.Globals.GUIHelper;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
@@ -22,10 +23,11 @@ import java.util.List;
 public class GoldMine extends Collector {
     public GoldMine(Currency currency, int x, int z) {
         super(currency, x,z);
-        // super.currency = Player's gold currency;
+        super.setCurrencyName("gold");
     }
     public GoldMine(Arena arena) {
         super(arena, Sessions.s.getSession(arena.getPlayer()).getCurrency("gold"));
+        super.setCurrencyName("gold");
     }
     @Override
     public int getMaxLevel() { return BuildingGlobals.GOLDMINE_MAX_LEVEL; }
@@ -59,13 +61,10 @@ public class GoldMine extends Collector {
         return lore;
     }
     public static ItemStack getShopItem() {
-        ItemStack stack = BuildingGlobals.GOLDMINE_ITEM_STACK.clone();
-        ItemMeta meta = stack.getItemMeta();
-        meta.setLore(Arrays.asList(ChatColor.GRAY + " A gold mine collects " + ChatColor.GOLD + "gold" + ChatColor.GRAY + " over",
-                    ChatColor.GRAY + " time, even when you're offline!",
-                    ChatColor.GRAY + "Cost: " + BuildingGlobals.GOLDMINE_COST[0] + " " + Globals.ELIXIR_DISPLAY_NAME));
-        stack.setItemMeta(meta);
-        return stack;
+        return GUIHelper.attachLore(BuildingGlobals.GOLDMINE_ITEM_STACK.clone(), Arrays.asList(
+                ChatColor.GRAY + " A gold mine collects " + ChatColor.GOLD + "gold" + ChatColor.GRAY + " over",
+                ChatColor.GRAY + " time, even when you're offline!",
+                ChatColor.GRAY + "Cost: " + BuildingGlobals.GOLDMINE_COST[0] + " " + Globals.ELIXIR_DISPLAY_NAME));
     }
     @Override
     public Schematic getSchematic() {

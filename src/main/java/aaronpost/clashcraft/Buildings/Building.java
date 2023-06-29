@@ -6,6 +6,7 @@ import aaronpost.clashcraft.Buildings.BuildingStates.*;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Commands.UpdateStorageCapacity;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
+import aaronpost.clashcraft.Globals.GUIHelper;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Interfaces.IDisplayable;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
@@ -118,12 +119,8 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         if(getLevel() == getMaxLevel()) {
             return Globals.MAXED_OUT_ITEM;
         }
-        ItemStack item = new ItemStack(Material.ARROW);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.GRAY + "Upgrade to Level " + (getLevel() + 1));
-        meta.setLore(getUpgradeDescription());
-        item.setItemMeta(meta);
-        return item;
+        String name = ChatColor.GRAY + "Upgrade to Level " + (getLevel() + 1);
+        return GUIHelper.attachNameAndLore(new ItemStack(Material.ARROW), name, getUpgradeDescription());
     }
     public int getMaxHitpoints() {
         return 100;
@@ -149,14 +146,9 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     }
     public boolean isNewBuilding() { return state instanceof InHandNewState; }
     public ItemStack getItemStack() {
-        ItemStack itemStack = getPlainItemStack();
-        ItemMeta meta = itemStack.getItemMeta();
-        meta.setDisplayName(getDisplayName());
-        PersistentDataContainer buildingData = meta.getPersistentDataContainer();
-        buildingData.set(BuildingGlobals.NAMESPACED_KEY_UUID, PersistentDataType.STRING, getUUID().toString());
-        buildingData.set(BuildingGlobals.NAMESPACED_KEY_IDENTIFIER, PersistentDataType.STRING, "building");
-        itemStack.setItemMeta(meta);
-        return itemStack;
+        ItemStack itemStack = GUIHelper.attachNameAndData(getPlainItemStack(), getDisplayName(),
+                BuildingGlobals.NAMESPACED_KEY_UUID, getUUID().toString());
+        return GUIHelper.attachData(itemStack,BuildingGlobals.NAMESPACED_KEY_IDENTIFIER,"building");
     }
     public ItemStack getStatsItem() { return new ItemStack(Material.OAK_SIGN); }
     public void sendMessage(String message) {

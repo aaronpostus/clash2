@@ -130,9 +130,6 @@ public class BuildingInHand implements Serializable, IUpdatable {
             this.player = arena.getPlayer();
         }
         ItemStack item = player.getInventory().getItemInMainHand();
-        if(item == null) {
-            return false;
-        }
         if(!item.hasItemMeta()) {
             return false;
         }

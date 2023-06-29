@@ -1,10 +1,9 @@
 package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Arenas.Arena;
-import aaronpost.clashcraft.Buildings.BuildingMenus.DefaultBuildingMenu;
-import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Commands.UpdateStorageCapacity;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
+import aaronpost.clashcraft.Globals.GUIHelper;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import org.bukkit.ChatColor;
@@ -19,12 +18,9 @@ public class GoldStorage extends Building {
         new UpdateStorageCapacity().execute(arena);
     }
     public static ItemStack getShopItem() {
-        ItemStack itemStack = BuildingGlobals.GOLD_STORAGE_ITEM_STACK.clone();
-        ItemMeta meta = itemStack.getItemMeta();
-        meta.setLore(Arrays.asList(ChatColor.GRAY + "  A gold storage allows you to",
+        return GUIHelper.attachLore(BuildingGlobals.GOLD_STORAGE_ITEM_STACK.clone(), Arrays.asList(
+                ChatColor.GRAY + "  A gold storage allows you to",
                 ChatColor.GRAY + "  stow reserves of " + ChatColor.GOLD + "gold" + ChatColor.GRAY + "."));
-        itemStack.setItemMeta(meta);
-        return itemStack;
     }
     @Override
     public boolean storesCurrency() { return true; }

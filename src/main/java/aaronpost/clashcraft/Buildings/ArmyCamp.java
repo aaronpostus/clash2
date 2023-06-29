@@ -5,6 +5,7 @@ import aaronpost.clashcraft.Buildings.BuildingMenus.DefaultBuildingMenu;
 import aaronpost.clashcraft.Buildings.NPC.WanderNPC;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
+import aaronpost.clashcraft.Globals.GUIHelper;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import org.bukkit.ChatColor;
@@ -23,11 +24,8 @@ public class ArmyCamp extends Building {
         super(x,z);
     }
     public static ItemStack getShopItem() {
-        ItemStack stack = BuildingGlobals.ARMY_CAMP_ITEM_STACK.clone();
-        ItemMeta meta = stack.getItemMeta();
-        meta.setLore(Arrays.asList(ChatColor.GRAY + " An army camp houses " + ChatColor.RED + "troops", ChatColor.GRAY + " on your island before battle."));
-        stack.setItemMeta(meta);
-        return stack;
+        return GUIHelper.attachLore(BuildingGlobals.ARMY_CAMP_ITEM_STACK.clone(), Arrays.asList(ChatColor.GRAY +
+                " An army camp houses " + ChatColor.RED + "troops", ChatColor.GRAY + " on your island before battle."));
     }
     @Override
     public ItemStack getPlainItemStack() {

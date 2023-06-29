@@ -5,6 +5,7 @@ import aaronpost.clashcraft.Buildings.BuildingMenus.BarracksMenu;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Buildings.BuildingMenus.BarracksTrainMenu;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
+import aaronpost.clashcraft.Globals.GUIHelper;
 import aaronpost.clashcraft.Raiding.Troop;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
@@ -23,11 +24,8 @@ public class Barracks extends Building {
         super(arena);
     }
     public static ItemStack getShopItem() {
-        ItemStack stack = BuildingGlobals.BARRACKS_ITEM_STACK.clone();
-        ItemMeta meta = stack.getItemMeta();
-        meta.setLore(Arrays.asList(ChatColor.GRAY + " Barracks train valiant " + ChatColor.RED + "troops", ChatColor.GRAY + " that can be used in battle."));
-        stack.setItemMeta(meta);
-        return stack;
+        return GUIHelper.attachLore(BuildingGlobals.BARRACKS_ITEM_STACK.clone(), Arrays.asList(ChatColor.GRAY +
+                " Barracks train valiant " + ChatColor.RED + "troops", ChatColor.GRAY + " that can be used in battle."));
     }
     @Override
     public void openMenu() {

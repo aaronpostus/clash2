@@ -5,6 +5,7 @@ import aaronpost.clashcraft.Buildings.BuildingMenus.CollectorMenu;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Currency.Currency;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
+import aaronpost.clashcraft.Globals.GUIHelper;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -34,17 +35,12 @@ public abstract class Collector extends Building {
     @Override
     public ItemStack getStatsItem() {
         ItemStack stack = new ItemStack(Material.OAK_SIGN);
-        ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(getDisplayName() + " Stats");
-        List<String> lore = new ArrayList<>();
-        int level = getLevel();
         String currency = " " + getCurrency().getDisplayName().toLowerCase() + " ";
-        lore.add(ChatColor.GRAY + " " + (int) getCollectionRate() + currency + ChatColor.GRAY + "per hour");
-        lore.add(ChatColor.GRAY + " " + (int) getCapacity() + currency + ChatColor.GRAY + "storage capacity");
-        lore.add(ChatColor.GRAY + " " + ChatColor.GRAY + getMaxHitpoints() + " hitpoints");
-        meta.setLore(lore);
-        stack.setItemMeta(meta);
-        return stack;
+        return GUIHelper.attachNameAndLore(stack,getDisplayName() + " Stats", Arrays.asList(
+                ChatColor.GRAY + " " + (int) getCollectionRate() + currency + ChatColor.GRAY + "per hour",
+                ChatColor.GRAY + " " + (int) getCapacity() + currency + ChatColor.GRAY + "storage capacity",
+                ChatColor.GRAY + " " + ChatColor.GRAY + getMaxHitpoints() + " hitpoints"
+        ));
     }
     abstract float getCollectionRate();
     abstract float getCapacity();

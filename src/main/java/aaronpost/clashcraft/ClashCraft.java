@@ -92,6 +92,7 @@ public class ClashCraft extends JavaPlugin {
             try {
                 Session session = Sessions.s.getSession(p);
                 if(session != null) {
+                    session.getIsland().saveBuildings();
                     serializer.serializeSession(p, session);
                 }
                 ClashCraft.plugin.getLogger().info(p.getName() + "'s session has been saved!");
@@ -114,7 +115,10 @@ public class ClashCraft extends JavaPlugin {
             return false;
         }
         else if(label.equals("raid")) {
-            Raids.r.tryRaid(player);
+            boolean canRaid = Raids.r.tryRaid(player);
+            if(!canRaid) {
+                sender.sendMessage(Globals.prefix + ChatColor.RED + " No available islands to attack. Try again later.");
+            }
             return true;
         }
         else if (label.equals("test")) {

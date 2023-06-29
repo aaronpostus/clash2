@@ -5,4 +5,5 @@ import aaronpost.clashcraft.Buildings.Building;
 public interface ITroopState {
     void update();
     void buildingDestroyed(Building building);
+    void callback();
 }

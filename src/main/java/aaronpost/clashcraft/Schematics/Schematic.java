@@ -139,7 +139,7 @@ public class Schematic implements Serializable {
         return layersToBuild(percentageComplete) != layersBuilt;
     }
     public int layersToBuild(float percentageComplete) {
-        return (int) Math.floor(percentageComplete * (yLength+yOffset));
+        return (int) Math.ceil(percentageComplete * (yLength+yOffset));
     }
     public void pasteSchematicConstruction(Location origLoc, int layersBuilt) {
         Location loc = origLoc.clone();

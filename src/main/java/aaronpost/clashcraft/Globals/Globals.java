@@ -2,6 +2,7 @@ package aaronpost.clashcraft.Globals;
 
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.OfflineSkull;
+import aaronpost.clashcraft.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -14,6 +15,16 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.concurrent.TimeUnit;
 
 public class Globals {
+    public static final ItemStack RAID_ITEM = new ItemStack(Material.FILLED_MAP);
+    public static NamespacedKey NM_KEY_RAID = new NamespacedKey(ClashCraft.plugin, "raid");
+
+    static {
+        ItemMeta meta = RAID_ITEM.getItemMeta();
+        meta.setDisplayName(ChatColor.RED + "Raid");
+        meta.getPersistentDataContainer().set(NM_KEY_RAID,PersistentDataType.STRING, SkinGlobals.Troops.BARBARIAN.toString());
+        RAID_ITEM.setItemMeta(meta);
+    }
+
     public static String timeFromSeconds(long seconds) {
         int day = (int) TimeUnit.SECONDS.toDays(seconds);
         long hours = TimeUnit.SECONDS.toHours(seconds) - (day * 24);

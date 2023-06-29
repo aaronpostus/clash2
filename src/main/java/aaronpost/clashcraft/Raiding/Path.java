@@ -18,6 +18,7 @@ public class Path {
     public Path(Raid raid, List<GridCell> path, Building firstTarget, Building secondTarget) {
         this(raid,path,firstTarget);
         this.nextTarget = secondTarget;
+        System.out.println(firstTarget.toString() + secondTarget.toString());
     }
     public Path(Raid raid,List<GridCell> path, Building firstTarget) {
         this.currentTarget = firstTarget;
@@ -26,6 +27,8 @@ public class Path {
         initializeCurrentPathAndNextPath();
         this.currentTarget = firstTarget;
         translateToWaypoints();
+        System.out.println(firstTarget.toString());
+
     }
 
     private void initializeCurrentPathAndNextPath() {
@@ -67,6 +70,9 @@ public class Path {
         return pathToTarget;
     }
     public void skipCurrentTarget() {
+        if(nextTarget == null) {
+            //recalculate
+        }
         currentTarget = nextTarget;
         currentPath = nextPath;
         nextTarget = null;
@@ -83,7 +89,7 @@ public class Path {
         for(int i = 0; i < currentPath.size(); i++) {
             // remove if not a building
             Building building = currentPath.get(i).building;
-            if(((i % 5 == 0) && currentPath.get(i).isWalkable()) || building == currentTarget) {
+            if(((i % 8 == 0) && currentPath.get(i).isWalkable()) || building == currentTarget) {
                 pointsToKeep.add(currentPath.get(i));
             }
             else if(i == currentPath.size() - 1) {

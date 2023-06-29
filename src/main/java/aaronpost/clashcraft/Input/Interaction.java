@@ -15,9 +15,12 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Fence;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -46,6 +49,7 @@ public class Interaction implements Listener {
         interactions.put(Globals.NM_KEY_BLDNG_PICK_UP_ITEM, new PickBuildingUp());
         interactions.put(Globals.NM_KEY_BLDNG_MENU_ITEM, new OpenBuildingMenu());
         interactions.put(BuildingGlobals.NAMESPACED_KEY_IDENTIFIER, new PlaceBuilding());
+        interactions.put(Globals.NM_KEY_RAID, new SearchForRaid());
     }
     @EventHandler
     public void onDrop(PlayerDropItemEvent e) {
@@ -57,6 +61,16 @@ public class Interaction implements Listener {
     @EventHandler
     public void inventoryItemClick(InventoryClickEvent e) {
         if(Arenas.a.playerAtArena((Player) e.getWhoClicked())) {
+            e.setCancelled(true);
+        }
+    }
+    @EventHandler
+    public void onPlayerPickUp(EntityPickupItemEvent e) {
+        Entity entity = e.getEntity();
+        if(!entity.getType().equals(EntityType.PLAYER)) {
+            return;
+        }
+        if(Arenas.a.playerAtArena((Player) entity)) {
             e.setCancelled(true);
         }
     }

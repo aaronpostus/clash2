@@ -54,7 +54,7 @@ public class BuildingGlobals {
     public static ChatColor BARRACKS_COLOR = ChatColor.RED;
     public static String[] BARRACKS_SCHEMATICS = new String[] { "Barracks1"};
     public static String[] BROKEN_BARRACKS_SCHEMATICS = new String[] { "Barracks1_Broken"};
-    public static ItemStack BARRACKS_ITEM_STACK = new ItemStack(Material.TARGET);
+    public static final ItemStack BARRACKS_ITEM_STACK = new ItemStack(Material.TARGET);
     public static final Material BARRACKS_ITEM_MATERIAL = BARRACKS_ITEM_STACK.getType();
     public static String BARRACKS_DISPLAY_NAME = BARRACKS_COLOR + "Barracks";
     static {
@@ -102,5 +102,14 @@ public class BuildingGlobals {
         ItemMeta meta = BUILDER_HUT_ITEM_STACK.getItemMeta();
         meta.setDisplayName(BUILDER_HUT_DISPLAY_NAME);
         BUILDER_HUT_ITEM_STACK.setItemMeta(meta);
+    }
+
+    //ARMY CAMP
+    public static ItemStack ARMY_CAMP_ITEM_STACK = new ItemStack(Material.CAMPFIRE);
+    public static String ARMY_CAMP_DISPLAY_NAME = ChatColor.YELLOW + "Army Camp";
+    static {
+        ItemMeta meta = ARMY_CAMP_ITEM_STACK.getItemMeta();
+        meta.setDisplayName(ARMY_CAMP_DISPLAY_NAME);
+        ARMY_CAMP_ITEM_STACK.setItemMeta(meta);
     }
 }

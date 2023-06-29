@@ -5,6 +5,7 @@ import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Islands.Island;
 import aaronpost.clashcraft.Pair;
+import aaronpost.clashcraft.Raiding.TroopAI.TroopStates.ICallback;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -53,4 +54,5 @@ public class WanderNPC implements IFixedUpdatable {
     public void stopUpdates() {
 
     }
+
 }

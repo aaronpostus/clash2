@@ -11,11 +11,14 @@ public class NoTargetState implements ITroopState {
     @Override
     public void update() {
         troop.target();
-        troop.state = new WalkingToTargetState(troop);
+        troop.state = new WalkingToTargetState(troop,troop.getTarget());
     }
 
     @Override
     public void buildingDestroyed(Building building) {
 
+    }
+    public void callback() {
+        // shouldn't  happen
     }
 }

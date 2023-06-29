@@ -9,6 +9,7 @@ import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Pair;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Session;
+import aaronpost.clashcraft.Singletons.Schematics;
 import aaronpost.clashcraft.Singletons.Sessions;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -37,6 +38,7 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     private transient Location absoluteLocation;
     private long buildTime;
     private transient int layersBuilt = 0;
+    private int level = 1;
     // New building in hand
     public Building(Arena arena) {
         this.uuid = UUID.randomUUID();
@@ -154,6 +156,9 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public void sendMessage(String message) {
         arena.sendActionBar(getPlainDisplayName() + ChatColor.DARK_GRAY + ": " + ChatColor.GRAY + message);
     }
+    public void damage(int amountToDamage) {
+        state.damage(amountToDamage);
+    }
     public Pair<Integer, Integer> getGridLoc() {
         return new Pair<>(x,z);
     }
@@ -170,10 +175,22 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public void buildStep() {
         this.buildTime += 1;
     }
+    public void buildCatchup(float hours) {
+        if(this.buildTime + (hours * 60 * 60) > getTimeToBuild(getNextLevel())) {
+            this.buildTime = getTimeToBuild(getNextLevel());
+            return;
+        }
+        this.buildTime += Math.floor(hours * 60 * 60);
+    }
+    public void finishBuilding() {
+
+    }
     public boolean upgrade() {
         if(state instanceof InHandNewState) {
             nextLevel = 1;
         }
+        nextLevel++;
+        buildTime = 0;
         state = new BuildingState(this);
         paste();
         return false;
@@ -182,6 +199,10 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         updateAbsoluteLocation();
         Schematic schematic = getSchematic();
         if(state instanceof BuildingState) {
+            if(layersBuilt == -1) {
+                Schematics.s.getSchematic("3x3Giftbox").pasteSchematic(absoluteLocation);
+                return;
+            }
             schematic.pasteSchematicConstruction(absoluteLocation, schematic.layersToBuild(getPercentageBuilt()));
             return;
         }

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TroopAgent {
-    private final Pair<Integer,Integer> agentPos;
+    private Pair<Integer,Integer> agentPos;
     private final Island island;
     private final Arena arena;
     private Raid raid;
@@ -30,12 +30,19 @@ public class TroopAgent {
         this.agentPos = new Pair<>(x,z);
         this.troopAgentOptions = new TroopAgentOptions();
     }
+    public void setAgentPos(int x, int z) {
+        this.agentPos.first = x;
+        this.agentPos.second = z;
+    }
+    public Pair<Integer,Integer> getAgentPos() {
+        return agentPos;
+    }
     public void setAgentOptions(TroopAgentOptions options) {
         this.troopAgentOptions = options;
     }
     public Location getLocationToLookAt(Building building) {
         Pair<Integer,Integer> loc = navGraph.buildingCenters.get(building);
-        return arena.getAbsLocationFromNavGridLoc(loc.first, loc.second, 1);
+        return arena.getAbsLocationFromNavGridLoc(loc.first, loc.second, 0.5f);
     }
     private List<Building> pickBuildings() {
         List<Building> closestBuildings = new ArrayList<>();
@@ -155,5 +162,9 @@ public class TroopAgent {
         Pair<Integer,List<GridCell>> pair = new Pair<>(cheapestPathCost,
                 navGraph.pathIfWallDestroyed(x1,z1,targetLoc.first,targetLoc.second,targetWall));
         return new Pair<>(pair,targetWall);
+    }
+
+    public void findClosestWalkableLoc(Pair<Integer,Integer> gridLoc) {
+        agentPos = navGraph.findClosestWalkableLoc(gridLoc);
     }
 }

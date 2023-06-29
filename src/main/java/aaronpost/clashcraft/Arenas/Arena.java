@@ -76,14 +76,18 @@ public class Arena {
 
         ItemStack openBuildingMenu = Globals.OPEN_BUILDING_MENU_ITEM.clone();
 
+        ItemStack raidTool = Globals.RAID_ITEM.clone();
+
         Bukkit.getScheduler().runTaskLater(ClashCraft.plugin, new Runnable() {
             @Override
             public void run() {
                 player.sendMessage(Globals.prefix + ChatColor.GRAY + " Loaded your island.");
                 p.teleport(tpLoc);
                 p.getInventory().setItem(0, shop);
-                p.getInventory().setItem(6, openBuildingMenu);
-                p.getInventory().setItem(7, pickUpTool);
+
+                p.getInventory().setItem(5, openBuildingMenu);
+                p.getInventory().setItem(6, pickUpTool);
+                p.getInventory().setItem(7, raidTool);
                 p.getInventory().setItem(8, returnToSpawn);
                 p.setGameMode(GameMode.ADVENTURE);
                 playSound(Sound.ENTITY_BAT_TAKEOFF, 1f,1f);
@@ -212,6 +216,13 @@ public class Arena {
         return loc;
     }
     public Location getAbsLocationFromNavGridLoc(int x, int z, int heightAboveGround) {
+        Location loc = this.getLoc().clone();
+        loc.setX(x + loc.getX() - 2);
+        loc.setZ(z + loc.getZ() - 2);
+        loc.setY(heightAboveGround + loc.getY());
+        return loc;
+    }
+    public Location getAbsLocationFromNavGridLoc(int x, int z, float heightAboveGround) {
         Location loc = this.getLoc().clone();
         loc.setX(x + loc.getX() - 2);
         loc.setZ(z + loc.getZ() - 2);

@@ -2,6 +2,7 @@ package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Buildings.BuildingStates.*;
+import aaronpost.clashcraft.Commands.UpdateStorageCapacity;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Interfaces.IDisplayable;
@@ -22,9 +23,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 // Author: Aaron Post
 public abstract class Building implements IDisplayable, IFixedUpdatable, Serializable {
@@ -95,9 +94,14 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     // abstract methods -- you probably meant to access a "request" method instead.
     public abstract void click();
     public abstract void openMenu();
-    public abstract void catchUp(float hoursToCatchUp);
-    public abstract void update();
-    public abstract void visualUpdate();
+    public void catchUp(float hoursToCatchUp) { }
+    public void update() { }
+    public void startUpdates() { }
+    public void stopUpdates() { }
+    public boolean storesCurrency() { return false; }
+    public int getStorageCapacity(String currencyType) { return 0; }
+    public List<String> storageCurrencies() { return new ArrayList<>(); }
+    public void visualUpdate() { }
     public abstract ItemStack getPlainItemStack();
     public abstract String getPlainDisplayName();
     public abstract ChatColor getPrimaryColor();
@@ -106,7 +110,7 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public abstract long getTimeToBuild(int level);
     public abstract Schematic getSchematic();
     public abstract Schematic getBrokenSchematic();
-    public abstract int getMaxLevel();
+    public int getMaxLevel() { return 1; }
     public List<String> getUpgradeDescription() { return Arrays.asList("No upgrade description yet", "Implement this");}
     public ItemStack getUpgradeItem() {
         if(getLevel() == getMaxLevel()) {
@@ -139,8 +143,8 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public float getPercentageBuilt() { return (buildTime / (float) getTimeToBuild(nextLevel)); }
     public int getLevel() {
         int level = 1;
-        return level; }
-
+        return level;
+    }
     public boolean isNewBuilding() { return state instanceof InHandNewState; }
     public ItemStack getItemStack() {
         ItemStack itemStack = getPlainItemStack();
@@ -183,7 +187,7 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         this.buildTime += Math.floor(hours * 60 * 60);
     }
     public void finishBuilding() {
-
+        new UpdateStorageCapacity().execute(arena);
     }
     public boolean upgrade() {
         if(state instanceof InHandNewState) {

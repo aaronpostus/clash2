@@ -3,6 +3,7 @@ import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Buildings.BuildingInHand;
+import aaronpost.clashcraft.Buildings.TownHall;
 import aaronpost.clashcraft.Buildings.Wall;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Interfaces.IUpdatable;
@@ -37,6 +38,7 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
                 nodes[i][j] = null;
             }
         }
+        addBuilding(new TownHall(45,45),45,45);
     }
     public void saveBuildings() {
         this.buildingsToSave = new ArrayList<>();

@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public abstract class Currency implements Serializable, IDisplayable {
     private int amount;
-    private final int maxAmount;
+    private int maxAmount;
     public int getAmount() {
         return amount;
     }
@@ -17,7 +17,7 @@ public abstract class Currency implements Serializable, IDisplayable {
     public void setAmount(int amount) {
         this.amount = amount;
     }
-    public void setMaxAmount(int maxAmount) { this.amount = amount; }
+    public void setMaxAmount(int maxAmount) { this.maxAmount = maxAmount; }
     public boolean canAfford(int cost) { return cost >= amount; }
     public Currency(int amount, int maxAmount) {
         this.amount = amount;

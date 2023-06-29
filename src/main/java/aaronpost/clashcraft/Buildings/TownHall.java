@@ -8,18 +8,28 @@ import aaronpost.clashcraft.Singletons.Schematics;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+
 public class TownHall extends Building {
     public TownHall(int x, int z) {
         super(x,z);
     }
     @Override
+    public boolean storesCurrency() { return true; }
+    @Override
+    public int getStorageCapacity(String currencyType) {
+        return BuildingGlobals.TOWN_HALL_STORAGE_CAPACITY.get(getLevel()-1).get(currencyType);
+    }
+    @Override
+    public List<String> storageCurrencies() { return BuildingGlobals.TOWN_HALL_STORAGE_CURRENCIES; }
+    @Override
     public void click() {
-
+        openMenu();
     }
 
     @Override
     public void openMenu() {
-
+        ClashCraft.guiManager.openGUI(new DefaultBuildingMenu(this),getArena().getPlayer());
     }
 
     @Override
@@ -39,17 +49,17 @@ public class TownHall extends Building {
 
     @Override
     public ItemStack getPlainItemStack() {
-        return null;
+        return BuildingGlobals.TOWN_HALL_ITEM_STACK.clone();
     }
 
     @Override
     public String getPlainDisplayName() {
-        return null;
+        return BuildingGlobals.TOWN_HALL_DISPLAY_NAME;
     }
 
     @Override
     public ChatColor getPrimaryColor() {
-        return null;
+        return ChatColor.GOLD;
     }
 
     @Override
@@ -64,7 +74,7 @@ public class TownHall extends Building {
 
     @Override
     public long getTimeToBuild(int level) {
-        return 0;
+        return BuildingGlobals.TOWN_HALL_BUILD_TIME[level-1];
     }
 
     @Override
@@ -78,7 +88,7 @@ public class TownHall extends Building {
     }
 
     @Override
-    public int getMaxLevel() { return 1; }
+    public int getMaxLevel() { return 2; }
 
     @Override
     public void startUpdates() {

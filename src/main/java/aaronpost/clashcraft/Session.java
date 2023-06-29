@@ -77,4 +77,5 @@ public class Session implements Serializable {
     public Currency getCurrency(String currency) {
         return currencies.get(currency);
     }
+    public Map<String,Currency> getCurrencies() { return currencies; }
 }

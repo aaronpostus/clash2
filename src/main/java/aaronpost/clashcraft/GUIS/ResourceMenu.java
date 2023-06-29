@@ -1,9 +1,7 @@
 package aaronpost.clashcraft.GUIS;
 
 import aaronpost.clashcraft.Arenas.Arena;
-import aaronpost.clashcraft.Buildings.BuilderHut;
-import aaronpost.clashcraft.Buildings.ElixirCollector;
-import aaronpost.clashcraft.Buildings.GoldMine;
+import aaronpost.clashcraft.Buildings.*;
 import aaronpost.clashcraft.GUIS.Manager.InventoryButton;
 import aaronpost.clashcraft.GUIS.Manager.InventoryGUI;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
@@ -30,9 +28,13 @@ public class ResourceMenu extends InventoryGUI {
     @Override
     public void decorate(Player p) {
         this.getInventory().setItem(10, GoldMine.getShopItem());
+        this.getInventory().setItem(20, GoldStorage.getShopItem());
         this.getInventory().setItem(12, ElixirCollector.getShopItem());
+        this.getInventory().setItem(14, DarkElixirDrill.getShopItem());
+        this.getInventory().setItem(24, DarkElixirStorage.getShopItem());
         this.getInventory().setItem(16, BuilderHut.getShopItem());
         this.addButton(10,purchaseBuilding("goldmine"));
+        this.addButton(20,purchaseBuilding("goldstorage"));
         this.addButton(12,purchaseBuilding("elixircollector"));
         this.addButton(16, purchaseBuilding("builderhut"));
     }
@@ -42,6 +44,11 @@ public class ResourceMenu extends InventoryGUI {
             switch(key) {
                 case "goldmine":
                     arena.purchaseNewBuilding(new GoldMine(arena));
+                    p.closeInventory();
+                    //ClashCraft.guiManager.openGUI(new IslandMenuRefactor(),arena.getPlayer());
+                    break;
+                case "goldstorage":
+                    arena.purchaseNewBuilding(new GoldStorage(arena));
                     p.closeInventory();
                     //ClashCraft.guiManager.openGUI(new IslandMenuRefactor(),arena.getPlayer());
                     break;

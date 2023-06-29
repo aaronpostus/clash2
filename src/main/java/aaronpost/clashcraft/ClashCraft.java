@@ -139,26 +139,12 @@ public class ClashCraft extends JavaPlugin {
             }
         }
         else if (label.equals("debugtools")) {
-            ItemStack stack = new ItemStack(Material.RED_CONCRETE);
+            if(!sender.isOp()) {
+                player.sendMessage(Globals.prefix + " This is an admin command.");
+                return true;
+            }
+            ItemStack stack = new ItemStack(Material.BLAZE_ROD);
             ItemMeta meta = stack.getItemMeta();
-            meta.setDisplayName("Barracks");
-            stack.setItemMeta(meta);
-            player.getInventory().addItem(stack);
-
-            stack = new ItemStack(Material.CAMPFIRE);
-            meta = stack.getItemMeta();
-            meta.setDisplayName("Army Camp");
-            stack.setItemMeta(meta);
-            player.getInventory().addItem(stack);
-
-            stack = new ItemStack(Material.OAK_FENCE);
-            meta = stack.getItemMeta();
-            meta.setDisplayName("Wall");
-            stack.setItemMeta(meta);
-            player.getInventory().addItem(stack);
-
-            stack = new ItemStack(Material.BLAZE_ROD);
-            meta = stack.getItemMeta();
             meta.setDisplayName(ChatColor.BLUE + "Schematic Wand");
             ArrayList<String> lore = new ArrayList<>(Arrays.asList(
                     ChatColor.YELLOW + "x: ",
@@ -171,14 +157,6 @@ public class ClashCraft extends JavaPlugin {
             meta.setLore(lore);
             stack.setItemMeta(meta);
             player.getInventory().addItem(stack);
-
-            stack = new ItemStack(Material.SHEARS);
-            meta = stack.getItemMeta();
-            meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Save Coordinates Wand");
-            meta.setLore(lore);
-            stack.setItemMeta(meta);
-            player.getInventory().addItem(stack);
-
             return true;
         }
         else if (label.equals("island")) {

@@ -3,6 +3,8 @@ import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Buildings.BuildingStates.BuildingState;
 import aaronpost.clashcraft.Buildings.BuildingStates.DefenseState;
 import aaronpost.clashcraft.ClashCraft;
+import aaronpost.clashcraft.Commands.UpdateStorageCapacity;
+import aaronpost.clashcraft.Currency.Currency;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Islands.Island;
@@ -77,7 +79,7 @@ public class Arena {
         ItemStack openBuildingMenu = Globals.OPEN_BUILDING_MENU_ITEM.clone();
 
         ItemStack raidTool = Globals.RAID_ITEM.clone();
-
+        Arena a = this;
         Bukkit.getScheduler().runTaskLater(ClashCraft.plugin, new Runnable() {
             @Override
             public void run() {
@@ -101,6 +103,13 @@ public class Arena {
                 island.startUpdates();
                 GameManager.getInstance().addFixedUpdatable(island);
                 GameManager.getInstance().addUpdatable(island);
+                new UpdateStorageCapacity().execute(a);
+                if(session.isDebugMode()) {
+                    p.sendMessage(Globals.prefix + ChatColor.GRAY + " Filled resource reserves: debug mode.");
+                    for(Currency currency : session.getCurrencies().values()) {
+                        currency.setAmount(currency.getMaxAmount());
+                    }
+                }
                 session.refreshScoreboard();
                 float hoursOffline = session.retrieveHoursOffline();
                 if(hoursOffline > 0) {

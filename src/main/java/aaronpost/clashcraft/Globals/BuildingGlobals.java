@@ -9,6 +9,8 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.*;
+
 public class BuildingGlobals {
     public static final int ELIXIRCOLLECTOR_MAX_LEVEL = 2;
     public static final float[] ELIXIRCOLLECTOR_COLLECTION_RATE = new float[] {200,400};
@@ -17,7 +19,7 @@ public class BuildingGlobals {
     public static final long[] ELIXIRCOLLECTOR_BUILD_TIME = new long[] {10L, 60L};
     public static final int[] ELIXIRCOLLECTOR_COST = new int[] { 150, 300 };
     public static final int[] ELIXIRCOLLECTOR_HITPOINTS = new int[] { 400, 440 };
-    public static final ItemStack ELIXIRCOLLECTOR_ITEM_STACK = new ItemStack(Material.MAGENTA_CONCRETE);
+    public static final ItemStack ELIXIRCOLLECTOR_ITEM_STACK = new ItemStack(Material.STRIPPED_CRIMSON_HYPHAE);
     public static final String ELIXIRCOLLECTOR_DISPLAY_NAME = ChatColor.LIGHT_PURPLE + "Elixir Collector";
     public static final String[] ELIXIRCOLLECTOR_SCHEMATIC = new String[] { "ElixirCollector1", "ElixirCollector2" };
     public static NamespacedKey NAMESPACED_KEY_UUID = new NamespacedKey(ClashCraft.plugin, "buildingUUID");
@@ -32,7 +34,7 @@ public class BuildingGlobals {
                                                                 "GoldMine5"};
     public static String[] GOLDMINE_BROKEN_SCHEMATIC = new String[] { "GoldMine1", "GoldMine2", "GoldMine3", "GoldMine4",
             "GoldMine5"};
-    public static ItemStack GOLDMINE_ITEM_STACK = new ItemStack(Material.CHEST);
+    public static ItemStack GOLDMINE_ITEM_STACK = new ItemStack(Material.RAW_GOLD_BLOCK);
     public static String GOLDMINE_DISPLAY_NAME = GOLDMINE_PRIMARY_COLOR + "Gold Mine";
     static {
         ItemMeta meta = GOLDMINE_ITEM_STACK.getItemMeta();
@@ -92,8 +94,28 @@ public class BuildingGlobals {
     public static int WALL_MAX_LEVEL = 1;
 
     //TOWNHALL
-    public static String[] TOWN_HALL_SCHEMATICS = new String[] { "TownHall1"};
+    public static ItemStack TOWN_HALL_ITEM_STACK = new ItemStack(Material.CHEST);
+    public static String TOWN_HALL_DISPLAY_NAME = ChatColor.GOLD + "Town Hall";
+    static {
+        ItemMeta meta = TOWN_HALL_ITEM_STACK.getItemMeta();
+        meta.setDisplayName(TOWN_HALL_DISPLAY_NAME);
+        TOWN_HALL_ITEM_STACK.setItemMeta(meta);
+    }
+    public static String[] TOWN_HALL_SCHEMATICS = new String[] { "TownHall1", "TownHall2" };
     public static String[] BROKEN_TOWN_HALL_SCHEMATICS = new String[] { "TownHall1_Broken"};
+    public static List<String> TOWN_HALL_STORAGE_CURRENCIES = List.of("gold","elixir");
+    public static List<Map<String,Integer>> TOWN_HALL_STORAGE_CAPACITY = new ArrayList<>();
+    static {
+        Map<String,Integer> th1currency = new HashMap<>();
+        th1currency.put("gold",1000);
+        th1currency.put("elixir",1000);
+        Map<String,Integer> th2currency = new HashMap<>();
+        th2currency.put("gold",2500);
+        th2currency.put("elixir",2500);
+        TOWN_HALL_STORAGE_CAPACITY.add(th1currency);
+        TOWN_HALL_STORAGE_CAPACITY.add(th2currency);
+    }
+    public static long[] TOWN_HALL_BUILD_TIME = new long[] { 0, 10L };
 
     //BUILDERHUT
     public static ItemStack BUILDER_HUT_ITEM_STACK = new ItemStack(Material.BRICKS);
@@ -112,4 +134,17 @@ public class BuildingGlobals {
         meta.setDisplayName(ARMY_CAMP_DISPLAY_NAME);
         ARMY_CAMP_ITEM_STACK.setItemMeta(meta);
     }
+
+    // GOLD STORAGE
+    public static ItemStack GOLD_STORAGE_ITEM_STACK = new ItemStack(Material.YELLOW_SHULKER_BOX);
+    public static String GOLD_STORAGE_DISPLAY_NAME = ChatColor.GOLD + "Gold Storage";
+    static {
+        ItemMeta meta = GOLD_STORAGE_ITEM_STACK.getItemMeta();
+        meta.setDisplayName(GOLD_STORAGE_DISPLAY_NAME);
+        GOLD_STORAGE_ITEM_STACK.setItemMeta(meta);
+    }
+    public static String[] GOLD_STORAGE_SCHEMATICS = new String[] { "GoldStorage1", "GoldStorage2" };
+    public static List<String> GOLD_STORAGE_CURRENCIES = List.of("gold");
+    public static int[] GOLD_STORAGE_CAPACITY = new int[] { 1500, 3000 };
+    public static long[] GOLD_STORAGE_BUILD_TIME = new long[] { 10L, 5 * 60L, };
 }

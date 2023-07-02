@@ -4,9 +4,12 @@ import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Interfaces.IUpdatable;
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.event.CitizensEnableEvent;
 import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
@@ -14,11 +17,12 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameManager {
+public class GameManager implements Listener {
     private static GameManager instance = null;
     public boolean active;
     private final List<IUpdatable> updatables;
     private final List<IFixedUpdatable> fixedUpdatables;
+    public NPCRegistry registry;
     private BukkitTask fixedUpdate, update;
     private GameManager() {
         active = true;
@@ -32,6 +36,10 @@ public class GameManager {
         if (instance == null)
             instance = new GameManager();
         return instance;
+    }
+    @EventHandler
+    public void onCitizensEnable(CitizensEnableEvent ev) {
+        registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
     }
     public void startUpdates() {
         active = true;

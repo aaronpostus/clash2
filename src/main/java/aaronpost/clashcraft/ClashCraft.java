@@ -6,7 +6,6 @@ import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.GUIS.Manager.GUIListener;
 import aaronpost.clashcraft.GUIS.Manager.GUIManager;
 import aaronpost.clashcraft.Globals.Globals;
-import aaronpost.clashcraft.Input.InputListener;
 import aaronpost.clashcraft.Input.Interaction;
 import aaronpost.clashcraft.PersistentData.Serializer;
 import aaronpost.clashcraft.Raiding.Raids;
@@ -15,11 +14,16 @@ import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import aaronpost.clashcraft.Singletons.GameManager;
 import aaronpost.clashcraft.Singletons.Sessions;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.event.CitizensEnableEvent;
+import net.citizensnpcs.api.npc.MemoryNPCDataStore;
+import net.citizensnpcs.api.npc.NPCRegistry;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,7 +54,7 @@ public class ClashCraft extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new Controller(), this);
         getServer().getPluginManager().registerEvents(new ArenaManager(), this);
         getServer().getPluginManager().registerEvents(new Interaction(), this);
-        getServer().getPluginManager().registerEvents(new InputListener(), this);
+        getServer().getPluginManager().registerEvents(gm, this);
 
         Player[] list = new Player[getServer().getOnlinePlayers().size()];
         getServer().getOnlinePlayers().toArray(list);
@@ -77,7 +81,6 @@ public class ClashCraft extends JavaPlugin {
         }
 
     }
-
     @Override
     public void onDisable() {
         Player[] list = new Player[Bukkit.getOnlinePlayers().size()];

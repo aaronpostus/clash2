@@ -63,6 +63,7 @@ public class DefenseState extends IBuildingState {
     public void damage(int amountToDamage) {
         this.hp -= amountToDamage;
         System.out.println("damage" + building.getDisplayName());
+        // building dies
         if(this.hp <= 0) {
             this.hp = 0;
             building.getArena().sendActionBar(ChatColor.GRAY + "Destroyed " + building.getDisplayName());

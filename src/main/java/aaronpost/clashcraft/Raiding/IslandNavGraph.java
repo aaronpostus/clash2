@@ -144,10 +144,46 @@ public class IslandNavGraph {
     }
 
     public Pair<Integer, Integer> findClosestWalkableLoc(Pair<Integer, Integer> gridLoc) {
-        if(cells[gridLoc.first][gridLoc.second].isWalkable()) {
+        if (cells[gridLoc.first][gridLoc.second].isWalkable()) {
             return gridLoc;
         }
-        System.out.println("TROOP IS ON AN UNWALKABLE LOCATION.. THIS IS BAD");
+
+        int numRows = cells.length;
+        int numCols = cells[0].length;
+        boolean[][] visited = new boolean[numRows][numCols];
+
+        // Create a queue for breadth-first search
+        Queue<Pair<Integer, Integer>> queue = new LinkedList<>();
+        queue.add(gridLoc);
+        visited[gridLoc.first][gridLoc.second] = true;
+
+        while (!queue.isEmpty()) {
+            Pair<Integer, Integer> currentLoc = queue.poll();
+            int currentRow = currentLoc.first;
+            int currentCol = currentLoc.second;
+
+            // Check if the current location is walkable
+            if (cells[currentRow][currentCol].isWalkable()) {
+                return currentLoc;
+            }
+
+            // Explore the neighboring cells in all four directions
+            int[] dx = {0, 0, -1, 1};
+            int[] dy = {-1, 1, 0, 0};
+
+            for (int i = 0; i < 4; i++) {
+                int newRow = currentRow + dx[i];
+                int newCol = currentCol + dy[i];
+
+                // Check if the new location is within the grid boundaries and not visited
+                if (newRow >= 0 && newRow < numRows && newCol >= 0 && newCol < numCols && !visited[newRow][newCol]) {
+                    queue.add(new Pair<>(newRow, newCol));
+                    visited[newRow][newCol] = true;
+                }
+            }
+        }
+        // No walkable location found
+        System.out.println("BAD BAD BAD BAD ERROR 12536789");
         return null;
     }
 }

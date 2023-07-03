@@ -87,4 +87,13 @@ public class GUIHelper {
         item.setItemMeta(meta);
         return item;
     }
+
+    public static ItemStack attachName(ItemStack item, String displayName) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(displayName);
+        }
+        item.setItemMeta(meta);
+        return item;
+    }
 }

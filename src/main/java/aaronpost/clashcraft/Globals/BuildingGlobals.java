@@ -88,7 +88,6 @@ public class BuildingGlobals {
     public static int[] WALL_HITPOINTS = new int[]{ 300 };
     public static int WALL_GRID_LENGTH = 2;
 
-    // max level per townhall level
     public static int[] WALL_TOWN_HALL_LEVEL = new int[]{ 2 };
     public static int WALL_MAX_LEVEL = 1;
 
@@ -138,9 +137,7 @@ public class BuildingGlobals {
     public static ItemStack GOLD_STORAGE_ITEM_STACK = new ItemStack(Material.YELLOW_SHULKER_BOX);
     public static String GOLD_STORAGE_DISPLAY_NAME = ChatColor.GOLD + "Gold Storage";
     static {
-        ItemMeta meta = GOLD_STORAGE_ITEM_STACK.getItemMeta();
-        meta.setDisplayName(GOLD_STORAGE_DISPLAY_NAME);
-        GOLD_STORAGE_ITEM_STACK.setItemMeta(meta);
+        GUIHelper.attachName(GOLD_STORAGE_ITEM_STACK,GOLD_STORAGE_DISPLAY_NAME);
     }
     public static String[] GOLD_STORAGE_SCHEMATICS = new String[] { "GoldStorage1", "GoldStorage2" };
     public static List<String> GOLD_STORAGE_CURRENCIES = List.of("gold");
@@ -151,9 +148,7 @@ public class BuildingGlobals {
     public static ItemStack ELIXIR_STORAGE_ITEM_STACK = new ItemStack(Material.MAGENTA_SHULKER_BOX);
     public static String ELIXIR_STORAGE_DISPLAY_NAME = ChatColor.LIGHT_PURPLE + "Elixir Storage";
     static {
-        ItemMeta meta = ELIXIR_STORAGE_ITEM_STACK.getItemMeta();
-        meta.setDisplayName(ELIXIR_STORAGE_DISPLAY_NAME);
-        ELIXIR_STORAGE_ITEM_STACK.setItemMeta(meta);
+        GUIHelper.attachName(ELIXIR_STORAGE_ITEM_STACK,ELIXIR_STORAGE_DISPLAY_NAME);
     }
     public static String[] ELIXIR_STORAGE_SCHEMATICS = new String[] { "ElixirStorage1", "ElixirStorage2" };
     public static List<String> ELIXIR_STORAGE_CURRENCIES = List.of("elixir");
@@ -166,8 +161,16 @@ public class BuildingGlobals {
     public static final ItemStack DARK_BARRACKS_ITEM_STACK = new ItemStack(Material.NETHERITE_SWORD);
     public static String DARK_BARRACKS_DISPLAY_NAME = ChatColor.GRAY + "Dark Barracks";
     static {
-        ItemMeta meta = DARK_BARRACKS_ITEM_STACK.getItemMeta();
-        meta.setDisplayName(DARK_BARRACKS_DISPLAY_NAME);
-        DARK_BARRACKS_ITEM_STACK.setItemMeta(meta);
+        GUIHelper.attachName(DARK_BARRACKS_ITEM_STACK,DARK_BARRACKS_DISPLAY_NAME);
     }
+
+    // Cannon
+    // Walls
+    public static String[] CANNON_SCHEMATICS = new String[] { "Cannon1" };
+    public static ItemStack CANNON_ITEM_STACK = new ItemStack(Material.DISPENSER);
+    public static String CANNON_DISPLAY_NAME = ChatColor.GRAY + "Cannon";
+    static {
+        GUIHelper.attachName(CANNON_ITEM_STACK, CANNON_DISPLAY_NAME);
+    }
+    public static long[] CANNON_BUILD_TIME = new long[] { 10L };
 }

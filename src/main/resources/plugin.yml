@@ -2,8 +2,8 @@ name: ClashCraft
 version: '${project.version}'
 main: aaronpost.clashcraft.ClashCraft
 api-version: 1.19
-depend: [Citizens]
-softdepend: [Citizens]
+depend: [Citizens,WorldGuard,WorldGuardEvents]
+softdepend: [Citizens,WorldGuard,WorldGuardEvents]
 commands:
   test:
     description: test command

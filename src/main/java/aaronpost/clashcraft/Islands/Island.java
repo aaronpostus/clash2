@@ -38,7 +38,7 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
                 nodes[i][j] = null;
             }
         }
-        addBuilding(new TownHall(45,45),45,45);
+        addBuilding(new TownHall(44,44),44,44);
     }
     public void saveBuildings() {
         this.buildingsToSave = new ArrayList<>();

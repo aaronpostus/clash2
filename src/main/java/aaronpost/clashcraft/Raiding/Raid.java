@@ -22,20 +22,6 @@ import aaronpost.clashcraft.Singletons.Sessions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumBiMap;
 import com.google.common.collect.HashBiMap;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.math.BlockVector2;
-import com.sk89q.worldedit.regions.Region;
-import com.sk89q.worldedit.util.Direction;
-import com.sk89q.worldedit.world.World;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.flags.EntityTypeFlag;
-import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.flags.StateFlag;
-import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
-import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import com.sk89q.worldguard.session.handler.EntryFlag;
-import net.raidstone.wgevents.events.RegionEnteredEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -56,7 +42,6 @@ public class Raid implements IUpdatable, IFixedUpdatable, Listener {
     private final UUID[][] raidGrid = new UUID[Arenas.NAV_GRID_X_LENGTH][Arenas.NAV_GRID_Z_LENGTH];
     public final List<Pair<Integer,Integer>> placeableIndexes;
     public final List<Pair<Integer,Integer>> adjacentIndexes;
-    private BiMap<Building,ProtectedRegion> regions = HashBiMap.create();
     public boolean canPlace(int x, int z) {
         for(Pair<Integer,Integer> placable: placeableIndexes) {
             if(placable.first.equals(x) && placable.second.equals(z)) {
@@ -113,58 +98,59 @@ public class Raid implements IUpdatable, IFixedUpdatable, Listener {
             // set to block
             arena.getAbsLocationFromNavGridLoc(pair.first, pair.second,-1).getBlock().setType(Material.MOSS_BLOCK);
         }
-        initializeRegionalTriggers();
+        //initializeRegionalTriggers();
         ClashCraft.plugin.getServer().getPluginManager().registerEvents(this, ClashCraft.plugin);
         //this.troopManager.addTroop(new Barbarian(this,x,z));
     }
-    @EventHandler
-    public void onRegionEntered(RegionEnteredEvent event) {
-        ProtectedRegion region = event.getRegion();
-        Player player = event.getPlayer();
-        System.out.println(1);
-        if(regions.containsValue(region) && troopManager.containsPlayer(player)) {
-            System.out.println(2);
-            Building building = regions.inverse().get(region);
-            if(building instanceof IDefenseBuilding) {
-                System.out.println(3);
-                ((IDefenseBuilding) building).addTroopToDamage(troopManager.getTroopFromPlayer(player));
-            }
-        }
-    }
-    public void initializeRegionalTriggers() {
-        int y = (int) arena.getLoc().getY();
-        int minY = y - 2;
-        int maxY = y + 10;
-        for(Building building: victimIsland.getBuildings()) {
-            if(!(building instanceof IDefenseBuilding)) {
-                continue;
-            }
-            System.out.println("trfygvhbjn");
-            ProtectedRegion region = new ProtectedPolygonalRegion(building.getUUID().toString(),
-                    getBuildingRhombus(building),minY,maxY);
-            region.setFlag(Flags.GREET_MESSAGE, "hello!");
-            WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(Globals.world)).addRegion(region);
-            regions.put(building,region);
-        }
+//    @EventHandler
+//    public void onRegionEntered(RegionEnteredEvent event) {
+//        ProtectedRegion region = event.getRegion();
+//        Player player = event.getPlayer();
+//        System.out.println(1);
+//        if(regions.containsValue(region) && troopManager.containsPlayer(player)) {
+//            System.out.println(2);
+//            Building building = regions.inverse().get(region);
+//            if(building instanceof IDefenseBuilding) {
+//                System.out.println(3);
+//                ((IDefenseBuilding) building).addTroopToDamage(troopManager.getTroopFromPlayer(player));
+//            }
+//        }
+//    }
+//    public void initializeRegionalTriggers() {
+//        int y = (int) arena.getLoc().getY();
+//        int minY = y - 2;
+//        int maxY = y + 10;
+//        for(Building building: victimIsland.getBuildings()) {
+//            if(!(building instanceof IDefenseBuilding)) {
+//                continue;
+//            }
+//            System.out.println("trfygvhbjn");
+//            ProtectedRegion region = new ProtectedPolygonalRegion(building.getUUID().toString(),
+//                    getBuildingRhombus(building),minY,maxY);
+//            region.setFlag(Flags.GREET_MESSAGE, "hello!");
+//            WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(Globals.world)).addRegion(region);
+//            regions.put(building,region);
+//        }
+//
+//    }
 
-    }
-    private List<BlockVector2> getBuildingRhombus(Building building) {
-        assert building instanceof IDefenseBuilding;
-        IDefenseBuilding defenseBuilding = (IDefenseBuilding) building;
-        Location loc = victimIsland.getCenterBuildingLoc(building, 0);
-        double x = loc.getX();
-        double z = loc.getZ();
-        float attackRange = defenseBuilding.getAttackRange();
-        List<BlockVector2> points = new ArrayList<>();
-        points.add(BlockVector2.at(x+attackRange,z));
-        points.add(BlockVector2.at(x-attackRange,z));
-        points.add(BlockVector2.at(x,z+attackRange));
-        points.add(BlockVector2.at(x,z-attackRange));
-        for(BlockVector2 bv: points) {
-            System.out.println(bv.toString());
-        }
-        return points;
-    }
+//    private List<BlockVector2> getBuildingRhombus(Building building) {
+//        assert building instanceof IDefenseBuilding;
+//        IDefenseBuilding defenseBuilding = (IDefenseBuilding) building;
+//        Location loc = victimIsland.getCenterBuildingLoc(building, 0);
+//        double x = loc.getX();
+//        double z = loc.getZ();
+//        float attackRange = defenseBuilding.getAttackRange();
+//        List<BlockVector2> points = new ArrayList<>();
+//        points.add(BlockVector2.at(x+attackRange,z));
+//        points.add(BlockVector2.at(x-attackRange,z));
+//        points.add(BlockVector2.at(x,z+attackRange));
+//        points.add(BlockVector2.at(x,z-attackRange));
+//        for(BlockVector2 bv: points) {
+//            System.out.println(bv.toString());
+//        }
+//        return points;
+//    }
     private void findIndexes() {
         // Iterate over the 2D array to find nearby and null indexes
         for (int i = 0; i < raidGrid.length; i++) {
@@ -195,20 +181,19 @@ public class Raid implements IUpdatable, IFixedUpdatable, Listener {
 
     public Arena getArena() { return arena; }
     public IslandNavGraph getNavGraph() { return navGraph; }
-    public void destroyBuilding(Building building) {
-        // tell nav graph that building should no longer be targeted
-        this.navGraph.destroy(building);
-        // tell troops to find a new building
-        this.troopManager.notifyTroopsOfDestroyedBuilding(building);
-        if(building instanceof IDefenseBuilding) {
-            this.regions.remove(building);
-        }
-    }
+//    public void destroyBuilding(Building building) {
+//        // tell nav graph that building should no longer be targeted
+//        this.navGraph.destroy(building);
+//        // tell troops to find a new building
+//        this.troopManager.notifyTroopsOfDestroyedBuilding(building);
+//        if(building instanceof IDefenseBuilding) {
+//            this.regions.remove(building);
+//        }
+//    }
     @Override
     public void update() {
 
     }
-
     @Override
     public void catchUpRequest(float hours) {
 

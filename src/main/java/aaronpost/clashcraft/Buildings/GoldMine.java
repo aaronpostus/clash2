@@ -67,8 +67,8 @@ public class GoldMine extends Collector {
                 ChatColor.GRAY + "Cost: " + BuildingGlobals.GOLDMINE_COST[0] + " " + Globals.ELIXIR_DISPLAY_NAME));
     }
     @Override
-    public Schematic getSchematic() {
-        return Schematics.s.getSchematic(BuildingGlobals.GOLDMINE_SCHEMATIC[getLevel() - 1]);
+    public Schematic getSchematic(int level) {
+        return Schematics.s.getSchematic(BuildingGlobals.GOLDMINE_SCHEMATIC[level - 1]);
     }
     @Override
     public Schematic getBrokenSchematic() {

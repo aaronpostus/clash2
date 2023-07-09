@@ -43,6 +43,7 @@ public class InHandBuildingState extends IBuildingState {
 
     @Override
     public void place(int x, int z) {
+        building.setRelativeLocation(x,z);
         building.state = new BuildingState(building);
         building.place(x,z);
     }
@@ -50,5 +51,10 @@ public class InHandBuildingState extends IBuildingState {
     @Override
     public void pickup() {
 
+    }
+    @Override
+    public void stopUpdates() {
+        building.getArena().getIsland().removeBuildingInHand();
+        building.state = new BuildingState(building);
     }
 }

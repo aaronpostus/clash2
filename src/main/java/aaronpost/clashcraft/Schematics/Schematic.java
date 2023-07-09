@@ -154,7 +154,8 @@ public class Schematic implements Serializable {
                 for(int z = 0; z < zLength; z++) {
                     Block referenceBlock = blockLocs.get(counter).getBlock();
                     Block newBlock = loc.getBlock();
-                    if((y) >= layersBuilt - yOffset || referenceBlock.getType().equals(Material.AIR)) {
+                    if((y) >= layersBuilt - yOffset || referenceBlock.getType().equals(Material.AIR) ||
+                            referenceBlock.getType().equals(Material.BARRIER)) {
                         if(x > 0 && x < xLength - 1 && z > 0 && z < zLength -1 ) {
                             newBlock.setType(Material.BRICK_WALL);
                         }

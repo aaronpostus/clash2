@@ -63,8 +63,8 @@ public class GoldStorage extends Building {
     }
 
     @Override
-    public Schematic getSchematic() {
-        return Schematics.s.getSchematic(BuildingGlobals.GOLD_STORAGE_SCHEMATICS[getLevel() - 1]);
+    public Schematic getSchematic(int level) {
+        return Schematics.s.getSchematic(BuildingGlobals.GOLD_STORAGE_SCHEMATICS[level - 1]);
     }
 
     @Override

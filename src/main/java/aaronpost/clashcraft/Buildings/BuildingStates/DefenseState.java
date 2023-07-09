@@ -68,7 +68,9 @@ public class DefenseState extends IBuildingState {
             this.hp = 0;
             building.getArena().sendActionBar(ChatColor.GRAY + "Destroyed " + building.getDisplayName());
             building.state = new DestroyedState(building, previousState);
-            raid.destroyBuilding(building);
+
+            // UNCOMMENT THIS
+            //raid.destroyBuilding(building);
         }
     }
 }

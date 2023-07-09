@@ -41,8 +41,8 @@ public class Wall extends Building {
         return 0;
     }
     @Override
-    public Schematic getSchematic() {
-        return Schematics.s.getSchematic(BuildingGlobals.WALL_SCHEMATICS[getLevel() -1]);
+    public Schematic getSchematic(int level) {
+        return Schematics.s.getSchematic(BuildingGlobals.WALL_SCHEMATICS[level-1]);
     }
     @Override
     public int getMaxLevel() {

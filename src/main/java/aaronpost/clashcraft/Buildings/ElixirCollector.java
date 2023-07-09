@@ -72,8 +72,8 @@ public class ElixirCollector extends Collector {
         return stack;
     }
     @Override
-    public Schematic getSchematic() {
-        return Schematics.s.getSchematic(BuildingGlobals.ELIXIRCOLLECTOR_SCHEMATIC[getLevel() - 1]);
+    public Schematic getSchematic(int level) {
+        return Schematics.s.getSchematic(BuildingGlobals.ELIXIRCOLLECTOR_SCHEMATIC[level - 1]);
     }
     @Override
     public Schematic getBrokenSchematic() {

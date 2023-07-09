@@ -81,7 +81,7 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
     }
 
     public void removeBuildingInHand() {
-        buildingInHand = null;
+        this.buildingInHand = null;
     }
 
     public boolean hasBuildingInHand() {
@@ -313,9 +313,6 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         Building buildingInHand = getBuildingInBuildingInHand();
         if(buildingInHand != null) {
             this.buildingInHand.stopUpdates();
-            if(!buildingInHand.isNewBuilding()) {
-                removeBuildingInHand();
-            }
         }
         for(Building building : getBuildings()) {
             building.stopUpdates();

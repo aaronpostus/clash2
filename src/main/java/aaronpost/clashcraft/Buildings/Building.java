@@ -100,7 +100,7 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public void catchUp(float hoursToCatchUp) { }
     public void update() { }
     public void startUpdates() { }
-    public void stopUpdates() { }
+    public void stopUpdates() { state.stopUpdates(); }
     public boolean storesCurrency() { return false; }
     public int getStorageCapacity(String currencyType) { return 0; }
     public List<String> storageCurrencies() { return new ArrayList<>(); }
@@ -111,7 +111,9 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public abstract int getGridLengthX();
     public abstract int getGridLengthZ();
     public abstract long getTimeToBuild(int level);
-    public abstract Schematic getSchematic();
+    public abstract Schematic getSchematic(int level);
+    public Schematic getSchematic() { return getSchematic(level); }
+    public Schematic getNextSchematic() { return getSchematic(nextLevel); }
     public abstract Schematic getBrokenSchematic();
     public int getMaxLevel() { return 1; }
     public List<String> getUpgradeDescription() { return Arrays.asList("No upgrade description yet", "Implement this");}
@@ -141,7 +143,6 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public void setLayersBuilt(int layers) { this.layersBuilt = layers; }
     public float getPercentageBuilt() { return (buildTime / (float) getTimeToBuild(nextLevel)); }
     public int getLevel() {
-        int level = 1;
         return level;
     }
     public boolean isNewBuilding() { return state instanceof InHandNewState; }
@@ -187,7 +188,6 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         if(state instanceof InHandNewState) {
             nextLevel = 1;
         }
-        nextLevel++;
         buildTime = 0;
         state = new BuildingState(this);
         paste();
@@ -197,14 +197,33 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         updateAbsoluteLocation();
         Schematic schematic = getSchematic();
         if(state instanceof BuildingState) {
+            schematic = getNextSchematic();
             if(layersBuilt == -1) {
-                Schematics.s.getSchematic("3x3Giftbox").pasteSchematic(absoluteLocation);
+                Schematic s;
+                switch(getGridLengthX()) {
+                    case 4:
+                        s = Schematics.s.getSchematic("2x2Giftbox");
+                    case 6:
+                        s = Schematics.s.getSchematic("3x3Giftbox");
+                        break;
+                    case 8:
+                        s = Schematics.s.getSchematic("4x4Giftbox");
+                        break;
+                    default:
+                        // shouldnt happen
+                        return;
+                }
+                s.pasteSchematic(absoluteLocation);
                 return;
             }
             schematic.pasteSchematicConstruction(absoluteLocation, schematic.layersToBuild(getPercentageBuilt()));
             return;
         }
         getSchematic().pasteSchematic(absoluteLocation);
+    }
+    public void completeUpgrade() {
+        this.level = this.nextLevel;
+        this.nextLevel++;
     }
     public void resetToGrass() {
         getSchematic().resetToGrassLand(absoluteLocation.clone());

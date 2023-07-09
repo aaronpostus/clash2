@@ -53,8 +53,8 @@ public class Cannon extends Building implements IDefenseBuilding {
         return BuildingGlobals.CANNON_BUILD_TIME[level - 1];
     }
     @Override
-    public Schematic getSchematic() {
-        return Schematics.s.getSchematic(BuildingGlobals.CANNON_SCHEMATICS[getLevel() -1]);
+    public Schematic getSchematic(int level) {
+        return Schematics.s.getSchematic(BuildingGlobals.CANNON_SCHEMATICS[level -1]);
     }
     @Override
     public int getMaxLevel() {

@@ -191,7 +191,6 @@ public class Arena {
         player.getInventory().clear();
         Arenas.a.sendToSpawn(player);
         this.player.setAllowFlight(false);
-        System.out.println("currentraid" + (currentRaid != null));
         if(currentState == RAID_STATE) {
             this.currentRaid.stopUpdates();
             this.currentRaid = null;

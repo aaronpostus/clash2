@@ -61,8 +61,8 @@ public class ElixirStorage extends Building {
         return BuildingGlobals.ELIXIR_STORAGE_BUILD_TIME[level - 1];
     }
     @Override
-    public Schematic getSchematic() {
-        return Schematics.s.getSchematic(BuildingGlobals.ELIXIR_STORAGE_SCHEMATICS[getLevel() - 1]);
+    public Schematic getSchematic(int level) {
+        return Schematics.s.getSchematic(BuildingGlobals.ELIXIR_STORAGE_SCHEMATICS[level - 1]);
     }
     @Override
     public Schematic getBrokenSchematic() {

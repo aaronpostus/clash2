@@ -29,9 +29,10 @@ public class NPCFactory {
         return null;
     }
     public static NPC createBuilderNPC(Location loc) {
-        NPC npc = registry.createNPC(EntityType.PLAYER, ChatColor.GRAY + "Builder", loc);
+        NPC npc = registry.createNPC(EntityType.PLAYER, ChatColor.RED + "Builder", loc);
         npc.getOrAddTrait(SkinTrait.class).setSkinPersistent("",
                 SkinGlobals.BUILDER_SIGNATURE,SkinGlobals.BUILDER_VALUE);
+        npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, new ItemStack(Material.STONE_AXE));
         return npc;
     }
 }

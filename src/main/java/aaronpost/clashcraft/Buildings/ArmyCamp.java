@@ -52,7 +52,7 @@ public class ArmyCamp extends Building {
         return 10;
     }
     @Override
-    public Schematic getSchematic() {
+    public Schematic getSchematic(int level) {
         return Schematics.s.getSchematic("ArmyCamp1");
     }
     @Override

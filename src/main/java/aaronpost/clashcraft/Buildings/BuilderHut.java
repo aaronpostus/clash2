@@ -53,7 +53,7 @@ public class BuilderHut extends Building {
         return 0;
     }
     @Override
-    public Schematic getSchematic() {
+    public Schematic getSchematic(int level) {
         return Schematics.s.getSchematic("BuilderHut1");
     }
     @Override

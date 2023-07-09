@@ -42,6 +42,7 @@ public class InHandNewState extends IBuildingState {
     }
     @Override
     public void place(int x, int z) {
+        building.setRelativeLocation(x,z);
         BuildingState buildingState = new BuildingState(building);
         building.state = buildingState;
         building.getArena().playSound(Sound.BLOCK_ANVIL_USE,0.35f,1f);
@@ -54,5 +55,9 @@ public class InHandNewState extends IBuildingState {
     @Override
     public void pickup() {
         // never called
+    }
+    @Override
+    public void stopUpdates() {
+
     }
 }

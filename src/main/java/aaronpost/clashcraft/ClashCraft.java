@@ -6,7 +6,6 @@ import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.GUIS.Manager.GUIListener;
 import aaronpost.clashcraft.GUIS.Manager.GUIManager;
 import aaronpost.clashcraft.Globals.Globals;
-import aaronpost.clashcraft.Input.InputListener;
 import aaronpost.clashcraft.Input.Interaction;
 import aaronpost.clashcraft.PersistentData.Serializer;
 import aaronpost.clashcraft.Raiding.Raids;
@@ -15,11 +14,16 @@ import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import aaronpost.clashcraft.Singletons.GameManager;
 import aaronpost.clashcraft.Singletons.Sessions;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.event.CitizensEnableEvent;
+import net.citizensnpcs.api.npc.MemoryNPCDataStore;
+import net.citizensnpcs.api.npc.NPCRegistry;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,7 +54,7 @@ public class ClashCraft extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new Controller(), this);
         getServer().getPluginManager().registerEvents(new ArenaManager(), this);
         getServer().getPluginManager().registerEvents(new Interaction(), this);
-        getServer().getPluginManager().registerEvents(new InputListener(), this);
+        getServer().getPluginManager().registerEvents(gm, this);
 
         Player[] list = new Player[getServer().getOnlinePlayers().size()];
         getServer().getOnlinePlayers().toArray(list);
@@ -77,7 +81,6 @@ public class ClashCraft extends JavaPlugin {
         }
 
     }
-
     @Override
     public void onDisable() {
         Player[] list = new Player[Bukkit.getOnlinePlayers().size()];
@@ -139,26 +142,12 @@ public class ClashCraft extends JavaPlugin {
             }
         }
         else if (label.equals("debugtools")) {
-            ItemStack stack = new ItemStack(Material.RED_CONCRETE);
+            if(!sender.isOp()) {
+                player.sendMessage(Globals.prefix + " This is an admin command.");
+                return true;
+            }
+            ItemStack stack = new ItemStack(Material.BLAZE_ROD);
             ItemMeta meta = stack.getItemMeta();
-            meta.setDisplayName("Barracks");
-            stack.setItemMeta(meta);
-            player.getInventory().addItem(stack);
-
-            stack = new ItemStack(Material.CAMPFIRE);
-            meta = stack.getItemMeta();
-            meta.setDisplayName("Army Camp");
-            stack.setItemMeta(meta);
-            player.getInventory().addItem(stack);
-
-            stack = new ItemStack(Material.OAK_FENCE);
-            meta = stack.getItemMeta();
-            meta.setDisplayName("Wall");
-            stack.setItemMeta(meta);
-            player.getInventory().addItem(stack);
-
-            stack = new ItemStack(Material.BLAZE_ROD);
-            meta = stack.getItemMeta();
             meta.setDisplayName(ChatColor.BLUE + "Schematic Wand");
             ArrayList<String> lore = new ArrayList<>(Arrays.asList(
                     ChatColor.YELLOW + "x: ",
@@ -171,14 +160,6 @@ public class ClashCraft extends JavaPlugin {
             meta.setLore(lore);
             stack.setItemMeta(meta);
             player.getInventory().addItem(stack);
-
-            stack = new ItemStack(Material.SHEARS);
-            meta = stack.getItemMeta();
-            meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Save Coordinates Wand");
-            meta.setLore(lore);
-            stack.setItemMeta(meta);
-            player.getInventory().addItem(stack);
-
             return true;
         }
         else if (label.equals("island")) {

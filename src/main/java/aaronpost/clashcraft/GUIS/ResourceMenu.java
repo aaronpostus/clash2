@@ -1,12 +1,11 @@
 package aaronpost.clashcraft.GUIS;
 
 import aaronpost.clashcraft.Arenas.Arena;
-import aaronpost.clashcraft.Buildings.BuilderHut;
-import aaronpost.clashcraft.Buildings.ElixirCollector;
-import aaronpost.clashcraft.Buildings.GoldMine;
+import aaronpost.clashcraft.Buildings.*;
 import aaronpost.clashcraft.GUIS.Manager.InventoryButton;
 import aaronpost.clashcraft.GUIS.Manager.InventoryGUI;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
+import aaronpost.clashcraft.Globals.GUIHelper;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Singletons.Sessions;
 import org.bukkit.Bukkit;
@@ -25,16 +24,23 @@ public class ResourceMenu extends InventoryGUI {
     }
     @Override
     protected Inventory createInventory() {
-        return Bukkit.createInventory(null, 27, ChatColor.GOLD + "+ Shop +");
+        return Bukkit.createInventory(null, 36, ChatColor.GOLD + "+ Shop +");
     }
     @Override
     public void decorate(Player p) {
         this.getInventory().setItem(10, GoldMine.getShopItem());
+        this.getInventory().setItem(20, GoldStorage.getShopItem());
         this.getInventory().setItem(12, ElixirCollector.getShopItem());
+        this.getInventory().setItem(22, ElixirStorage.getShopItem());
+        this.getInventory().setItem(14, DarkElixirDrill.getShopItem());
+        this.getInventory().setItem(24, DarkElixirStorage.getShopItem());
         this.getInventory().setItem(16, BuilderHut.getShopItem());
         this.addButton(10,purchaseBuilding("goldmine"));
+        this.addButton(20,purchaseBuilding("goldstorage"));
         this.addButton(12,purchaseBuilding("elixircollector"));
+        this.addButton(22,purchaseBuilding("elixirstorage"));
         this.addButton(16, purchaseBuilding("builderhut"));
+        GUIHelper.fillEmptyGUISpots(getInventory(),36);
     }
     private InventoryButton purchaseBuilding(String key) {
         return new InventoryButton().consumer(event -> {
@@ -45,8 +51,17 @@ public class ResourceMenu extends InventoryGUI {
                     p.closeInventory();
                     //ClashCraft.guiManager.openGUI(new IslandMenuRefactor(),arena.getPlayer());
                     break;
+                case "goldstorage":
+                    arena.purchaseNewBuilding(new GoldStorage(arena));
+                    p.closeInventory();
+                    //ClashCraft.guiManager.openGUI(new IslandMenuRefactor(),arena.getPlayer());
+                    break;
                 case "elixircollector":
                     arena.purchaseNewBuilding(new ElixirCollector(arena));
+                    p.closeInventory();
+                    break;
+                case "elixirstorage":
+                    arena.purchaseNewBuilding(new ElixirStorage(arena));
                     p.closeInventory();
                     break;
                 case "builderhut":

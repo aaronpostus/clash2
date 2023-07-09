@@ -13,6 +13,7 @@ public abstract class IBuildingState {
     public abstract void visualUpdate();
     public abstract void place(int x, int z);
     public abstract void pickup();
+    public void stopUpdates() { }
     public void damage(int amountToDamage) {
         // do nothing most of the time
     }

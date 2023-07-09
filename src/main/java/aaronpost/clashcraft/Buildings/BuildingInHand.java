@@ -15,7 +15,9 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * BuildingInHand will follow the user's cursor on the island and paste a given building's schematic at that location,
@@ -33,7 +35,8 @@ public class BuildingInHand implements Serializable, IUpdatable {
     private transient Island island;
     private transient Player player;
     private transient int x = -1, z = -1;
-    private transient List<Block> blockSilhoutte = new ArrayList<>();
+    private transient int oldx, oldy;
+    private transient Map<Block,Material> blockSilhoutte = new HashMap<>();
 
     //Player p = new Player
 
@@ -46,6 +49,9 @@ public class BuildingInHand implements Serializable, IUpdatable {
         this.building.refreshReferences(arena);
         this.arena = arena;
         this.island = arena.getIsland();
+        Pair<Integer,Integer> gridLoc = building.getGridLoc();
+        this.oldx = gridLoc.first;
+        this.oldy = gridLoc.second;
     }
     public Building getBuilding() { return building; }
     public void setArena(Arena arena) {
@@ -71,10 +77,10 @@ public class BuildingInHand implements Serializable, IUpdatable {
     }
 
     private void removeOldSilhouette() {
-        for(Block block: blockSilhoutte) {
-            block.setType(Material.GRASS_BLOCK);
+        for(Map.Entry<Block,Material> block: blockSilhoutte.entrySet()) {
+            block.getKey().setType(block.getValue());
         }
-        blockSilhoutte = new ArrayList<>();
+        blockSilhoutte = new HashMap<>();
     }
     private void addSilhouette(Location loc) {
         int x = (int)Math.ceil(loc.getX());
@@ -87,8 +93,9 @@ public class BuildingInHand implements Serializable, IUpdatable {
                 blockLoc.setY(y);
                 blockLoc.setZ(z + j);
                 Block block = blockLoc.getBlock();
+                Material oldmat = block.getType();
                 block.setType(Material.LIME_CONCRETE);
-                blockSilhoutte.add(block);
+                blockSilhoutte.put(block,oldmat);
             }
         }
     }
@@ -106,22 +113,31 @@ public class BuildingInHand implements Serializable, IUpdatable {
                 int gridX = gridLoc.first + i;
                 int gridZ = gridLoc.second + j;
                 Block block = blockLoc.getBlock();
-                if (arena.isValidGridLocation(gridX, gridZ) && (!island.hasBuilding(gridX, gridZ) ||
-                        (island.hasBuilding(gridX, gridZ) && island.getBuilding(gridX, gridZ).equals(building)))) {
+                if(shouldAddSilhoutte(gridX,gridZ, block)) {
+                    Material mat = block.getType();
                     block.setType(Material.RED_CONCRETE);
-                    blockSilhoutte.add(block);
+                    blockSilhoutte.put(block,mat);
                 }
             }
         }
+    }
+    private boolean shouldAddSilhoutte(int gridX, int gridZ, Block block) {
+        if(!arena.isValidGridLocation(gridX, gridZ)) {
+            return false;
+        }
+        if(!island.hasBuilding(gridX, gridZ))  {
+            return true;
+        }
+        if(island.hasBuilding(gridX, gridZ)) {
+            return island.getBuilding(gridX, gridZ).equals(building) || block.getType().equals(Material.MOSS_BLOCK);
+        }
+        return false;
     }
     private boolean playerHoldingBuilding() {
         if(this.player == null) {
             this.player = arena.getPlayer();
         }
         ItemStack item = player.getInventory().getItemInMainHand();
-        if(item == null) {
-            return false;
-        }
         if(!item.hasItemMeta()) {
             return false;
         }
@@ -197,10 +213,11 @@ public class BuildingInHand implements Serializable, IUpdatable {
         this.island = arena.getIsland();
         this.player = arena.getPlayer();
         building.stopUpdates();
-        blockSilhoutte = new ArrayList<>();
+        blockSilhoutte = new HashMap<>();
     }
     @Override
     public void stopUpdates() {
-        if(building.isNewBuilding()) { removeOldSilhouette(); }
+        removeOldSilhouette();
+        this.building.stopUpdates();
     }
 }

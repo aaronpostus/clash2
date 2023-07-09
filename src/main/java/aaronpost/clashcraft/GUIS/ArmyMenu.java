@@ -3,10 +3,12 @@ package aaronpost.clashcraft.GUIS;
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Buildings.ArmyCamp;
 import aaronpost.clashcraft.Buildings.Barracks;
+import aaronpost.clashcraft.Buildings.DarkBarracks;
 import aaronpost.clashcraft.Buildings.GoldMine;
 import aaronpost.clashcraft.GUIS.Manager.InventoryButton;
 import aaronpost.clashcraft.GUIS.Manager.InventoryGUI;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
+import aaronpost.clashcraft.Globals.GUIHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -31,7 +33,9 @@ public class ArmyMenu extends InventoryGUI {
         this.getInventory().setItem(10, Barracks.getShopItem());
         this.addButton(10,purchaseBuilding("barracks"));
         this.getInventory().setItem(12, ArmyCamp.getShopItem());
+        this.getInventory().setItem(14, DarkBarracks.getShopItem());
         this.addButton(12,purchaseBuilding("armycamp"));
+        GUIHelper.fillEmptyGUISpots(getInventory(),27);
     }
     private InventoryButton purchaseBuilding(String key) {
         return new InventoryButton().consumer(event -> {

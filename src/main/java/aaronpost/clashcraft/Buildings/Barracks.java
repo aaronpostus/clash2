@@ -5,6 +5,7 @@ import aaronpost.clashcraft.Buildings.BuildingMenus.BarracksMenu;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Buildings.BuildingMenus.BarracksTrainMenu;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
+import aaronpost.clashcraft.Globals.GUIHelper;
 import aaronpost.clashcraft.Raiding.Troop;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
@@ -22,39 +23,14 @@ public class Barracks extends Building {
     public Barracks(Arena arena) {
         super(arena);
     }
-
     public static ItemStack getShopItem() {
-        ItemStack stack = BuildingGlobals.BARRACKS_ITEM_STACK.clone();
-        ItemMeta meta = stack.getItemMeta();
-        meta.setLore(Arrays.asList(ChatColor.GRAY + " Barracks train valiant " + ChatColor.RED + "troops", ChatColor.GRAY + " that can be used in battle."));
-        stack.setItemMeta(meta);
-        return stack;
+        return GUIHelper.attachLore(BuildingGlobals.BARRACKS_ITEM_STACK.clone(), Arrays.asList(ChatColor.GRAY +
+                " Barracks train valiant " + ChatColor.RED + "troops", ChatColor.GRAY + " that can be used in battle."));
     }
-
-    @Override
-    public void click() {
-        openMenu();
-    }
-
     @Override
     public void openMenu() {
         Player player = getArena().getPlayer();
         ClashCraft.guiManager.openGUI(new BarracksMenu(this), player);
-    }
-
-    @Override
-    public void catchUp(float hoursToCatchUp) {
-
-    }
-
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    public void visualUpdate() {
-
     }
 
     @Override
@@ -88,26 +64,15 @@ public class Barracks extends Building {
     }
 
     @Override
-    public Schematic getSchematic() {
-        return Schematics.s.getSchematic(BuildingGlobals.BARRACKS_SCHEMATICS[getLevel() - 1]);
+    public Schematic getSchematic(int level) {
+        return Schematics.s.getSchematic(BuildingGlobals.BARRACKS_SCHEMATICS[level-1]);
     }
     @Override
     public Schematic getBrokenSchematic() {
-        return Schematics.s.getSchematic(BuildingGlobals.BROKEN_BARRACKS_SCHEMATICS[getLevel() - 1]);
+        return Schematics.s.getSchematic("BarracksBrokenSchematic");
     }
-
     @Override
     public int getMaxLevel() {
         return BuildingGlobals.BARRACKS_MAX_LEVEL;
-    }
-
-    @Override
-    public void startUpdates() {
-
-    }
-
-    @Override
-    public void stopUpdates() {
-
     }
 }

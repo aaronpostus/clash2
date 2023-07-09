@@ -164,7 +164,7 @@ public class TroopAgent {
         return new Pair<>(pair,targetWall);
     }
 
-    public void findClosestWalkableLoc(Pair<Integer,Integer> gridLoc) {
-        agentPos = navGraph.findClosestWalkableLoc(gridLoc);
+    public Pair<Integer,Integer> findClosestWalkableLoc(Pair<Integer,Integer> gridLoc) {
+        return navGraph.findClosestWalkableLoc(gridLoc);
     }
 }

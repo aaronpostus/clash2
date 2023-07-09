@@ -5,6 +5,7 @@ import aaronpost.clashcraft.Arenas.Arenas;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.GUIS.Manager.InventoryButton;
 import aaronpost.clashcraft.GUIS.Manager.InventoryGUI;
+import aaronpost.clashcraft.Globals.GUIHelper;
 import aaronpost.clashcraft.Globals.Globals;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,8 +32,9 @@ public class IslandMenu extends InventoryGUI {
         this.getInventory().setItem(14,Globals.DEFENSE_SHOP_ICON.clone());
         this.addButton(14,createSubmenuButton("defenses"));
 
-        this.getInventory().setItem(16,Globals.TRAP_SHOP_ICON.clone());
-        this.addButton(16,createSubmenuButton("traps"));
+        this.getInventory().setItem(16,GUIHelper.attachComingSoonLore(Globals.TRAP_SHOP_ICON.clone()));
+
+        GUIHelper.fillEmptyGUISpots(getInventory(),27);
     }
     private InventoryButton createSubmenuButton(String key) {
         return new InventoryButton().consumer(event -> {
@@ -47,11 +49,6 @@ public class IslandMenu extends InventoryGUI {
                     break;
                 case "defenses":
                     ClashCraft.guiManager.openGUI(new DefenseMenu(a),p);
-                    break;
-                case "traps":
-                    p.sendMessage(Globals.prefix + "Traps coming soon!");
-                    p.closeInventory();
-                    //ClashCraft.guiManager.openGUI(new IslandMenuRefactor(),arena.getPlayer());
                     break;
             }
         });

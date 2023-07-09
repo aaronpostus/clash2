@@ -1,8 +1,12 @@
 package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Arenas.Arena;
+import aaronpost.clashcraft.Buildings.BuildingMenus.DefaultBuildingMenu;
 import aaronpost.clashcraft.Buildings.BuildingStates.*;
+import aaronpost.clashcraft.ClashCraft;
+import aaronpost.clashcraft.Commands.UpdateStorageCapacity;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
+import aaronpost.clashcraft.Globals.GUIHelper;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Interfaces.IDisplayable;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
@@ -22,9 +26,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 // Author: Aaron Post
 public abstract class Building implements IDisplayable, IFixedUpdatable, Serializable {
@@ -93,31 +95,34 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         state.visualUpdate();
     }
     // abstract methods -- you probably meant to access a "request" method instead.
-    public abstract void click();
-    public abstract void openMenu();
-    public abstract void catchUp(float hoursToCatchUp);
-    public abstract void update();
-    public abstract void visualUpdate();
+    public void click() { openMenu(); }
+    public void openMenu() { ClashCraft.guiManager.openGUI(new DefaultBuildingMenu(this), getArena().getPlayer()); }
+    public void catchUp(float hoursToCatchUp) { }
+    public void update() { }
+    public void startUpdates() { }
+    public void stopUpdates() { state.stopUpdates(); }
+    public boolean storesCurrency() { return false; }
+    public int getStorageCapacity(String currencyType) { return 0; }
+    public List<String> storageCurrencies() { return new ArrayList<>(); }
+    public void visualUpdate() { }
     public abstract ItemStack getPlainItemStack();
     public abstract String getPlainDisplayName();
     public abstract ChatColor getPrimaryColor();
     public abstract int getGridLengthX();
     public abstract int getGridLengthZ();
     public abstract long getTimeToBuild(int level);
-    public abstract Schematic getSchematic();
+    public abstract Schematic getSchematic(int level);
+    public Schematic getSchematic() { return getSchematic(level); }
+    public Schematic getNextSchematic() { return getSchematic(nextLevel); }
     public abstract Schematic getBrokenSchematic();
-    public abstract int getMaxLevel();
+    public int getMaxLevel() { return 1; }
     public List<String> getUpgradeDescription() { return Arrays.asList("No upgrade description yet", "Implement this");}
     public ItemStack getUpgradeItem() {
         if(getLevel() == getMaxLevel()) {
             return Globals.MAXED_OUT_ITEM;
         }
-        ItemStack item = new ItemStack(Material.ARROW);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.GRAY + "Upgrade to Level " + (getLevel() + 1));
-        meta.setLore(getUpgradeDescription());
-        item.setItemMeta(meta);
-        return item;
+        String name = ChatColor.GRAY + "Upgrade to Level " + (getLevel() + 1);
+        return GUIHelper.attachNameAndLore(new ItemStack(Material.ARROW), name, getUpgradeDescription());
     }
     public int getMaxHitpoints() {
         return 100;
@@ -138,19 +143,13 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public void setLayersBuilt(int layers) { this.layersBuilt = layers; }
     public float getPercentageBuilt() { return (buildTime / (float) getTimeToBuild(nextLevel)); }
     public int getLevel() {
-        int level = 1;
-        return level; }
-
+        return level;
+    }
     public boolean isNewBuilding() { return state instanceof InHandNewState; }
     public ItemStack getItemStack() {
-        ItemStack itemStack = getPlainItemStack();
-        ItemMeta meta = itemStack.getItemMeta();
-        meta.setDisplayName(getDisplayName());
-        PersistentDataContainer buildingData = meta.getPersistentDataContainer();
-        buildingData.set(BuildingGlobals.NAMESPACED_KEY_UUID, PersistentDataType.STRING, getUUID().toString());
-        buildingData.set(BuildingGlobals.NAMESPACED_KEY_IDENTIFIER, PersistentDataType.STRING, "building");
-        itemStack.setItemMeta(meta);
-        return itemStack;
+        ItemStack itemStack = GUIHelper.attachNameAndData(getPlainItemStack(), getDisplayName(),
+                BuildingGlobals.NAMESPACED_KEY_UUID, getUUID().toString());
+        return GUIHelper.attachData(itemStack,BuildingGlobals.NAMESPACED_KEY_IDENTIFIER,"building");
     }
     public ItemStack getStatsItem() { return new ItemStack(Material.OAK_SIGN); }
     public void sendMessage(String message) {
@@ -183,13 +182,12 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         this.buildTime += Math.floor(hours * 60 * 60);
     }
     public void finishBuilding() {
-
+        new UpdateStorageCapacity().execute(arena);
     }
     public boolean upgrade() {
         if(state instanceof InHandNewState) {
             nextLevel = 1;
         }
-        nextLevel++;
         buildTime = 0;
         state = new BuildingState(this);
         paste();
@@ -199,14 +197,33 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         updateAbsoluteLocation();
         Schematic schematic = getSchematic();
         if(state instanceof BuildingState) {
+            schematic = getNextSchematic();
             if(layersBuilt == -1) {
-                Schematics.s.getSchematic("3x3Giftbox").pasteSchematic(absoluteLocation);
+                Schematic s;
+                switch(getGridLengthX()) {
+                    case 4:
+                        s = Schematics.s.getSchematic("2x2Giftbox");
+                    case 6:
+                        s = Schematics.s.getSchematic("3x3Giftbox");
+                        break;
+                    case 8:
+                        s = Schematics.s.getSchematic("4x4Giftbox");
+                        break;
+                    default:
+                        // shouldnt happen
+                        return;
+                }
+                s.pasteSchematic(absoluteLocation);
                 return;
             }
             schematic.pasteSchematicConstruction(absoluteLocation, schematic.layersToBuild(getPercentageBuilt()));
             return;
         }
         getSchematic().pasteSchematic(absoluteLocation);
+    }
+    public void completeUpgrade() {
+        this.level = this.nextLevel;
+        this.nextLevel++;
     }
     public void resetToGrass() {
         getSchematic().resetToGrassLand(absoluteLocation.clone());

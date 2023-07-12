@@ -31,9 +31,7 @@ public class PlaceBuilding implements IArenaCommand {
         }
         building.sendMessage("Placing.");
         island.placeBuildingInHand();
-        //building.place(x, z);
         PlayerInventory inventory = player.getInventory();
         inventory.removeItem(inventory.getItemInMainHand());
-//        island.addBuilding(building, x, z);
     }
 }

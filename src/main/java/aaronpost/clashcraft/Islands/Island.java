@@ -285,7 +285,6 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         if(buildingInHand != null) {
             this.buildingInHand.setArena(arena);
         }
-        Location location = arena.getLoc();
     }
     public void loadBuildings() {
         for(Building building: getBuildings()) {
@@ -312,6 +311,7 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         }
         Building buildingInHand = getBuildingInBuildingInHand();
         if(buildingInHand != null) {
+            System.out.println("stopping building in hand updates");
             this.buildingInHand.stopUpdates();
         }
         for(Building building : getBuildings()) {

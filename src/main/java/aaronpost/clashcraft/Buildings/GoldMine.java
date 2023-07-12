@@ -72,7 +72,7 @@ public class GoldMine extends Collector {
     }
     @Override
     public Schematic getBrokenSchematic() {
-        return Schematics.s.getSchematic(BuildingGlobals.GOLDMINE_BROKEN_SCHEMATIC[getLevel() - 1]);
+        return Schematics.s.getSchematic("GoldMine1_Broken");
     }
     @Override
     public ItemStack getPlainItemStack() { return BuildingGlobals.GOLDMINE_ITEM_STACK.clone(); }

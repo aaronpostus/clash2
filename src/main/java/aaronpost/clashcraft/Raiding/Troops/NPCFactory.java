@@ -15,12 +15,14 @@ import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 public class NPCFactory {
     private static final NPCRegistry registry = GameManager.getInstance().registry;
     public static NPC createBarbarianNPC(Location loc, int level) {
         NPC npc = registry.createNPC(EntityType.PLAYER, ChatColor.GOLD + "Barbarian " +
                 ChatColor.GRAY + "- Lvl " + level, loc);
-        npc.getOrAddTrait(SkinTrait.class).setSkinPersistent("",
+        npc.getOrAddTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(),
                 Globals.BARBARIAN_SIGNATURE[0],Globals.BARBARIAN_VALUE[0]);
         npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, new ItemStack(Material.IRON_SWORD));
         return npc;
@@ -30,7 +32,7 @@ public class NPCFactory {
     }
     public static NPC createBuilderNPC(Location loc) {
         NPC npc = registry.createNPC(EntityType.PLAYER, ChatColor.RED + "Builder", loc);
-        npc.getOrAddTrait(SkinTrait.class).setSkinPersistent("",
+        npc.getOrAddTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(),
                 SkinGlobals.BUILDER_SIGNATURE,SkinGlobals.BUILDER_VALUE);
         npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, new ItemStack(Material.STONE_AXE));
         return npc;

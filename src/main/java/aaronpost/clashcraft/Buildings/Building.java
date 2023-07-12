@@ -100,7 +100,10 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public void catchUp(float hoursToCatchUp) { }
     public void update() { }
     public void startUpdates() { }
-    public void stopUpdates() { state.stopUpdates(); }
+    public void stopUpdates() {
+        System.out.println("2");
+        state.stopUpdates();
+    }
     public boolean storesCurrency() { return false; }
     public int getStorageCapacity(String currencyType) { return 0; }
     public List<String> storageCurrencies() { return new ArrayList<>(); }
@@ -195,25 +198,23 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     }
     public void paste() {
         updateAbsoluteLocation();
-        Schematic schematic = getSchematic();
+        Schematic schematic;
         if(state instanceof BuildingState) {
             schematic = getNextSchematic();
             if(layersBuilt == -1) {
-                Schematic s;
                 switch(getGridLengthX()) {
                     case 4:
-                        s = Schematics.s.getSchematic("2x2Giftbox");
+                        schematic = Schematics.s.getSchematic("2x2Giftbox");
                     case 6:
-                        s = Schematics.s.getSchematic("3x3Giftbox");
+                        schematic = Schematics.s.getSchematic("3x3Giftbox");
                         break;
                     case 8:
-                        s = Schematics.s.getSchematic("4x4Giftbox");
+                        schematic = Schematics.s.getSchematic("4x4Giftbox");
                         break;
                     default:
-                        // shouldnt happen
                         return;
                 }
-                s.pasteSchematic(absoluteLocation);
+                schematic.pasteSchematic(absoluteLocation);
                 return;
             }
             schematic.pasteSchematicConstruction(absoluteLocation, schematic.layersToBuild(getPercentageBuilt()));

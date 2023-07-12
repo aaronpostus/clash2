@@ -2,6 +2,7 @@ package aaronpost.clashcraft.Arenas;
 
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Raiding.Raids;
+import aaronpost.clashcraft.Session;
 import aaronpost.clashcraft.Singletons.Sessions;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -25,6 +26,7 @@ public class ArenaManager implements Listener {
                 ChatColor.GRAY + e.getPlayer().getName());
         Arena arena = Arenas.a.findPlayerArena(p);
         if(arena != null) {
+            System.out.println("41782");
             Arenas.a.unassignPlayer(p,arena);
         }
         p.setAllowFlight(false);

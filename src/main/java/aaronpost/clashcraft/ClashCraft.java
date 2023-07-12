@@ -95,15 +95,14 @@ public class ClashCraft extends JavaPlugin {
             try {
                 Session session = Sessions.s.getSession(p);
                 if(session != null) {
+                    if(Arenas.a.playerAtArena(p)) {
+                        Arenas.a.unassignPlayer(p,Arenas.a.findPlayerArena(p));
+                        ClashCraft.plugin.getLogger().info(p.getName() + "'s arena has been unassigned.");
+                    }
                     session.getIsland().saveBuildings();
                     serializer.serializeSession(p, session);
+                    ClashCraft.plugin.getLogger().info(p.getName() + "'s session has been saved!");
                 }
-                ClashCraft.plugin.getLogger().info(p.getName() + "'s session has been saved!");
-                if(Arenas.a.playerAtArena(p)) {
-                    Arenas.a.unassignPlayer(p,Arenas.a.findPlayerArena(p));
-                    ClashCraft.plugin.getLogger().info(p.getName() + "'s arena has been unassigned.");
-                }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -42,7 +42,7 @@ public class AdminSchematicMenu implements Listener {
         meta.setDisplayName(ChatColor.GOLD + "==>");
         rightArrow.setItemMeta(meta);
 
-        pages = (int) Math.floor(((double) s.size()) / 45);
+        pages = (int) Math.ceil(((double) s.size()) / 45);
         currentPage = 1;
 
         i.setItem(53, rightArrow);
@@ -94,14 +94,19 @@ public class AdminSchematicMenu implements Listener {
                         }
                     }
                 } else if (i.getCurrentItem().getType().equals(Material.PLAYER_HEAD)) {
+                    System.out.println(1);
                     if (i.getCurrentItem().getItemMeta().getDisplayName().equals(ChatColor.GOLD + "<==")) {
+                        System.out.println(2);
                         if (currentPage > 1) {
+                            System.out.println(3);
                             currentPage--;
                             clearSlots();
                             formatPage(currentPage);
                         }
                     } else if (i.getCurrentItem().getItemMeta().getDisplayName().equals(ChatColor.GOLD + "==>")) {
+                        System.out.println(4);
                         if (currentPage < pages) {
+                            System.out.println(5);
                             currentPage++;
                             clearSlots();
                             formatPage(currentPage);
@@ -128,7 +133,7 @@ public class AdminSchematicMenu implements Listener {
     }
 
     public void formatPage(int page) {
-
+        System.out.println(page);
         ItemStack schematic = new ItemStack(Material.PAPER);
         ItemMeta meta = schematic.getItemMeta();
 
@@ -137,14 +142,14 @@ public class AdminSchematicMenu implements Listener {
         if(s.size() < endIndex) {
             endIndex = s.size();
         }
-
+        int j = 0;
         for(int i = startIndex; i < endIndex; i++) {
             meta.setDisplayName(ChatColor.GOLD + s.get(i).getName());
             ArrayList<String> lore = new ArrayList<>();
             lore.add(ChatColor.GRAY + "Y-Offset: " + ChatColor.YELLOW + s.get(i).getYOffset());
             meta.setLore(lore);
             schematic.setItemMeta(meta);
-            this.i.setItem(i, schematic);
+            this.i.setItem(j++, schematic);
         }
 
         ItemStack infoSign = new ItemStack(Material.OAK_SIGN);

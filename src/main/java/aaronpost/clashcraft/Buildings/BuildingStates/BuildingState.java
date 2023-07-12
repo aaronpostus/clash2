@@ -59,11 +59,11 @@ public class BuildingState extends IBuildingState {
                 building.paste();
             }
             if(builderNPC != null) {
-                if(random.nextInt(2)==1 && !builderNPC.getNavigator().isNavigating()) {
+                if(!builderNPC.getNavigator().isNavigating()) {
+                    builderNPC.faceLocation(building.getArena().getIsland().getCenterBuildingLoc(building,1));
                     PlayerAnimation.ARM_SWING.play((Player) builderNPC.getEntity());
                     building.getArena().getPlayer().playSound(builderNPC.getEntity().getLocation(),
                             Sound.BLOCK_ANVIL_HIT, 1f,1f);
-                    builderNPC.faceLocation(building.getArena().getIsland().getCenterBuildingLoc(building,1));
                 }
                 if(random.nextInt(10) == 0) {
                     builderNPC.getNavigator().setTarget(locations.get(random.nextInt(locations.size())));

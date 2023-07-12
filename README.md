@@ -6,7 +6,7 @@ Ver 1.0 alpha will include functional buildings:
 2.) Elixir collector (Level 4 Alpha, Level 10 Beta)   
 3.) Gold storage (Level 3 Alpha, Level 9 Beta)   
 4.) Elixir storage (Level 3 Alpha, Level 9 Beta)   
-5.) Barracks (up to level 5 for alpha, 7 for beta)   
+5.) Barracks (up to level 4 for alpha, 7 for beta)   
 6.) Army Camp (Level 2 Alpha, Level 5 Beta)   
 7.) Town hall (Level 2 Alpha, Level 5 Beta)   
 8.) Wall (Level 2 Alpha, Level 5 Beta)   

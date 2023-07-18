@@ -3,6 +3,7 @@ package aaronpost.clashcraft.Commands;
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Buildings.BuildingInHand;
+import aaronpost.clashcraft.Buildings.Wall;
 import aaronpost.clashcraft.Interfaces.IArenaCommand;
 import aaronpost.clashcraft.Islands.Island;
 import aaronpost.clashcraft.Pair;
@@ -31,9 +32,10 @@ public class PlaceBuilding implements IArenaCommand {
         }
         building.sendMessage("Placing.");
         island.placeBuildingInHand();
-        //building.place(x, z);
         PlayerInventory inventory = player.getInventory();
         inventory.removeItem(inventory.getItemInMainHand());
-//        island.addBuilding(building, x, z);
+        if(building instanceof Wall) {
+            arena.carveWallGaps();
+        }
     }
 }

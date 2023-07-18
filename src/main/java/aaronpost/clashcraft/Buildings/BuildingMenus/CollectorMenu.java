@@ -34,8 +34,8 @@ public class CollectorMenu extends DefaultBuildingMenu implements IFixedUpdatabl
         GameManager.getInstance().addFixedUpdatable(this);
     }
     @Override
-    protected Inventory createInventory() {
-        return Bukkit.createInventory(null, 27, ChatColor.GRAY + "- " + ChatColor.BLACK + "Collector" +
+    protected Inventory createInventory(String name) {
+        return Bukkit.createInventory(null, 27, ChatColor.GRAY + "- " + name +
                 ChatColor.GRAY + " -");
     }
     @Override

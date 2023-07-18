@@ -41,6 +41,10 @@ public class TroopAgent {
         this.troopAgentOptions = options;
     }
     public Location getLocationToLookAt(Building building) {
+        if(building instanceof Wall) {
+            Pair<Integer,Integer> loc = building.getGridLoc();
+            return arena.getAbsLocationFromGridLoc(loc.first,loc.second,0.5f);
+        }
         Pair<Integer,Integer> loc = navGraph.buildingCenters.get(building);
         return arena.getAbsLocationFromNavGridLoc(loc.first, loc.second, 0.5f);
     }
@@ -97,6 +101,7 @@ public class TroopAgent {
                 Pair<Integer, List<GridCell>> buildingPath = buildingPathWithWall.first;
                 if (buildingPath != null) {
                     if (buildingPath.first < cheapestPathCost) {
+                        System.out.println(1427890);
                         path = new Pair<>(buildingPath.first,Path.copyGridCellList(buildingPath.second));
                         wall = buildingPathWithWall.second;
                         cheapestPathCost = buildingPath.first;
@@ -111,7 +116,7 @@ public class TroopAgent {
         if(wall != null) {
             return new Path(this.raid,path.second,wall,cheapestBuilding);
         }
-        return new Path(this.raid,path.second,cheapestBuilding);
+        return new Path(this.raid,path.second,cheapestBuilding,null);
     }
     private Pair<Integer,List<GridCell>> cheapestPathAroundWalls(int x1, int z1, Building building) {
         int cheapestPathCost = Integer.MAX_VALUE;

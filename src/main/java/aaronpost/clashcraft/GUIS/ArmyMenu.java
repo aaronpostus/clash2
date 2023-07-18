@@ -21,12 +21,13 @@ public class ArmyMenu extends InventoryGUI {
     private Player p;
     private Arena arena;
     public ArmyMenu(Arena arena) {
+        super(ChatColor.GOLD + "+ Shop +");
         this.arena = arena;
         this.p = arena.getPlayer();
     }
     @Override
-    protected Inventory createInventory() {
-        return Bukkit.createInventory(null, 27, ChatColor.GOLD + "+ Shop +");
+    protected Inventory createInventory(String name) {
+        return Bukkit.createInventory(null, 27, name);
     }
     @Override
     public void decorate(Player p) {

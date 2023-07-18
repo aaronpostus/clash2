@@ -1,10 +1,8 @@
 package aaronpost.clashcraft.Islands;
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Arenas.Arenas;
-import aaronpost.clashcraft.Buildings.Building;
-import aaronpost.clashcraft.Buildings.BuildingInHand;
-import aaronpost.clashcraft.Buildings.TownHall;
-import aaronpost.clashcraft.Buildings.Wall;
+import aaronpost.clashcraft.Buildings.*;
+import aaronpost.clashcraft.Buildings.BuildingStates.BuildingState;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
 import aaronpost.clashcraft.Interfaces.IUpdatable;
 import aaronpost.clashcraft.Pair;
@@ -83,7 +81,32 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
     public void removeBuildingInHand() {
         this.buildingInHand = null;
     }
-
+    public boolean hasAvailableBuilder() {
+        int builders = 0;
+        int buildersBusy = 0;
+        List<Building> buildings = new ArrayList<>();
+        for(Building building: getBuildings()) {
+            buildings.add(building);
+            if(building instanceof BuilderHut) {
+                builders += 1;
+            }
+            else if(building.state instanceof BuildingState) {
+                buildersBusy += 1;
+            }
+        }
+        if(hasBuildingInHand()) {
+            Building building = getBuildingInBuildingInHand();
+            if(!buildings.contains(building)) {
+                if(building instanceof BuilderHut) {
+                    builders += 1;
+                }
+                else if(building.state instanceof BuildingState) {
+                    buildersBusy += 1;
+                }
+            }
+        }
+        return builders - buildersBusy > 0;
+    }
     public boolean hasBuildingInHand() {
         return buildingInHand != null;
     }
@@ -105,7 +128,9 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
             addBuildingHelper(building, x, z);
         }
     }
-
+    public void removeNode(int x, int z) {
+        this.nodes[x][z] = null;
+    }
     private void addBuildingHelper(Building building, int x, int z) {
         UUID buildingUUID = building.getUUID();
         //remove old building locations from grid
@@ -285,7 +310,6 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         if(buildingInHand != null) {
             this.buildingInHand.setArena(arena);
         }
-        Location location = arena.getLoc();
     }
     public void loadBuildings() {
         for(Building building: getBuildings()) {
@@ -312,6 +336,7 @@ public class Island implements Serializable, IFixedUpdatable, IUpdatable {
         }
         Building buildingInHand = getBuildingInBuildingInHand();
         if(buildingInHand != null) {
+            System.out.println("stopping building in hand updates");
             this.buildingInHand.stopUpdates();
         }
         for(Building building : getBuildings()) {

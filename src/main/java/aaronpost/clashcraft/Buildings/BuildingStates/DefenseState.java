@@ -62,7 +62,6 @@ public class DefenseState extends IBuildingState {
     @Override
     public void damage(int amountToDamage) {
         this.hp -= amountToDamage;
-        System.out.println("damage" + building.getDisplayName());
         // building dies
         if(this.hp <= 0) {
             this.hp = 0;
@@ -70,7 +69,7 @@ public class DefenseState extends IBuildingState {
             building.state = new DestroyedState(building, previousState);
 
             // UNCOMMENT THIS
-            //raid.destroyBuilding(building);
+            raid.destroyBuilding(building);
         }
     }
 }

@@ -12,16 +12,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 public class BuildingGlobals {
-    public static final int ELIXIRCOLLECTOR_MAX_LEVEL = 2;
-    public static final float[] ELIXIRCOLLECTOR_COLLECTION_RATE = new float[] {200,400};
-    public static final int[] ELIXIRCOLLECTOR_CAPACITY = new int[] {1000,2000};
+    public static final int ELIXIRCOLLECTOR_MAX_LEVEL = 5;
+    public static final float[] ELIXIRCOLLECTOR_COLLECTION_RATE = new float[] {200,400,600,800,1000};
+    public static final int[] ELIXIRCOLLECTOR_CAPACITY = new int[] {1000,2000,3000,5000,10000};
     public static final int ELIXIRCOLLECTOR_GRID_LENGTH = 6;
-    public static final long[] ELIXIRCOLLECTOR_BUILD_TIME = new long[] {10L, 60L};
-    public static final int[] ELIXIRCOLLECTOR_COST = new int[] { 150, 300 };
-    public static final int[] ELIXIRCOLLECTOR_HITPOINTS = new int[] { 400, 440 };
+    public static final long[] ELIXIRCOLLECTOR_BUILD_TIME = new long[] {10L, 60L, 60L * 4, 60L * 10, 60L * 40};
+    public static final int[] ELIXIRCOLLECTOR_COST = new int[] { 150, 300, 700, 1400, 3000 };
+    public static final int[] ELIXIRCOLLECTOR_HITPOINTS = new int[] { 400, 440, 480, 520, 560 };
     public static final ItemStack ELIXIRCOLLECTOR_ITEM_STACK = new ItemStack(Material.STRIPPED_CRIMSON_HYPHAE);
     public static final String ELIXIRCOLLECTOR_DISPLAY_NAME = ChatColor.LIGHT_PURPLE + "Elixir Collector";
-    public static final String[] ELIXIRCOLLECTOR_SCHEMATIC = new String[] { "ElixirCollector1", "ElixirCollector2" };
+    public static final String[] ELIXIRCOLLECTOR_SCHEMATIC = new String[] { "ElixirCollector1", "ElixirCollector2",
+            "ElixirCollector3", "ElixirCollector4", "ElixirCollector5"};
     public static NamespacedKey NAMESPACED_KEY_UUID = new NamespacedKey(ClashCraft.plugin, "buildingUUID");
     public static NamespacedKey NAMESPACED_KEY_IDENTIFIER = new NamespacedKey(ClashCraft.plugin, "buildingInHand");
     public enum BuildingStates { InHandNew, InHand, Upgrading, UpgradeComplete, IslandMode, DefenseMode }
@@ -54,7 +55,8 @@ public class BuildingGlobals {
 
     // Barracks
     public static ChatColor BARRACKS_COLOR = ChatColor.RED;
-    public static String[] BARRACKS_SCHEMATICS = new String[] { "Barracks1"};
+    public static String[] BARRACKS_SCHEMATICS = new String[] { "Barracks1", "Barracks2", "Barracks3", "Barracks4",
+    "Barracks5" };
     public static String[] BROKEN_BARRACKS_SCHEMATICS = new String[] { "Barracks1_Broken"};
     public static final ItemStack BARRACKS_ITEM_STACK = new ItemStack(Material.IRON_SWORD);
     public static String BARRACKS_DISPLAY_NAME = BARRACKS_COLOR + "Barracks";
@@ -63,18 +65,18 @@ public class BuildingGlobals {
         meta.setDisplayName(BARRACKS_DISPLAY_NAME);
         BARRACKS_ITEM_STACK.setItemMeta(meta);
     }
-    public static long[] BARRACKS_BUILD_TIME = new long[]{ 10 };
-    public static float[] BARRACKS_COST = new float[] { 100 };
-    public static int[] BARRACKS_HITPOINTS = new int[]{ 250 };
+    public static long[] BARRACKS_BUILD_TIME = new long[]{ 10, 60L, 60L * 10, 60L * 60, 60L * 60 * 8 };
+    public static float[] BARRACKS_COST = new float[] { 100, 500, 2500, 5000, 20000 };
+    public static int[] BARRACKS_HITPOINTS = new int[]{ 250, 290, 330, 370, 420 };
     public static int BARRACKS_GRID_LENGTH = 6;
 
     // max level per townhall level
-    public static int[] BARRACKS_TOWN_HALL_LEVEL = new int[]{ 1 };
-    public static int BARRACKS_MAX_LEVEL = 1;
+    public static int[] BARRACKS_TOWN_HALL_LEVEL = new int[]{ 1,1,1,2,3 };
+    public static int BARRACKS_MAX_LEVEL = 5;
 
     // Walls
     public static ChatColor WALL_COLOR = ChatColor.GOLD;
-    public static String[] WALL_SCHEMATICS = new String[] { "Wall1" };
+    public static String[] WALL_SCHEMATICS = new String[] { "Wall1", "Wall2" };
     public static String BROKEN_WALL_SCHEMATIC = "Wall_Broken";
     public static ItemStack WALL_ITEM_STACK = new ItemStack(Material.OAK_FENCE);
     public static final Material WALL_ITEM_MATERIAL = BARRACKS_ITEM_STACK.getType();
@@ -84,12 +86,12 @@ public class BuildingGlobals {
         meta.setDisplayName(WALL_DISPLAY_NAME);
         WALL_ITEM_STACK.setItemMeta(meta);
     }
-    public static float[] WALL_COST = new float[] { 50 };
-    public static int[] WALL_HITPOINTS = new int[]{ 300 };
+    public static float[] WALL_COST = new float[] { 50, 1000 };
+    public static int[] WALL_HITPOINTS = new int[]{ 300, 500 };
     public static int WALL_GRID_LENGTH = 2;
 
-    public static int[] WALL_TOWN_HALL_LEVEL = new int[]{ 2 };
-    public static int WALL_MAX_LEVEL = 1;
+    public static int[] WALL_TOWN_HALL_LEVEL = new int[]{ 2,2 };
+    public static int WALL_MAX_LEVEL = 2;
 
     //TOWNHALL
     public static ItemStack TOWN_HALL_ITEM_STACK = new ItemStack(Material.CHEST);
@@ -139,10 +141,12 @@ public class BuildingGlobals {
     static {
         GUIHelper.attachName(GOLD_STORAGE_ITEM_STACK,GOLD_STORAGE_DISPLAY_NAME);
     }
-    public static String[] GOLD_STORAGE_SCHEMATICS = new String[] { "GoldStorage1", "GoldStorage2" };
+    public static String[] GOLD_STORAGE_SCHEMATICS = new String[] { "GoldStorage1", "GoldStorage2", "GoldStorage3" };
     public static List<String> GOLD_STORAGE_CURRENCIES = List.of("gold");
-    public static int[] GOLD_STORAGE_CAPACITY = new int[] { 1500, 3000 };
-    public static long[] GOLD_STORAGE_BUILD_TIME = new long[] { 10L, 5 * 60L, };
+    public static int[] GOLD_STORAGE_CAPACITY = new int[] { 1500, 3000, 6000 };
+    public static int[] GOLD_STORAGE_COST = new int[] { 300, 750, 1500 };
+    public static int[] GOLD_STORAGE_HITPOINTS = new int[]{ 400, 600, 800, 1000, 1200 };
+    public static long[] GOLD_STORAGE_BUILD_TIME = new long[] { 10L, 5 * 60L, 20 * 60L };
 
     // ELIXIR STORAGE
     public static ItemStack ELIXIR_STORAGE_ITEM_STACK = new ItemStack(Material.MAGENTA_SHULKER_BOX);
@@ -150,11 +154,12 @@ public class BuildingGlobals {
     static {
         GUIHelper.attachName(ELIXIR_STORAGE_ITEM_STACK,ELIXIR_STORAGE_DISPLAY_NAME);
     }
-    public static String[] ELIXIR_STORAGE_SCHEMATICS = new String[] { "ElixirStorage1", "ElixirStorage2" };
+    public static String[] ELIXIR_STORAGE_SCHEMATICS = new String[] { "ElixirStorage1", "ElixirStorage2", "ElixirStorage3" };
     public static List<String> ELIXIR_STORAGE_CURRENCIES = List.of("elixir");
-    public static int[] ELIXIR_STORAGE_CAPACITY = new int[] { 1500, 3000 };
-    public static long[] ELIXIR_STORAGE_BUILD_TIME = new long[] { 10L, 5 * 60L, };
-
+    public static int[] ELIXIR_STORAGE_CAPACITY = new int[] { 1500, 3000, 6000 };
+    public static long[] ELIXIR_STORAGE_BUILD_TIME = new long[] { 10L, 5 * 60L, 20 * 60L };
+    public static int[] ELIXIR_STORAGE_COST = new int[] { 300, 750, 1500 };
+    public static int[] ELIXIR_STORAGE_HITPOINTS = new int[]{ 400, 600, 800, 1000, 1200 };
 
 
     // todo

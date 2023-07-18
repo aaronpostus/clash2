@@ -5,6 +5,7 @@ import aaronpost.clashcraft.Buildings.BuilderHut;
 import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Buildings.Wall;
 import aaronpost.clashcraft.Globals.Globals;
+import aaronpost.clashcraft.Interfaces.IInstantBuild;
 import aaronpost.clashcraft.Islands.Island;
 import aaronpost.clashcraft.Pair;
 import aaronpost.clashcraft.Raiding.Troops.NPCFactory;
@@ -25,13 +26,13 @@ public class BuildingState extends IBuildingState {
     private transient Building building;
     private transient Schematic schematic;
     private transient boolean pastedUpdate = false;
-    private NPC builderNPC = null;
+    private transient NPC builderNPC = null;
     private transient List<Location> locations;
     private transient Random random;
     public BuildingState(Building building) {
         this.building = building;
         this.schematic = building.getSchematic();
-        if(building instanceof Wall || building instanceof BuilderHut || building.getPercentageBuilt() >= 1f) {
+        if(building instanceof IInstantBuild || building.getPercentageBuilt() >= 1f) {
             return;
         }
         this.locations = initializeLocations();
@@ -59,11 +60,11 @@ public class BuildingState extends IBuildingState {
                 building.paste();
             }
             if(builderNPC != null) {
-                if(random.nextInt(2)==1 && !builderNPC.getNavigator().isNavigating()) {
+                if(!builderNPC.getNavigator().isNavigating()) {
+                    builderNPC.faceLocation(building.getArena().getIsland().getCenterBuildingLoc(building,1));
                     PlayerAnimation.ARM_SWING.play((Player) builderNPC.getEntity());
                     building.getArena().getPlayer().playSound(builderNPC.getEntity().getLocation(),
                             Sound.BLOCK_ANVIL_HIT, 1f,1f);
-                    builderNPC.faceLocation(building.getArena().getIsland().getCenterBuildingLoc(building,1));
                 }
                 if(random.nextInt(10) == 0) {
                     builderNPC.getNavigator().setTarget(locations.get(random.nextInt(locations.size())));
@@ -96,7 +97,7 @@ public class BuildingState extends IBuildingState {
         building.state = new IslandState(building);
         building.finishBuilding();
         Schematic s;
-        if(!(building instanceof Wall || building instanceof BuilderHut)) {
+        if(!(building instanceof IInstantBuild)) {
             switch (building.getGridLengthX()) {
                 case 4:
                     s = Schematics.s.getSchematic("2x2Giftbox");
@@ -115,6 +116,9 @@ public class BuildingState extends IBuildingState {
         }
         building.completeUpgrade();
         building.paste();
+        if(building instanceof Wall) {
+            building.getArena().carveWallGaps();
+        }
     }
     @Override
     public void click() {

@@ -3,6 +3,7 @@ package aaronpost.clashcraft.Buildings.BuildingStates;
 import aaronpost.clashcraft.Buildings.BuilderHut;
 import aaronpost.clashcraft.Buildings.Building;
 import aaronpost.clashcraft.Buildings.Wall;
+import aaronpost.clashcraft.Interfaces.IInstantBuild;
 import org.bukkit.Sound;
 
 public class InHandNewState extends IBuildingState {
@@ -47,7 +48,7 @@ public class InHandNewState extends IBuildingState {
         building.state = buildingState;
         building.getArena().playSound(Sound.BLOCK_ANVIL_USE,0.35f,1f);
         building.place(x,z);
-        if(building instanceof Wall || building instanceof BuilderHut) {
+        if(building instanceof IInstantBuild) {
             buildingState.finishBuilding();
         }
     }

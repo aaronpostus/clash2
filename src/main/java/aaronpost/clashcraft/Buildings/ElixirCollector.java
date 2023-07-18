@@ -66,7 +66,8 @@ public class ElixirCollector extends Collector {
         ItemMeta meta = stack.getItemMeta();
         meta.setLore(Arrays.asList(ChatColor.GRAY + " An elixir collector collects " + ChatColor.LIGHT_PURPLE + "elixir" + ChatColor.GRAY + " over",
                     ChatColor.GRAY + " time, even when you're offline!",
-                    ChatColor.GRAY + "Cost: " + BuildingGlobals.ELIXIRCOLLECTOR_COST[0] + " " + Globals.GOLD_DISPLAY_NAME));
+                    ChatColor.GRAY + "Cost: " + BuildingGlobals.ELIXIRCOLLECTOR_COST[0] + " " + Globals.GOLD_DISPLAY_NAME,
+                    ChatColor.GRAY + "Build Time: " + Globals.timeFromSeconds(BuildingGlobals.ELIXIRCOLLECTOR_BUILD_TIME[0])));
         meta.setDisplayName(BuildingGlobals.ELIXIRCOLLECTOR_DISPLAY_NAME);
         stack.setItemMeta(meta);
         return stack;

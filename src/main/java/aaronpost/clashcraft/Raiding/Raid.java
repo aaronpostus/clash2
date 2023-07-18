@@ -181,15 +181,12 @@ public class Raid implements IUpdatable, IFixedUpdatable, Listener {
 
     public Arena getArena() { return arena; }
     public IslandNavGraph getNavGraph() { return navGraph; }
-//    public void destroyBuilding(Building building) {
-//        // tell nav graph that building should no longer be targeted
-//        this.navGraph.destroy(building);
-//        // tell troops to find a new building
-//        this.troopManager.notifyTroopsOfDestroyedBuilding(building);
-//        if(building instanceof IDefenseBuilding) {
-//            this.regions.remove(building);
-//        }
-//    }
+    public void destroyBuilding(Building building) {
+        // tell nav graph that building should no longer be targeted
+        this.navGraph.destroy(building);
+        // tell troops to find a new building
+        this.troopManager.notifyTroopsOfDestroyedBuilding(building);
+    }
     @Override
     public void update() {
 

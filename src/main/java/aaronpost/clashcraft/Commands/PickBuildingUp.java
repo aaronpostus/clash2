@@ -2,6 +2,7 @@ package aaronpost.clashcraft.Commands;
 
 import aaronpost.clashcraft.Arenas.Arena;
 import aaronpost.clashcraft.Buildings.Building;
+import aaronpost.clashcraft.Buildings.Wall;
 import aaronpost.clashcraft.Interfaces.IArenaCommand;
 import aaronpost.clashcraft.Islands.Island;
 import net.md_5.bungee.api.ChatMessageType;

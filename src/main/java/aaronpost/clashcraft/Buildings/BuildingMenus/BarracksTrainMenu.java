@@ -25,13 +25,14 @@ public class BarracksTrainMenu extends InventoryGUI {
     private Elixir elixir;
     private Barracks barracks;
     public BarracksTrainMenu(Barracks barracks, Player player) {
+        super("Barracks");
         amountToTrain.put("Barbarian",0);
         amountToTrain.put("Archer",0);
         this.elixir = (Elixir) Sessions.s.getSession(player).getCurrency("elixir");
     }
     @Override
-    protected Inventory createInventory() {
-        return Bukkit.createInventory(null, 3 * 9, "Barracks");
+    protected Inventory createInventory(String name) {
+        return Bukkit.createInventory(null, 3 * 9, name);
     }
 
 

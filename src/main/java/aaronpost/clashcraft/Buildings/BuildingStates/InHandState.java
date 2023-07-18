@@ -48,6 +48,11 @@ public class InHandState extends IBuildingState {
 
     @Override
     public void pickup() {
-
+        building.state = new IslandState(building);
+    }
+    @Override
+    public void stopUpdates() {
+        building.getArena().getIsland().removeBuildingInHand();
+        building.state = new IslandState(building);
     }
 }

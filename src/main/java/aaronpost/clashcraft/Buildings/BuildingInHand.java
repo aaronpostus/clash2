@@ -62,18 +62,10 @@ public class BuildingInHand implements Serializable, IUpdatable {
         this.z = -1;
     }
     public void place() {
-        stopUpdates();
         building.refreshReferences(arena);
         building.placeRequest(x,z);
         island.addBuilding(building, x,z);
         island.removeBuildingInHand();
-    }
-
-    // Will check if schematic needs an update.
-    private boolean targetLocIsDifferent(Location location) {
-        int x = (int) Math.ceil(location.getX());
-        int z = (int) Math.ceil(location.getZ());
-        return (x != this.x) && (z != this.z);
     }
 
     private void removeOldSilhouette() {
@@ -218,6 +210,7 @@ public class BuildingInHand implements Serializable, IUpdatable {
     @Override
     public void stopUpdates() {
         removeOldSilhouette();
+        System.out.println("1");
         this.building.stopUpdates();
     }
 }

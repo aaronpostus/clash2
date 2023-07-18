@@ -64,7 +64,8 @@ public class GoldMine extends Collector {
         return GUIHelper.attachLore(BuildingGlobals.GOLDMINE_ITEM_STACK.clone(), Arrays.asList(
                 ChatColor.GRAY + " A gold mine collects " + ChatColor.GOLD + "gold" + ChatColor.GRAY + " over",
                 ChatColor.GRAY + " time, even when you're offline!",
-                ChatColor.GRAY + "Cost: " + BuildingGlobals.GOLDMINE_COST[0] + " " + Globals.ELIXIR_DISPLAY_NAME));
+                ChatColor.GRAY + "Cost: " + BuildingGlobals.GOLDMINE_COST[0] + " " + Globals.ELIXIR_DISPLAY_NAME,
+                ChatColor.GRAY + "Build Time: " + Globals.timeFromSeconds(BuildingGlobals.GOLDMINE_BUILD_TIME[0])));
     }
     @Override
     public Schematic getSchematic(int level) {
@@ -72,7 +73,7 @@ public class GoldMine extends Collector {
     }
     @Override
     public Schematic getBrokenSchematic() {
-        return Schematics.s.getSchematic(BuildingGlobals.GOLDMINE_BROKEN_SCHEMATIC[getLevel() - 1]);
+        return Schematics.s.getSchematic("GoldMine1_Broken");
     }
     @Override
     public ItemStack getPlainItemStack() { return BuildingGlobals.GOLDMINE_ITEM_STACK.clone(); }

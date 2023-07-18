@@ -6,6 +6,7 @@ import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Globals.GUIHelper;
 import aaronpost.clashcraft.Globals.Globals;
+import aaronpost.clashcraft.Interfaces.IInstantBuild;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import org.bukkit.ChatColor;
@@ -15,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 
-public class BuilderHut extends Building {
+public class BuilderHut extends Building implements IInstantBuild {
     private transient Building BuildingToBuild;
     public BuilderHut(Arena arena) {
         super(arena);
@@ -25,8 +26,15 @@ public class BuilderHut extends Building {
     }
     public static ItemStack getShopItem() {
         return GUIHelper.attachLore(BuildingGlobals.BUILDER_HUT_ITEM_STACK.clone(), Arrays.asList(ChatColor.GRAY +
-                        " A builder hut houses an NPC", ChatColor.GRAY + " who builds/upgrades buildings!",
-                        ChatColor.GRAY + " One builder hut -> One task."));
+                        " A builder hut houses an NPC", ChatColor.GRAY + " who builds/upgrades buildings!"));
+    }
+    @Override
+    public ItemStack getStatsItem() {
+        ItemStack stack = new ItemStack(Material.OAK_SIGN);
+        return GUIHelper.attachNameAndLore(stack,getDisplayName() + " Stats", Arrays.asList(
+                ChatColor.GRAY + "  Houses one builder who can work on",
+                ChatColor.GRAY + "  one building at a time."
+        ));
     }
     @Override
     public ItemStack getPlainItemStack() {

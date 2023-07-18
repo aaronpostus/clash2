@@ -10,6 +10,7 @@ import aaronpost.clashcraft.Globals.GUIHelper;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Interfaces.IDisplayable;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
+import aaronpost.clashcraft.Interfaces.IInstantBuild;
 import aaronpost.clashcraft.Pair;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Session;
@@ -100,7 +101,9 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public void catchUp(float hoursToCatchUp) { }
     public void update() { }
     public void startUpdates() { }
-    public void stopUpdates() { state.stopUpdates(); }
+    public void stopUpdates() {
+        state.stopUpdates();
+    }
     public boolean storesCurrency() { return false; }
     public int getStorageCapacity(String currencyType) { return 0; }
     public List<String> storageCurrencies() { return new ArrayList<>(); }
@@ -170,6 +173,9 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         getArena().playSound(Sound.BLOCK_WOOD_BREAK,1f,1f);
         arena.getIsland().putBuildingInHand(this);
         resetToGrass();
+        if(this instanceof Wall) {
+            arena.carveWallGaps();
+        }
     }
     public void buildStep() {
         this.buildTime += 1;
@@ -189,31 +195,36 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
             nextLevel = 1;
         }
         buildTime = 0;
-        state = new BuildingState(this);
+        BuildingState newState = new BuildingState(this);
+        state = newState;
+        if(this instanceof IInstantBuild) {
+            newState.finishBuilding();
+        }
         paste();
+        if(this instanceof Wall) {
+            arena.carveWallGaps();
+        }
         return false;
     }
     public void paste() {
         updateAbsoluteLocation();
-        Schematic schematic = getSchematic();
+        Schematic schematic;
         if(state instanceof BuildingState) {
             schematic = getNextSchematic();
             if(layersBuilt == -1) {
-                Schematic s;
                 switch(getGridLengthX()) {
                     case 4:
-                        s = Schematics.s.getSchematic("2x2Giftbox");
+                        schematic = Schematics.s.getSchematic("2x2Giftbox");
                     case 6:
-                        s = Schematics.s.getSchematic("3x3Giftbox");
+                        schematic = Schematics.s.getSchematic("3x3Giftbox");
                         break;
                     case 8:
-                        s = Schematics.s.getSchematic("4x4Giftbox");
+                        schematic = Schematics.s.getSchematic("4x4Giftbox");
                         break;
                     default:
-                        // shouldnt happen
                         return;
                 }
-                s.pasteSchematic(absoluteLocation);
+                schematic.pasteSchematic(absoluteLocation);
                 return;
             }
             schematic.pasteSchematicConstruction(absoluteLocation, schematic.layersToBuild(getPercentageBuilt()));

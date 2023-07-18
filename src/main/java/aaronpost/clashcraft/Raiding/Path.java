@@ -15,24 +15,32 @@ public class Path {
     public List<GridCell> currentPath;
     public List<GridCell> nextPath;
     private Arena arena;
-    public Path(Raid raid, List<GridCell> path, Building firstTarget, Building secondTarget) {
-        this(raid,path,firstTarget);
-        this.nextTarget = secondTarget;
-        System.out.println(firstTarget.toString() + secondTarget.toString());
-    }
-    public Path(Raid raid,List<GridCell> path, Building firstTarget) {
+    public Path(Raid raid,List<GridCell> path, Building firstTarget, Building nextTarget) {
         this.currentTarget = firstTarget;
+        this.nextTarget = nextTarget;
         this.arena = raid.getArena();
-        this.currentPath = copyGridCellList(path);
-        initializeCurrentPathAndNextPath();
-        this.currentTarget = firstTarget;
+        initializeCurrentPathAndNextPath(path);
         translateToWaypoints();
         System.out.println(firstTarget.toString());
-
     }
 
-    private void initializeCurrentPathAndNextPath() {
+    private void initializeCurrentPathAndNextPath(List<GridCell> path) {
         // make current path only up to the first building and then the second path the remaining stuffs
+        this.currentPath = copyGridCellList(path);
+        if(this.nextTarget == null) {
+            System.out.println("dshua");
+            int i;
+            for(i=0;i<currentPath.size();i++) {
+                if(path.get(i).building != null) {
+                    if(path.get(i).building.equals(this.nextTarget)) {
+                        System.out.println("fas");
+                        break;
+                    }
+                }
+            }
+            this.nextPath = this.currentPath.subList(i,currentPath.size());
+            this.currentPath = this.currentPath.subList(0,i);
+        }
     }
 
     public static List<GridCell> copyGridCellList(List<GridCell> path) {

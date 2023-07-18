@@ -14,10 +14,13 @@ import org.bukkit.inventory.Inventory;
 
 public class IslandMenu extends InventoryGUI {
     private Player p;
+    public IslandMenu() {
+        super(ChatColor.GOLD + "+ Shop +");
+    }
 
     @Override
-    protected Inventory createInventory() {
-        return Bukkit.createInventory(null, 27, ChatColor.GOLD + "+ Shop +");
+    protected Inventory createInventory(String name) {
+        return Bukkit.createInventory(null, 27, name);
     }
     @Override
     public void decorate(Player p) {

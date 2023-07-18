@@ -1,27 +1,18 @@
 package aaronpost.clashcraft.Buildings;
 
 import aaronpost.clashcraft.Arenas.Arena;
-import aaronpost.clashcraft.Buildings.BuildingMenus.DefaultBuildingMenu;
-import aaronpost.clashcraft.Buildings.NPC.WanderNPC;
-import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Globals.GUIHelper;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Singletons.Schematics;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 
 public class ArmyCamp extends Building {
-    private transient Building BuildingToBuild;
-    private transient WanderNPC npc;
     public ArmyCamp(Arena arena) {
         super(arena);
-    }
-    public ArmyCamp(int x, int z) {
-        super(x,z);
     }
     public static ItemStack getShopItem() {
         return GUIHelper.attachLore(BuildingGlobals.ARMY_CAMP_ITEM_STACK.clone(), Arrays.asList(ChatColor.GRAY +

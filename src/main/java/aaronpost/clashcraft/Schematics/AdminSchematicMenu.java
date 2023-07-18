@@ -94,19 +94,14 @@ public class AdminSchematicMenu implements Listener {
                         }
                     }
                 } else if (i.getCurrentItem().getType().equals(Material.PLAYER_HEAD)) {
-                    System.out.println(1);
                     if (i.getCurrentItem().getItemMeta().getDisplayName().equals(ChatColor.GOLD + "<==")) {
-                        System.out.println(2);
                         if (currentPage > 1) {
-                            System.out.println(3);
                             currentPage--;
                             clearSlots();
                             formatPage(currentPage);
                         }
                     } else if (i.getCurrentItem().getItemMeta().getDisplayName().equals(ChatColor.GOLD + "==>")) {
-                        System.out.println(4);
                         if (currentPage < pages) {
-                            System.out.println(5);
                             currentPage++;
                             clearSlots();
                             formatPage(currentPage);

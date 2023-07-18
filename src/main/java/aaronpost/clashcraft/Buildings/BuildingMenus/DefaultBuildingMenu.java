@@ -14,9 +14,11 @@ public class DefaultBuildingMenu extends InventoryGUI {
     private Building building;
     private int upgradeIndex = 15, statsIndex = 13, pickupIndex = 11;
     public DefaultBuildingMenu(Building building) {
+        super(building.getDisplayName());
         this.building = building;
     }
     public DefaultBuildingMenu(Building building, int spaceToAdd) {
+        super(building.getDisplayName());
         this.building = building;
         upgradeIndex += spaceToAdd;
         statsIndex += spaceToAdd;
@@ -24,8 +26,8 @@ public class DefaultBuildingMenu extends InventoryGUI {
     }
 
     @Override
-    protected Inventory createInventory() {
-        return Bukkit.createInventory(null, 27, ChatColor.GRAY + "- " + ChatColor.BLACK + "Building" +
+    protected Inventory createInventory(String name) {
+        return Bukkit.createInventory(null, 27, ChatColor.GRAY + "- " + name +
                 ChatColor.GRAY + " -");
     }
     @Override
@@ -46,7 +48,12 @@ public class DefaultBuildingMenu extends InventoryGUI {
     private InventoryButton upgrade() {
         return new InventoryButton().consumer(event -> {
             Player player = (Player) event.getWhoClicked();
-            building.upgrade();
+            if(building.isMaxLevel()) {
+                building.sendMessage("Already maxed out.");
+            }
+            else {
+                building.upgrade();
+            }
             player.closeInventory();
         });
     }

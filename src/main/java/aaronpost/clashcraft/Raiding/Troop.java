@@ -63,7 +63,8 @@ public abstract class Troop implements ICallback {
         state.buildingDestroyed(building);
     }
     public void target() {
-        getNavGridPos();
+        Pair<Integer,Integer> pos = getNavGridPos();
+        agent.setAgentPos(pos.first,pos.second);
         troopPath = agent.target();
         npc.getNavigator().cancelNavigation();
         addWaypoints();
@@ -87,8 +88,8 @@ public abstract class Troop implements ICallback {
         return troopPath.getTarget();
     }
     public void playAttackAnimation() {
-        //npc.faceLocation(agent.getLocationToLookAt(getTarget()));
-        PlayerAnimation.ARM_SWING.play(troopPlayer);
+        npc.faceLocation(agent.getLocationToLookAt(getTarget()));
+        PlayerAnimation.ARM_SWING.play((Player) npc.getEntity());
         arena.getPlayer().playSound(npc.getEntity(), Sound.ENTITY_PLAYER_ATTACK_WEAK,4f,1f);
     }
     public void update() {

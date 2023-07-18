@@ -10,6 +10,7 @@ import aaronpost.clashcraft.Globals.GUIHelper;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Interfaces.IDisplayable;
 import aaronpost.clashcraft.Interfaces.IFixedUpdatable;
+import aaronpost.clashcraft.Interfaces.IInstantBuild;
 import aaronpost.clashcraft.Pair;
 import aaronpost.clashcraft.Schematics.Schematic;
 import aaronpost.clashcraft.Session;
@@ -101,7 +102,6 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
     public void update() { }
     public void startUpdates() { }
     public void stopUpdates() {
-        System.out.println("2");
         state.stopUpdates();
     }
     public boolean storesCurrency() { return false; }
@@ -173,6 +173,9 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
         getArena().playSound(Sound.BLOCK_WOOD_BREAK,1f,1f);
         arena.getIsland().putBuildingInHand(this);
         resetToGrass();
+        if(this instanceof Wall) {
+            arena.carveWallGaps();
+        }
     }
     public void buildStep() {
         this.buildTime += 1;
@@ -192,8 +195,15 @@ public abstract class Building implements IDisplayable, IFixedUpdatable, Seriali
             nextLevel = 1;
         }
         buildTime = 0;
-        state = new BuildingState(this);
+        BuildingState newState = new BuildingState(this);
+        state = newState;
+        if(this instanceof IInstantBuild) {
+            newState.finishBuilding();
+        }
         paste();
+        if(this instanceof Wall) {
+            arena.carveWallGaps();
+        }
         return false;
     }
     public void paste() {

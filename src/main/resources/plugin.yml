@@ -20,9 +20,6 @@ commands:
   createschematic:
     description: create schematic with name
     usage: /createschematic
-  raid:
-    description: go raiding
-    usage: /raid
   debug:
     description: debug command for op
     usage: /debug

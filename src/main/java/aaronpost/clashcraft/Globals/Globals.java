@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Globals {
@@ -165,7 +166,7 @@ public class Globals {
     }
     public static ItemStack ARMY_SHOP_ICON;
     static {
-        ARMY_SHOP_ICON = new ItemStack(Material.BOW);
+        ARMY_SHOP_ICON = new ItemStack(Material.GOLDEN_SWORD);
         ItemMeta meta = ARMY_SHOP_ICON.getItemMeta();
         meta.setDisplayName(ChatColor.RED + "Army");
         ARMY_SHOP_ICON.setItemMeta(meta);
@@ -196,9 +197,8 @@ public class Globals {
 
     public static ItemStack MAXED_OUT_ITEM;
     static {
-        MAXED_OUT_ITEM = new ItemStack(Material.NETHER_STAR);
-        ItemMeta meta = MAXED_OUT_ITEM.getItemMeta();
-        meta.setDisplayName(ChatColor.RED + "MAXED OUT");
-        MAXED_OUT_ITEM.setItemMeta(meta);
+        MAXED_OUT_ITEM = GUIHelper.attachNameAndLore(new ItemStack(Material.NETHER_STAR), ChatColor.RED + "Maxed Out", List.of(
+                ChatColor.GRAY + "  This building is maxed out.", ChatColor.GRAY + "  Wait for a future update."
+        ));
     }
 }

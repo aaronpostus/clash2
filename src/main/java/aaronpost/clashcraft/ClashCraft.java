@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ClashCraft extends JavaPlugin {
-    static List<String> commands = Arrays.asList("test","debugtools","island", "createschematic", "savecoordinates", "raid","debug");
+    static List<String> commands = Arrays.asList("test","debugtools","island", "createschematic", "savecoordinates","debug");
     public static ClashCraft plugin;
     public static GUIManager guiManager;
     public static Serializer serializer;
@@ -115,13 +115,6 @@ public class ClashCraft extends JavaPlugin {
         Player player = getServer().getPlayer(sender.getName());
         if(!commands.contains(label)) {
             return false;
-        }
-        else if(label.equals("raid")) {
-            boolean canRaid = Raids.r.tryRaid(player);
-            if(!canRaid) {
-                sender.sendMessage(Globals.prefix + ChatColor.RED + " No available islands to attack. Try again later.");
-            }
-            return true;
         }
         else if (label.equals("test")) {
             sender.sendMessage("hi");

@@ -1,11 +1,10 @@
 package aaronpost.clashcraft.Arenas;
 import aaronpost.clashcraft.Buildings.Building;
-import aaronpost.clashcraft.Buildings.BuildingStates.BuildingState;
 import aaronpost.clashcraft.Buildings.BuildingStates.DefenseState;
+import aaronpost.clashcraft.Buildings.Wall;
 import aaronpost.clashcraft.ClashCraft;
 import aaronpost.clashcraft.Commands.UpdateStorageCapacity;
 import aaronpost.clashcraft.Currency.Currency;
-import aaronpost.clashcraft.Globals.BuildingGlobals;
 import aaronpost.clashcraft.Globals.Globals;
 import aaronpost.clashcraft.Islands.Island;
 import aaronpost.clashcraft.Pair;
@@ -24,8 +23,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
+import org.checkerframework.checker.units.qual.A;
 import pathfinding.grid.GridCell;
 
 import java.util.ArrayList;
@@ -116,6 +114,7 @@ public class Arena {
                     island.catchUpRequest(hoursOffline);
                 }
                 p.setAllowFlight(true);
+                carveWallGaps();
             }
         },  10);
     }
@@ -223,6 +222,13 @@ public class Arena {
         loc.setY(heightAboveGround + loc.getY());
         return loc;
     }
+    public Location getAbsLocationFromGridLoc(int x, int z, float heightAboveGround) {
+        Location loc = this.getLoc().clone();
+        loc.setX(x + loc.getX());
+        loc.setZ(z + loc.getZ());
+        loc.setY(heightAboveGround + loc.getY());
+        return loc;
+    }
     public Location getAbsLocationFromNavGridLoc(int x, int z, int heightAboveGround) {
         Location loc = this.getLoc().clone();
         loc.setX(x + loc.getX() - 2);
@@ -237,6 +243,126 @@ public class Arena {
         loc.setY(heightAboveGround + loc.getY());
         return loc;
     }
+    public void carveWallGaps() {
+        for(Building building: island.getBuildings()) {
+            if(building instanceof Wall) {
+                building.paste();
+            }
+        }
+        List<Pair<Integer,Integer>> wallGaps = findWallGaps();
+        for(Pair<Integer,Integer> gap: wallGaps) {
+            carveGap(gap.first,gap.second);
+        }
+    }
+    private void carveGap(int x, int z) {
+        //island.removeNode(x,z);
+        getAbsLocationFromGridLoc(x,z,-1).getBlock().setType(Material.MOSS_BLOCK);
+        getAbsLocationFromGridLoc(x,z,0).getBlock().setType(Material.AIR);
+        getAbsLocationFromGridLoc(x,z,1).getBlock().setType(Material.AIR);
+        getAbsLocationFromGridLoc(x,z,2).getBlock().setType(Material.AIR);
+        getAbsLocationFromGridLoc(x,z,3).getBlock().setType(Material.AIR);
+    }
+    private List<Pair<Integer, Integer>> findWallGaps() {
+        List<Pair<Integer, Integer>> locs = new ArrayList<>();
+        List<Pair<Wall,Wall>> adjacenciesAddressed = new ArrayList<>();
+        for (int row = 0; row < Arenas.GRID_X_LENGTH; row++) {
+            for (int col = 0; col < Arenas.GRID_Z_LENGTH; col++) {
+                if (isValidWall(row,col)) {
+                    Wall wall1 = (Wall) island.getBuilding(row,col);
+                    // upper right
+                    if (isValidWall(row + 2, col+2)) {
+                        Wall wall2 = (Wall) island.getBuilding(row+2,col+2);
+                        if(!adjacencyAddressed(adjacenciesAddressed, wall1,wall2)) {
+                            if(!isValidWall(row+2,col+0) && !isValidWall(row+0,col+2)) {
+                                locs.add(new Pair<Integer,Integer>(row+1,col+1));
+                                locs.add(new Pair<Integer,Integer>(row+2,col+2));
+                                adjacenciesAddressed.add(new Pair<Wall,Wall>(wall1,wall2));
+                            }
+                        }
+                    }
+                    // bottom right
+                    if (isValidWall(row+2, col-2)) {
+                        Wall wall2 = (Wall) island.getBuilding(row+2,col-2);
+                        if(!adjacencyAddressed(adjacenciesAddressed, wall1,wall2)) {
+                            if(!isValidWall(row+2,col+0) && !isValidWall(row+0,col-2)) {
+                                locs.add(new Pair<Integer,Integer>(row+1,col));
+                                locs.add(new Pair<Integer,Integer>(row+2,col-1));
+                                adjacenciesAddressed.add(new Pair<Wall,Wall>(wall1,wall2));
+                            }
+                        }
+                    }
+                    // upper left
+                    if(isValidWall(row-2,col+2)) {
+                        Wall wall2 = (Wall) island.getBuilding(row-2,col+2);
+                        if(!adjacencyAddressed(adjacenciesAddressed, wall1,wall2)) {
+                            if(!isValidWall(row-2,col+0) && !isValidWall(row+0,col+2)) {
+                                locs.add(new Pair<Integer,Integer>(row,col+1));
+                                locs.add(new Pair<Integer,Integer>(row-1,col+2));
+                                adjacenciesAddressed.add(new Pair<Wall,Wall>(wall1,wall2));
+                            }
+                        }
+                    }
+                    // bottom left
+                    if(isValidWall(row-2,col-2)) {
+                        Wall wall2 = (Wall) island.getBuilding(row-2,col-2);
+                        if(!adjacencyAddressed(adjacenciesAddressed, wall1,wall2)) {
+                            if(!isValidWall(row-2,col+0) && !isValidWall(row+0,col-2)) {
+                                locs.add(new Pair<Integer,Integer>(row,col));
+                                locs.add(new Pair<Integer,Integer>(row-1,col-1));
+                                adjacenciesAddressed.add(new Pair<Wall,Wall>(wall1,wall2));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return locs;
+    }
+    private boolean adjacencyAddressed(List<Pair<Wall,Wall>> adjacenciesAddressed, Wall wall1, Wall wall2) {
+        for(Pair<Wall,Wall> pair: adjacenciesAddressed) {
+            if(pair.first == wall1 && pair.second == wall2) {
+                return true;
+            }
+            else if(pair.first == wall2 && pair.second == wall1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isValidWall(int row, int col) {
+
+        if (row >= 0 && row < Arenas.GRID_X_LENGTH && col >= 0 && col < Arenas.GRID_Z_LENGTH) {
+            Building building = island.getBuilding(row, col);
+            if(island.hasBuildingInHand()) {
+                if(building==(island.getBuildingInBuildingInHand())) {
+                    return false;
+                }
+            }
+            return building instanceof Wall;
+        }
+
+        return false;
+    }
+    /**
+     * Finds diagnonally adjacent walls that do not share a neighbor
+     * @return list of locations where gaps should be created
+     */
+//    public List<Pair<Integer,Integer>> createWallGaps() {
+//        BiMap<Building,Building> adjacenciesAdressed = HashBiMap.create();
+//        for(Building building: island.getBuildings()) {
+//            if(!(building instanceof Wall)) {
+//                continue;
+//            }
+//            Wall wall = (Wall) building;
+//            Pair<Integer,Integer> wallGridLoc = building.getGridLoc();
+//            if
+//            if(island.getBuilding())
+//
+//            if(adjacenciesAdressed.containsKey())
+//        }
+//    }
     public void unload() {
         GameManager.getInstance().removeFixedUpdatable(island);
         GameManager.getInstance().removeUpdatable(island);

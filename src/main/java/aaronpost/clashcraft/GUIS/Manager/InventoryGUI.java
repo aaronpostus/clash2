@@ -15,8 +15,8 @@ public abstract class InventoryGUI implements InventoryHandler {
     private final Inventory inventory;
     private final Map<Integer, InventoryButton> buttonMap = new HashMap<>();
 
-    public InventoryGUI() {
-        this.inventory = this.createInventory();
+    public InventoryGUI(String name) {
+        this.inventory = this.createInventory(name);
     }
 
     public Inventory getInventory() {
@@ -53,6 +53,6 @@ public abstract class InventoryGUI implements InventoryHandler {
     public void onClose(InventoryCloseEvent event) {
     }
 
-    protected abstract Inventory createInventory();
+    protected abstract Inventory createInventory(String name);
 
 }
